@@ -1,0 +1,2173 @@
+:root {
+  --paper: #FFFFFF;
+  --paper-tint: #F7F7F5;
+  --ink: #141414;
+  --ink-soft: #6E6B66;
+  --accent: #141414;
+  --danger: #B3261E;
+  --success: #2E7D4F;
+  --line: #E7E5E1;
+  --hero-accent: #FFFFFF;
+}
+
+.hc-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hc-h1 {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+/* ---------- 헤더 (투명 / 솔리드) ---------- */
+.hc-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.hc-header--overlay.hc-header--scrolled,
+.hc-header--solid {
+  background: rgba(255, 255, 255, 0.85);
+  /* backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.hc-header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+.hc-wordmark {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 28.5px;
+  font-weight: 700;
+  text-decoration: none;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+.hc-header--overlay .hc-wordmark { color: #FFFFFF; }
+.hc-header--overlay.hc-header--scrolled .hc-wordmark,
+.hc-header--solid .hc-wordmark { color: var(--ink); }
+
+/* 헤더 좌상단 로고 이미지 (관리자 페이지에서 업로드한 경우에만 표시됨) */
+.hc-wordmark-logo {
+  height: 56px;
+  width: auto;
+  max-width: 240px;
+  display: block;
+  transition: filter 0.3s ease;
+}
+/* 히어로 위 투명 상태일 땐 사진 위에서 묻히지 않게 그림자만 살짝 */
+.hc-wordmark-logo--overlay {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.25));
+}
+
+.hc-nav {
+  display: flex;
+  flex: 1;
+}
+.hc-nav a {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s ease;
+}
+.hc-header--overlay .hc-nav a { color: #FFFFFF; }
+.hc-header--overlay.hc-header--scrolled .hc-nav a,
+.hc-header--solid .hc-nav a { color: var(--ink); }
+.hc-nav a:hover { border-bottom-color: currentColor; }
+
+/* ---------- 히어로 (풀블리드, 투명 헤더 오버레이) ---------- */
+.hc-hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background-color: #0E0E0E;
+  background-size: cover;
+  background-position: center;
+}
+
+.hc-hero-video,
+.hc-hero-image-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hc-hero-image-bg {
+  background-size: cover;
+  background-position: center;
+}
+
+.hc-hero-fallback-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(55% 60% at 60% 30%, rgba(255,255,255,0.10), transparent 70%),
+    linear-gradient(180deg, #2B2B2B, #0E0E0E);
+}
+.hc-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.35) 55%, rgba(10,10,10,0.78) 100%);
+}
+
+.hc-hero-content {
+  position: relative;
+  z-index: 5;
+  max-width: 640px;
+  padding: 0 32px 110px;
+  color: #FFFFFF;
+}
+.hc-hero-eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--hero-accent);
+  margin-bottom: 18px;
+}
+.hc-hero-content h1 {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: clamp(34px, 5.5vw, 54px);
+  line-height: 1.28;
+  margin-bottom: 22px;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.35);
+}
+.hc-hero-divider {
+  width: 56px;
+  height: 3px;
+  background: var(--hero-accent);
+  margin-bottom: 22px;
+}
+.hc-hero-sub {
+  font-size: 16px;
+  color: #E4E4E4;
+  max-width: 440px;
+}
+
+/* 세로 퀵네비는 제거됨 */
+
+/* ---------- 홈 하단 정보 섹션 (스크롤 시 노출, 흰 배경) ---------- */
+.hc-home-footer {
+  /* background: var(--paper); */
+  background: #4A4A4A;
+  color: var(--ink);
+}
+.hc-home-footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 30px 40px 28px;
+  text-align: left;
+}
+.hc-home-footer-link {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  /* color: var(--ink); */
+  color: #FFFFFF;
+  text-decoration: none;
+  margin-bottom: 28px;
+}
+.hc-home-footer-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.hc-home-footer-line {
+  font-size: 14px;
+  /* color: var(--ink-soft); */
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+.hc-home-footer-line a {
+  /* color: var(--ink-soft); */
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.hc-home-footer-line a:hover { opacity: 0.8; }.hc-home-footer-line a:hover { text-decoration: underline; }
+.hc-home-footer-brand {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  /* color: var(--ink); */
+  color: #FFFFFF;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.hc-home-footer-brand:hover { opacity: 0.8; }
+.hc-home-footer-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+.hc-home-footer-copyright {
+  font-size: 12px;
+  /* color: var(--ink-soft); */
+  color: #FFFFFF;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.hc-home-footer-admin {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 11px;
+  /* color: var(--ink-soft); */
+  color: #FFFFFF;
+  opacity: 0.6;
+  text-decoration: none;
+}
+.hc-home-footer-admin:hover { opacity: 1; }
+
+/* ---------- 내부 페이지 공통 ---------- */
+.hc-page {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.hc-page-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 140px 32px 120px;
+}
+
+/* 예배 안내 (표) */
+.hc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.hc-table thead th {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  padding: 14px 16px;
+  background: var(--paper-tint);
+  border-bottom: 1px solid var(--line);
+}
+.hc-table tbody td {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  color: var(--ink);
+}
+/* .hc-table tbody td:last-child { border-right: none; } */
+.hc-table-group {
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  background: #fff;
+}
+
+@media (max-width: 560px) {
+  .hc-table { font-size: 13px; }
+  .hc-table thead th, .hc-table tbody td { padding: 10px 8px; }
+}
+
+/* 공지사항 리스트 */
+.hc-list {
+  list-style: none;
+
+}
+.hc-list-item { border-bottom: 1px solid var(--line); }
+.hc-list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 20px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.hc-list-row--button {
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.hc-list-title { font-size: 15px; font-weight: 500; }
+.hc-list-title--link {
+  color: var(--ink);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+.hc-list-title--link:hover { opacity: 0.7; }
+.hc-list-meta { font-size: 13px; color: var(--ink-soft); white-space: nowrap; }
+.hc-list-content {
+  padding: 4px 4px 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+}
+
+/* 주보 프리뷰 (오시는 길 지도 박스와 톤 통일) */
+.hc-bulletin-preview {
+  margin: 4px 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.hc-bulletin-preview-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-tint);
+}
+.hc-bulletin-preview-title { font-size: 14px; font-weight: 700; }
+.hc-bulletin-preview-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.hc-bulletin-preview-close:hover { color: var(--ink); }
+.hc-bulletin-preview-image {
+  display: block;
+  width: 100%;
+  max-height: 720px;
+  object-fit: contain;
+  background: var(--paper-tint);
+}
+.hc-bulletin-preview-frame {
+  display: block;
+  width: 100%;
+  height: 720px;
+  border: none;
+}
+.hc-bulletin-preview-download {
+  display: block;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  border-top: 1px solid var(--line);
+}
+.hc-bulletin-preview-download:hover { opacity: 0.7; }
+
+/* 주보 카드 */
+.hc-bulletin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.hc-bulletin-card {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 22px;
+  background: #fff;
+}
+.hc-bulletin-date {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.hc-bulletin-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.hc-bulletin-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+.hc-bulletin-link:hover { opacity: 0.7; }
+
+.hc-loading, .hc-empty {
+  color: var(--ink-soft);
+  font-size: 14px;
+  padding: 24px 0;
+}
+
+/* 오시는 길 */
+.hc-location-box {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 32px;
+  background: #fff;
+}
+.hc-location-name {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.hc-location-line {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.hc-map-wrap {
+  position: relative;
+  margin-top: 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.hc-map {
+  width: 100%;
+  height: 360px;
+  background: var(--paper-tint);
+}
+.hc-map-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--ink-soft);
+  background: var(--paper-tint);
+}
+
+@media (max-width: 760px) {
+  .hc-nav { gap: 20px; }
+  .hc-nav a { font-size: 13px; }
+  .hc-header-inner { gap: 24px; padding: 20px 20px; }
+  .hc-hero-content { padding-bottom: 140px; }
+  .hc-hero-next { left: 32px; right: auto; bottom: 20px; }
+  .hc-page-content { padding: 120px 20px 80px; }
+}
+
+/* ---------- 관리자 ---------- */
+.hc-admin-login-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.hc-admin-login-card {
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+.hc-admin-login-card .hc-eyebrow {
+  justify-content: center;
+}
+.hc-admin-login-card .hc-h1 {
+  margin-bottom: 28px;
+}
+.hc-admin-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.hc-admin-login input {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.hc-admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  position: relative;
+}
+.hc-admin-logout {
+  align-self: flex-end;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+.hc-admin-logout:hover { border-color: var(--accent); color: var(--accent); }
+
+.hc-admin-panel-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hc-admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.hc-admin-form input[type="text"],
+.hc-admin-form input[type="date"],
+.hc-admin-form input[type="file"] {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+}
+.hc-admin-form textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  background: #fff;
+}
+
+.hc-admin-btn {
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.hc-admin-btn:hover { background: #000000; }
+.hc-admin-btn--danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 6px 14px;
+}
+.hc-admin-btn--danger:hover { background: var(--danger); color: #fff; }
+
+.hc-admin-hint {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: -6px;
+  margin-bottom: 16px;
+}
+
+.hc-admin-status {
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.hc-admin-status.ok { color: var(--success); }
+.hc-admin-status.err { color: var(--danger); }
+
+.hc-admin-list {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.hc-admin-list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.hc-intro {
+  padding: 100px 32px;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.hc-intro-inner {
+  max-width: 640px;
+}
+.hc-intro-title {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.35;
+  color: #1A1A1A;
+  margin: 18px 0 22px;
+}
+.hc-intro-sub {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555555;
+}
+.hc-intro .hc-hero-divider {
+  margin: 0 auto 22px;
+}
+
+/* 스크롤 등장 애니메이션 */
+.hc-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.hc-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 5s ease, transform 0.8s ease;
+}
+
+/* ---------- 교회소식 드롭다운 메뉴 ---------- */
+.hc-nav-item {
+  position: relative;
+  flex: 1;
+  text-align: center;
+}
+.hc-header .hc-nav-item > .hc-nav-parent {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 0;
+  cursor: default;
+}
+.hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent {
+  color: #FFFFFF;
+}
+.hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
+.hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
+  color: var(--ink);
+}
+.hc-nav-item > a:hover { border-bottom-color: currentColor; }
+
+.hc-nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 140px;
+  background: #1A1A1A;
+  border-radius: 6px;
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 30;
+}
+.hc-nav-item:hover .hc-nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.hc-nav .hc-nav-dropdown a {
+  display: block;
+  padding: 10px 20px;
+  color: #FFFFFF;
+  font-size: 13px;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+}
+.hc-nav .hc-nav-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 드롭다운 메뉴 글자색: 헤더가 흰색이든 투명이든 항상 흰색 고정 */
+.hc-header .hc-nav-item .hc-nav-dropdown a {
+  color: #FFFFFF;
+}
+.hc-header .hc-nav-item .hc-nav-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- 서브 히어로 (내부 페이지용 작은 배너) ---------- */
+.hc-subhero {
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  background-color: #2B2B2B;
+  background-size: cover;
+  background-position: center;
+}
+.hc-subhero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,10,10,0.15) 0%, rgba(10,10,10,0.4) 100%);
+}
+
+/* ---------- 주보 페이지 ---------- */
+.hc-bulletin-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 32px 120px;
+}
+.hc-bulletin-tabs {
+  display: flex;
+  gap: 32px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 40px;
+}
+.hc-bulletin-tab {
+  padding: 12px 4px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink-soft);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.hc-bulletin-tab--active {
+  color: #B8860B;
+  border-bottom-color: #B8860B;
+}
+
+.hc-bulletin-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 56px;
+}
+@media (max-width: 860px) {
+  .hc-bulletin-layout { grid-template-columns: 1fr; }
+}
+
+.hc-bulletin-list { list-style: none; margin: 0; padding: 0; }
+.hc-bulletin-item { border-bottom: 1px solid var(--line); }
+.hc-bulletin-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+.hc-bulletin-thumb {
+  flex-shrink: 0;
+  width: 60px;
+  height: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--paper-tint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hc-bulletin-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hc-bulletin-thumb-icon {
+  width: 60%;
+  height: 60%;
+}
+.hc-bulletin-info {
+  flex: 1;
+  min-width: 0;
+}
+.hc-bulletin-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hc-bulletin-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.hc-bulletin-badge {
+  background: #B3261E;
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.hc-bulletin-date {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.hc-side-box {
+  background: var(--paper-tint);
+  border-radius: 8px;
+  padding: 24px;
+}
+.hc-side-box-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+.hc-side-box-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: #B8860B;
+  text-decoration: none;
+}
+
+/* ---------- 주보 페이지 제목 영역 (동산교회 스타일) ---------- */
+.hc-bulletin-heading {
+  margin-bottom: 40px;
+}
+.hc-bulletin-heading-eyebrow {
+  font-size: 20px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.hc-bulletin-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.hc-bulletin-heading-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.hc-bulletin-heading-line {
+  flex: 1;
+  height: 2px;
+  background: #B8860B;
+}
+
+.hc-bulletin-list-col {
+  max-width: 700px;
+}
+
+/* ---------- 서브 히어로 페이지 공통 콘텐츠 영역 ---------- */
+.hc-inner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 32px 120px;
+}
+@media (max-width: 760px) {
+  .hc-inner-content { padding: 40px 20px 80px; }
+}
+
+/* ---------- 교회소개 본문 영역 전용 고정 배경 (스크롤해도 사진은 그대로 고정) ---------- */
+.hc-about-content-bg {
+  position: relative;
+  width: 100%;
+  background: var(--paper);
+}
+.hc-about-content-bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  pointer-events: none;
+}
+.hc-about-content-bg-layer.is-visible {
+  opacity: 1;
+}
+@media (max-width: 760px) {
+  /* iOS 사파리는 background-attachment: fixed를 사실상 무시/버벅이므로 스크롤로 대체 */
+  .hc-about-content-bg-layer { background-attachment: scroll; }
+}
+
+.hc-about-intro {
+  margin-top: 0;
+  text-align: center;
+}
+.hc-about-intro-line {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.hc-about-intro-emphasis {
+  font-size: 1.7em;
+  font-weight: 800;
+}
+
+/* ---------- 교회소개 스토리(겨자씨 비유) 텍스트 ---------- */
+.hc-about-story {
+  max-width: 640px;
+  margin: 96px auto 0;
+  text-align: center;
+}
+.hc-about-story-line {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 44px;
+}
+.hc-about-story-line:last-child {
+  margin-bottom: 0;
+}
+.hc-about-story-quote {
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+/* ---------- 교회소개 핵심 비전 3가지 ---------- */
+.hc-about-vision {
+  max-width: 1040px;
+  margin: 120px auto 0;
+  text-align: center;
+}
+.hc-about-vision-eyebrow {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #B8860B;
+  margin-bottom: 12px;
+}
+.hc-about-vision-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 56px;
+}
+.hc-about-vision-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  text-align: left;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.hc-about-vision-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.hc-about-vision-label {
+  flex-shrink: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  padding: 10px 22px;
+  border: 2px solid #B8860B;
+  /* 손글씨로 그린 듯한 삐뚤빼뚤한 사각형 느낌 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+.hc-about-vision-row:nth-child(2) .hc-about-vision-label {
+  border-radius: 15px 225px 15px 255px / 225px 15px 255px 15px;
+}
+.hc-about-vision-row:nth-child(3) .hc-about-vision-label {
+  border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
+}
+.hc-about-vision-dash {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--ink-soft);
+}
+.hc-about-vision-desc {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+@media (max-width: 600px) {
+  .hc-about-vision-row { gap: 12px; }
+  .hc-about-vision-label { font-size: 16px; padding: 8px 18px; }
+  .hc-about-vision-desc { font-size: 14px; width: 100%; }
+}
+
+/* ---------- 오시는 길 페이지 ---------- */
+.hc-location-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 64px 32px 120px;
+  text-align: center;
+}
+
+.hc-location-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.hc-location-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.hc-location-divider-line {
+  flex: 1;
+  max-width: 260px;
+  height: 1px;
+  background: #B8860B;
+}
+.hc-location-divider-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.hc-location-address-line {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 56px;
+}
+
+.hc-location-contacts {
+  display: flex;
+  justify-content: center;
+  gap: 72px;
+  margin-bottom: 64px;
+  flex-wrap: wrap;
+}
+.hc-location-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+.hc-location-contact-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #B8860B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.hc-location-contact:hover .hc-location-contact-icon {
+  background: #9C7209;
+  transform: translateY(-2px);
+}
+.hc-location-contact-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .hc-location-title { font-size: 30px; }
+  .hc-location-contacts { gap: 40px; }
+}
+
+/* ---------- 교회앨범 갤러리 ---------- */
+.hc-album-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+@media (max-width: 900px) {
+  .hc-album-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .hc-album-grid { grid-template-columns: 1fr; }
+}
+
+.hc-album-card {
+  display: flex;
+  flex-direction: column;
+}
+.hc-album-thumb {
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--paper-tint);
+}
+.hc-album-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.hc-album-card:hover .hc-album-thumb img {
+  transform: scale(1.04);
+}
+.hc-album-thumb-empty {
+  width: 100%;
+  height: 100%;
+  background: var(--paper-tint);
+}
+.hc-album-card-title {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.hc-album-card-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.hc-album-search-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+}
+.hc-album-search {
+  width: 320px;
+  max-width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-size: 14px;
+}
+.hc-album-search:focus {
+  outline: none;
+  border-color: #B8860B;
+}
+
+.hc-album-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.hc-album-pagination button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.hc-album-pagination button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.hc-album-pagination .hc-album-page--active {
+  background: #B8860B;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* ---------- 앨범 카드 링크 스타일 (div → Link 전환에 따른 보정) ---------- */
+.hc-album-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ---------- 앨범 상세 페이지 ---------- */
+.hc-album-detail-back {
+  display: inline-block;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.hc-album-detail-back:hover {
+  color: var(--ink);
+}
+.hc-album-detail-meta {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.hc-album-detail-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 40px;
+}
+.hc-album-detail-photo {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+}
+
+.hc-album-detail-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 48px;
+}
+.hc-album-detail-breadcrumb {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- 주보 상세 페이지 ---------- */
+.hc-bulletin-detail-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 48px;
+}
+.hc-bulletin-detail-date {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.hc-bulletin-detail-file {
+  margin-top: 40px;
+}
+.hc-bulletin-detail-page-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.hc-bulletin-detail-frame {
+  width: 100%;
+  height: 80vh;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.hc-bulletin-detail-image {
+  width: 100%;
+  border-radius: 6px;
+  display: block;
+}
+.hc-bulletin-detail-download {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #B8860B;
+  text-decoration: none;
+}
+
+/* ---------- 홈 갤러리 스트립 ---------- */
+.hc-gallery-strip {
+  background: var(--paper-tint);
+  padding: 0 0 20px;
+}
+.hc-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+@media (max-width: 900px) {
+  .hc-gallery-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 500px) {
+  .hc-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.hc-gallery-thumb {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.hc-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.hc-gallery-thumb:hover img {
+  transform: scale(1.06);
+}
+
+.hc-gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 40px;
+  cursor: zoom-out;
+}
+.hc-gallery-lightbox-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 4px;
+  cursor: default;
+}
+.hc-gallery-lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* ---------- 홈 최근 게시물 2단 (사진 밑 배경색 이어서 사용) ---------- */
+.hc-recent-boards {
+  background: var(--paper-tint);
+  padding: 40px 0 100px;
+}
+.hc-recent-boards-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+@media (max-width: 760px) {
+  .hc-recent-boards-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+.hc-recent-col-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  padding-bottom: 14px;
+  border-bottom: 2px solid #B8860B;
+  margin-bottom: 8px;
+}
+.hc-recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hc-recent-list-item {
+  border-bottom: 1px solid var(--line);
+}
+.hc-recent-list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 4px;
+  text-decoration: none;
+  color: inherit;
+}
+.hc-recent-list-title {
+  font-size: 15px;
+  color: var(--ink);
+}
+.hc-recent-list-date {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- 홈 퀵링크 (4개 아이콘 배너) ---------- */
+.hc-quicklinks {
+  background: #FFFFFF;
+  padding: 60px 32px;
+}
+.hc-quicklinks-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+@media (max-width: 600px) {
+  .hc-quicklinks-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+}
+
+.hc-quicklink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.hc-quicklink-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid #B8860B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+.hc-quicklink:hover .hc-quicklink-icon {
+  background: rgba(184, 134, 11, 0.08);
+}
+.hc-quicklink-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---------- 페이지 전환 애니메이션 ---------- */
+.hc-page-transition {
+  animation: hc-fade-in 0.8s ease;
+}
+@keyframes hc-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- 예배안내 (사진 그리드 + 배경 흐린 사진) ---------- */
+.hc-worship-section {
+  position: relative;
+  min-height: 720px;
+  padding: 72px 0 100px;
+  overflow: hidden;
+}
+.hc-worship-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 0.12;
+  filter: grayscale(40%);
+  z-index: 0;
+  pointer-events: none;
+}
+.hc-worship-heading {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin: 0 0 56px;
+}
+.hc-worship-heading-line {
+  width: 80px;
+  height: 2px;
+  background: #B8860B;
+  margin: 20px auto 0;
+}
+.hc-worship-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .hc-worship-inner { grid-template-columns: 1fr; gap: 40px; }
+}
+
+.hc-worship-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  align-content: start;
+}
+.hc-worship-gallery-thumb {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.hc-worship-gallery-thumb img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.hc-worship-gallery-thumb:hover img {
+  transform: scale(1.04);
+}
+
+.hc-worship-divider {
+  width: 100%;
+  height: 1px;
+  background: #B8860B;
+  margin: 20px 0 0;
+}
+
+.hc-worship-group {
+  margin-bottom: 32px;
+}
+.hc-worship-group-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #B8860B;
+  margin-bottom: 14px;
+}
+.hc-worship-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.hc-worship-item-part {
+  font-weight: 700;
+  min-width: 44px;
+  font-size: 15px;
+}
+.hc-worship-item-sep {
+  color: var(--ink-soft);
+}
+
+/* ---------- 교회학교 예배 (배경 사진 없는 버전) ---------- */
+.hc-worship-section--plain {
+  background: #FFFFFF;
+  padding: 80px 0 100px;
+}
+.hc-worship-gallery--2x2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ---------- 히어로 영상 위 로고 ---------- */
+.hc-hero-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, 55%);
+  z-index: 15;
+  pointer-events: none;
+  opacity: 0.65;
+}
+.hc-notice-detail-content {
+  margin-top: 32px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+/* ---------- 인라인 에디터 ---------- */
+.hc-rich-editor {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.hc-rich-editor-toolbar {
+  padding: 8px 10px;
+  background: var(--paper-tint);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.hc-rich-editor-toolbar button {
+  padding: 6px 12px;
+  font-size: 13px;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.hc-rich-editor-body {
+  min-height: 200px;
+  padding: 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  outline: none;
+}
+.hc-rich-editor-body img {
+  max-width: 100%;
+  margin: 10px 0;
+  border-radius: 4px;
+  display: block;
+}
+
+.hc-notice-detail-content {
+  margin-top: 32px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.hc-notice-detail-content img {
+  max-width: 100%;
+  margin: 20px 0;
+  border-radius: 4px;
+  display: block;
+}
+
+.hc-rich-editor {
+  width: 100%;
+  display: block;
+}
+.hc-rich-editor-body {
+  width: 100%;
+  min-height: 220px;
+  box-sizing: border-box;
+}
+
+.hc-rich-editor-wrap {
+  position: relative;
+}
+.hc-rich-editor-body img {
+  cursor: pointer;
+}
+.hc-rich-editor-resize-handle {
+  width: 14px;
+  height: 14px;
+  background: #B8860B;
+  border: 2px solid #FFFFFF;
+  border-radius: 2px;
+  cursor: nwse-resize;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+/* ---------- 말씀 관리 (카테고리 선택) ---------- */
+.hc-admin-category-select {
+  display: flex;
+  gap: 20px;
+  padding: 4px 0;
+}
+.hc-admin-category-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hc-admin-sermon-group {
+  margin-top: 32px;
+}
+.hc-admin-sermon-group-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #B8860B;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.hc-sermon-audio {
+  width: 100%;
+  margin-top: 40px;
+}
+.hc-sermon-download {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #B8860B;
+  text-decoration: none;
+}
+
+/* ---------- 홈 예배안내 미리보기 (우리동산교회 스타일) ---------- */
+.hc-worship-preview {
+  background: var(--paper-tint);
+  padding: 80px 0 100px;
+  text-align: center;
+}
+.hc-worship-preview-header {
+  padding: 0 32px;
+}
+.hc-worship-preview-divider {
+  width: 60px;
+  height: 2px;
+  background: #B8860B;
+  margin: 0 auto 20px;
+}
+.hc-worship-preview-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.hc-worship-preview-verse {
+  font-size: 15px;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-bottom: 48px;
+}
+
+.hc-worship-preview-gallery {
+  width: 100%;
+  margin: 0 0 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+.hc-worship-preview-photo {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--line);
+}
+.hc-worship-preview-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 700px) {
+  .hc-worship-preview-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+.hc-worship-preview-boxes {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+.hc-worship-preview-box {
+  border: 1.5px solid #B8860B;
+  border-radius: 6px;
+  padding: 14px 32px;
+  display: inline-flex;
+  width: 620px;
+  max-width: 100%;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: 10px;
+  justify-content: center;
+  background: #FFFFFF;
+  white-space: nowrap;
+  font-size: 13px;
+}
+@media (max-width: 1320px) {
+  .hc-worship-preview-box {
+    width: 100%;
+  }
+}
+@media (max-width: 720px) {
+  .hc-worship-preview-box {
+    width: 100%;
+    white-space: normal;
+    justify-content: flex-start;
+  }
+}
+.hc-worship-preview-box-label {
+  font-weight: 700;
+  color: #B8860B;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.hc-worship-preview-box-times {
+  font-size: 14px;
+  color: var(--ink);
+}
+.hc-worship-preview-box-times strong {
+  font-weight: 600;
+  margin-right: 2px;
+}
+.hc-worship-preview-sep {
+  margin: 0 8px;
+  color: var(--line);
+}
+/* ---------- 홈 풀블리드 패럴랙스 배너 ---------- */
+.hc-parallax-banner {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+@media (max-width: 760px) {
+  /* iOS 사파리는 background-attachment: fixed를 사실상 무시/버벅이므로 스크롤로 대체 */
+  .hc-parallax-banner {
+    background-attachment: scroll;
+    height: 70vh;
+    min-height: 480px;
+  }
+}
+.hc-parallax-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(60, 90, 50, 0.65);
+}
+.hc-parallax-banner-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #FFFFFF;
+  padding: 0 32px;
+}
+.hc-parallax-banner-badge {
+  display: block;
+  max-width: 260px;
+  width: 40%;
+  margin: 0 auto 24px;
+}
+.hc-parallax-banner-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 700;
+  line-height: 1.4;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.35);
+}
+.hc-parallax-banner-subtitle {
+  margin-top: 14px;
+  font-size: 15px;
+  color: #EFEFEF;
+}
+/* ---------- 홈 갤러리 / 예배안내 사진 스크롤 리빌 ---------- */
+.hc-gallery-grid.hc-reveal .hc-gallery-thumb,
+.hc-worship-preview-gallery.hc-reveal .hc-worship-preview-photo {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.hc-gallery-grid.hc-reveal-visible .hc-gallery-thumb,
+.hc-worship-preview-gallery.hc-reveal-visible .hc-worship-preview-photo {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+/* ---------- 홈 최근 게시물(주보/주일예배) 스크롤 리빌 ---------- */
+.hc-recent-boards-grid.hc-reveal .hc-recent-list-item {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.hc-recent-boards-grid.hc-reveal-visible .hc-recent-list-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+/* ---------- 홈 퀵링크: 중앙 한 점 → 좌우로 펼쳐지는 애니메이션 ---------- */
+.hc-quicklink {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.hc-quicklinks-grid.hc-reveal .hc-quicklink {
+  opacity: 0;
+  transform: translateX(calc(var(--hc-ql-offset) * -1)) scale(0.25);
+}
+.hc-quicklinks-grid.hc-reveal-visible .hc-quicklink {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+@media (max-width: 600px) {
+  /* 모바일은 2열 그리드라 좌우 펼침 효과가 어색해서 위→아래 페이드로 대체 */
+  .hc-quicklinks-grid.hc-reveal .hc-quicklink {
+    transform: translateY(16px) scale(0.85);
+  }
+}
+
+/* ---------- 서브 페이지 하위메뉴 탭 바 (사진과 콘텐츠 사이) ---------- */
+.hc-subnav {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--line);
+}
+.hc-subnav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 32px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.hc-subnav-pill {
+  display: inline-block;
+  padding: 6.4px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  font-size: 10.4px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.hc-subnav-pill:hover {
+  border-color: #B8860B;
+  color: #B8860B;
+}
+.hc-subnav-pill--active {
+  background: #B8860B;
+  border-color: #B8860B;
+  color: #FFFFFF;
+}
+.hc-subnav-pill--active:hover {
+  color: #FFFFFF;
+}
+@media (max-width: 760px) {
+  .hc-subnav-inner { padding: 14px 20px; }
+}
+
+/* ---------- 관리자: 홈영상 관리 패널 ---------- */
+.hc-admin-panel-hint {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  display: block;
+}
+.hc-admin-homevideo-current {
+  margin-bottom: 20px;
+}
+.hc-admin-homevideo-preview {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+/* ---------- 관리자: 사이트 이미지 관리 패널 ---------- */
+.hc-admin-siteimage-select {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+.hc-admin-siteimage-current {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.hc-admin-siteimage-thumb {
+  width: 140px;
+  flex: 0 0 140px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  text-align: center;
+}
+.hc-admin-siteimage-thumb img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+.hc-admin-siteimage-thumb button {
+  width: 100%;
+  padding: 6px 0;
+  border: none;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  color: var(--danger);
+  font-size: 12px;
+  cursor: pointer;
+}
+.hc-admin-siteimage-thumb button:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.hc-admin-siteimage-move {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+.hc-admin-siteimage-move button {
+  flex: 1 1 50%;
+  min-width: 0;
+  padding: 6px 0;
+  border: none;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.hc-admin-siteimage-move button:first-child {
+  border-right: 1px solid var(--line);
+}
+.hc-admin-siteimage-move button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ---------- 관리자 페이지: 사이드바 + 콘텐츠 레이아웃 ---------- */
+.hc-admin-shell {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 72px;
+}
+
+.hc-admin-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--paper-tint);
+  border-right: 1px solid var(--line);
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 72px;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+}
+.hc-admin-sidebar-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0 28px;
+  margin-bottom: 20px;
+}
+.hc-admin-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.hc-admin-sidebar-item {
+  text-align: left;
+  padding: 14px 28px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.hc-admin-sidebar-item:hover {
+  background: rgba(184, 134, 11, 0.06);
+  color: var(--ink);
+}
+.hc-admin-sidebar-item--active {
+  background: rgba(184, 134, 11, 0.1);
+  border-left-color: #B8860B;
+  color: #B8860B;
+  font-weight: 700;
+}
+.hc-admin-sidebar-logout {
+  margin: 20px 28px 0;
+  padding: 10px 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.hc-admin-sidebar-logout:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.hc-admin-content {
+  flex: 1;
+  margin-left: 240px;
+  padding: 48px 56px 120px;
+  max-width: 900px;
+}
+.hc-admin-content-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.hc-admin-content-body .hc-admin-panel-title {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .hc-admin-shell {
+    flex-direction: column;
+  }
+  .hc-admin-sidebar {
+    position: static;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 16px;
+    gap: 4px;
+  }
+  .hc-admin-sidebar-title {
+    display: none;
+  }
+  .hc-admin-sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: none;
+    width: 100%;
+  }
+  .hc-admin-sidebar-item {
+    padding: 8px 14px;
+    border-left: none;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+  }
+  .hc-admin-sidebar-item--active {
+    border-color: #B8860B;
+  }
+  .hc-admin-sidebar-logout {
+    margin: 12px 0 0;
+    width: 100%;
+  }
+  .hc-admin-content {
+    margin-left: 0;
+    padding: 32px 20px 80px;
+    max-width: 100%;
+  }
+}
