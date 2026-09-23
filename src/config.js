@@ -60,6 +60,9 @@
 export const API_BASE_URL = "https://13.210.86.184.nip.io";
 // export const API_BASE_URL = "http://localhost:8080";
 
+// 토스페이먼츠 클라이언트 키 (공개키, 테스트키로 시작 — 실결제 승인 나면 live_ck_ 로 교체)
+export const TOSS_CLIENT_KEY = "test_ck_여기에_토스페이먼츠_테스트_클라이언트키_입력";
+
 // public/images 폴더에 사진 넣고 파일명만 바꿔주면 됩니다.
 // 예: public/images/hero.jpg 에 넣었으면 "/images/hero.jpg"
 // 없으면 null로 두면 그라데이션 배경으로 자동 대체됩니다.
@@ -125,6 +128,7 @@ export const NOTICE_HERO_IMAGE_URL = "images/notice-hero.jpg";
 export const LOCATION_HERO_IMAGE_URL = "images/location-hero.jpg";
 export const ALBUM_HERO_IMAGE_URL = "images/album-hero.jpg";
 export const ABOUT_HERO_IMAGE_URL = "images/about-hero.jpg";
+export const DONATION_HERO_IMAGE_URL = null;
 
 // 교회소개 본문("교회소개 / 준비중입니다..." 영역) 뒤에 깔리는 고정 배경 사진
 // 스크롤해도 이 사진 자체는 움직이지 않고, 그 위로 텍스트만 스크롤됩니다
@@ -241,6 +245,7 @@ export const SITE_IMAGE_GROUPS = [
   { key: "location_hero", label: "오시는길 배너", type: "single" },
   { key: "album_hero", label: "교회앨범 배너", type: "single" },
   { key: "about_hero", label: "교회소개 배너", type: "single" },
+  { key: "donation_hero", label: "온라인 헌금 배너", type: "single" },
   { key: "about_content_bg", label: "교회소개 본문 고정 배경", type: "single" },
   { key: "sunday_worship_hero", label: "주일예배 배너", type: "single" },
   { key: "dawn_worship_hero", label: "새벽예배 배너", type: "single" },

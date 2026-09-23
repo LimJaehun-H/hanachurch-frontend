@@ -2171,3 +2171,225 @@
     max-width: 100%;
   }
 }
+/* ---------- 온라인 헌금 페이지 ---------- */
+.hc-donation-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 64px 32px 120px;
+  text-align: center;
+}
+
+.hc-donation-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.hc-donation-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.hc-donation-divider-line {
+  flex: 1;
+  max-width: 200px;
+  height: 1px;
+  background: #B8860B;
+}
+.hc-donation-divider-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.hc-donation-desc {
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+.hc-donation-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 40px 32px;
+  text-align: left;
+}
+
+.hc-donation-field {
+  margin-bottom: 28px;
+}
+
+.hc-donation-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+  font-family: 'Pretendard', sans-serif;
+}
+.hc-donation-optional {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.hc-donation-amounts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.hc-donation-amount-btn {
+  padding: 14px 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-tint);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-donation-amount-btn:hover {
+  border-color: #B8860B;
+}
+.hc-donation-amount-btn--active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.hc-donation-input {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Pretendard', sans-serif;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+.hc-donation-input:focus {
+  outline: none;
+  border-color: #B8860B;
+}
+
+.hc-donation-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+  margin-bottom: 24px;
+  font-size: 15px;
+  color: var(--ink-soft);
+  font-family: 'Pretendard', sans-serif;
+}
+.hc-donation-total strong {
+  font-size: 22px;
+  color: var(--ink);
+}
+
+.hc-donation-error {
+  color: var(--danger);
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.hc-donation-submit {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 17px;
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.hc-donation-submit:hover {
+  opacity: 0.85;
+}
+.hc-donation-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .hc-donation-title { font-size: 30px; }
+  .hc-donation-amounts { grid-template-columns: repeat(2, 1fr); }
+  .hc-donation-card { padding: 28px 20px; }
+}
+
+/* ---------- 헌금 결과 페이지 (성공/실패) ---------- */
+.hc-donation-result-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 120px 32px 160px;
+  text-align: center;
+}
+
+.hc-donation-result-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  font-size: 32px;
+}
+.hc-donation-result-icon--success {
+  background: var(--success);
+  color: #fff;
+}
+.hc-donation-result-icon--error {
+  background: var(--danger);
+  color: #fff;
+}
+.hc-donation-result-icon--pending {
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+}
+
+.hc-donation-result-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.hc-donation-result-desc {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.hc-donation-result-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.hc-donation-result-btn:hover {
+  opacity: 0.85;
+}
