@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loadTossPayments } from "@tosspayments/payment-sdk";
+import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
@@ -53,8 +53,13 @@ export default function Offering() {
       const data = await res.json();
 
       const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
-      await tossPayments.requestPayment("카드", {
-        amount: finalAmount,
+      const payment = tossPayments.payment({ customerKey: ANONYMOUS });
+      await payment.requestPayment({
+        method: "CARD",
+        amount: {
+          currency: "KRW",
+          value: finalAmount,
+        },
         orderId: data.orderId,
         orderName: "온라인 헌금",
         customerName: donorName.trim() || "익명",
