@@ -61,7 +61,7 @@ export const API_BASE_URL = "https://13.210.86.184.nip.io";
 // export const API_BASE_URL = "http://localhost:8080";
 
 // 토스페이먼츠 클라이언트 키 (공개키, 테스트키로 시작 — 실결제 승인 나면 live_ck_ 로 교체)
-export const TOSS_CLIENT_KEY = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+export const TOSS_CLIENT_KEY = "test_ck_DnyRpQWGrNDJ9gZAGjm73Kwv1M9E";
 
 // public/images 폴더에 사진 넣고 파일명만 바꿔주면 됩니다.
 // 예: public/images/hero.jpg 에 넣었으면 "/images/hero.jpg"
