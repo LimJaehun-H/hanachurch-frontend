@@ -114,7 +114,7 @@ export default function Header({ variant = "solid" }) {
           </div>
 
           <div className="hc-nav-item">
-            <Link to="/donation" className="hc-nav-parent">
+            <Link to="/offering" className="hc-nav-parent">
               온라인 헌금
             </Link>
           </div>

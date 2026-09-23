@@ -4,7 +4,7 @@ import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { API_BASE_URL } from "../config.js";
 
-export default function DonationSuccess() {
+export default function OfferingSuccess() {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("confirming"); // confirming | success | error
   const [message, setMessage] = useState("");
@@ -20,7 +20,7 @@ export default function DonationSuccess() {
       return;
     }
 
-    fetch(`${API_BASE_URL}/api/donations/confirm`, {
+    fetch(`${API_BASE_URL}/api/offerings/confirm`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),
@@ -41,25 +41,25 @@ export default function DonationSuccess() {
   return (
     <div className="hc-page">
       <Header variant="solid" />
-      <main className="hc-donation-result-page">
+      <main className="hc-offering-result-page">
         {status === "confirming" && (
           <>
-            <div className="hc-donation-result-icon hc-donation-result-icon--pending">⏳</div>
-            <h1 className="hc-donation-result-title">결제를 확인하고 있습니다</h1>
-            <p className="hc-donation-result-desc">잠시만 기다려주세요.</p>
+            <div className="hc-offering-result-icon hc-offering-result-icon--pending">⏳</div>
+            <h1 className="hc-offering-result-title">결제를 확인하고 있습니다</h1>
+            <p className="hc-offering-result-desc">잠시만 기다려주세요.</p>
           </>
         )}
 
         {status === "success" && (
           <>
-            <div className="hc-donation-result-icon hc-donation-result-icon--success">✓</div>
-            <h1 className="hc-donation-result-title">헌금이 완료되었습니다</h1>
-            <p className="hc-donation-result-desc">
+            <div className="hc-offering-result-icon hc-offering-result-icon--success">✓</div>
+            <h1 className="hc-offering-result-title">헌금이 완료되었습니다</h1>
+            <p className="hc-offering-result-desc">
               {amount ? `${Number(amount).toLocaleString()}원이 정상적으로 헌금되었습니다.` : ""}
               <br />
               귀한 헌금 감사드립니다.
             </p>
-            <Link to="/" className="hc-donation-result-btn">
+            <Link to="/" className="hc-offering-result-btn">
               홈으로 돌아가기
             </Link>
           </>
@@ -67,10 +67,10 @@ export default function DonationSuccess() {
 
         {status === "error" && (
           <>
-            <div className="hc-donation-result-icon hc-donation-result-icon--error">✕</div>
-            <h1 className="hc-donation-result-title">결제 승인에 실패했습니다</h1>
-            <p className="hc-donation-result-desc">{message}</p>
-            <Link to="/donation" className="hc-donation-result-btn">
+            <div className="hc-offering-result-icon hc-offering-result-icon--error">✕</div>
+            <h1 className="hc-offering-result-title">결제 승인에 실패했습니다</h1>
+            <p className="hc-offering-result-desc">{message}</p>
+            <Link to="/offering" className="hc-offering-result-btn">
               다시 시도하기
             </Link>
           </>

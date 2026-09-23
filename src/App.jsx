@@ -18,9 +18,9 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import PageTransition from "./components/PageTransition.jsx";
 import NoticeDetail from "./pages/NoticeDetail.jsx";
 import SermonDetail from "./pages/SermonDetail.jsx";
-import Donation from "./pages/Donation.jsx";
-import DonationSuccess from "./pages/DonationSuccess.jsx";
-import DonationFail from "./pages/DonationFail.jsx";
+import Offering from "./pages/Offering.jsx";
+import OfferingSuccess from "./pages/OfferingSuccess.jsx";
+import OfferingFail from "./pages/OfferingFail.jsx";
 
 export default function App() {
   return (
@@ -42,9 +42,9 @@ export default function App() {
           <Route path="/bulletin/:id" element={<BulletinDetail />} />
           <Route path="/notice/:id" element={<NoticeDetail />} />
           <Route path="/sermon/:id" element={<SermonDetail />} />
-          <Route path="/donation" element={<Donation />} />
-          <Route path="/donation/success" element={<DonationSuccess />} />
-          <Route path="/donation/fail" element={<DonationFail />} />
+          <Route path="/offering" element={<Offering />} />
+          <Route path="/offering/success" element={<OfferingSuccess />} />
+          <Route path="/offering/fail" element={<OfferingFail />} />
         </Routes>
       </PageTransition>
     </>

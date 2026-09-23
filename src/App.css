@@ -2172,14 +2172,14 @@
   }
 }
 /* ---------- 온라인 헌금 페이지 ---------- */
-.hc-donation-page {
+.hc-offering-page {
   max-width: 640px;
   margin: 0 auto;
   padding: 64px 32px 120px;
   text-align: center;
 }
 
-.hc-donation-title {
+.hc-offering-title {
   font-family: 'Pretendard', sans-serif;
   font-size: 40px;
   font-weight: 700;
@@ -2187,34 +2187,34 @@
   margin-bottom: 24px;
 }
 
-.hc-donation-divider {
+.hc-offering-divider {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
   margin-bottom: 24px;
 }
-.hc-donation-divider-line {
+.hc-offering-divider-line {
   flex: 1;
   max-width: 200px;
   height: 1px;
   background: #B8860B;
 }
-.hc-donation-divider-label {
+.hc-offering-divider-label {
   font-size: 13px;
   letter-spacing: 0.1em;
   color: var(--ink-soft);
   white-space: nowrap;
 }
 
-.hc-donation-desc {
+.hc-offering-desc {
   font-size: 16px;
   color: var(--ink-soft);
   margin-bottom: 48px;
   line-height: 1.6;
 }
 
-.hc-donation-card {
+.hc-offering-card {
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -2222,11 +2222,11 @@
   text-align: left;
 }
 
-.hc-donation-field {
+.hc-offering-field {
   margin-bottom: 28px;
 }
 
-.hc-donation-label {
+.hc-offering-label {
   display: block;
   font-size: 14px;
   font-weight: 700;
@@ -2234,18 +2234,18 @@
   margin-bottom: 12px;
   font-family: 'Pretendard', sans-serif;
 }
-.hc-donation-optional {
+.hc-offering-optional {
   font-weight: 400;
   color: var(--ink-soft);
 }
 
-.hc-donation-amounts {
+.hc-offering-amounts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
-.hc-donation-amount-btn {
+.hc-offering-amount-btn {
   padding: 14px 8px;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -2257,16 +2257,16 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.hc-donation-amount-btn:hover {
+.hc-offering-amount-btn:hover {
   border-color: #B8860B;
 }
-.hc-donation-amount-btn--active {
+.hc-offering-amount-btn--active {
   background: var(--ink);
   border-color: var(--ink);
   color: var(--paper);
 }
 
-.hc-donation-input {
+.hc-offering-input {
   width: 100%;
   margin-top: 12px;
   padding: 14px 16px;
@@ -2277,12 +2277,12 @@
   color: var(--ink);
   box-sizing: border-box;
 }
-.hc-donation-input:focus {
+.hc-offering-input:focus {
   outline: none;
   border-color: #B8860B;
 }
 
-.hc-donation-total {
+.hc-offering-total {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2293,19 +2293,19 @@
   color: var(--ink-soft);
   font-family: 'Pretendard', sans-serif;
 }
-.hc-donation-total strong {
+.hc-offering-total strong {
   font-size: 22px;
   color: var(--ink);
 }
 
-.hc-donation-error {
+.hc-offering-error {
   color: var(--danger);
   font-size: 14px;
   margin-bottom: 16px;
   text-align: center;
 }
 
-.hc-donation-submit {
+.hc-offering-submit {
   width: 100%;
   padding: 18px;
   border: none;
@@ -2318,29 +2318,29 @@
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
-.hc-donation-submit:hover {
+.hc-offering-submit:hover {
   opacity: 0.85;
 }
-.hc-donation-submit:disabled {
+.hc-offering-submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 @media (max-width: 600px) {
-  .hc-donation-title { font-size: 30px; }
-  .hc-donation-amounts { grid-template-columns: repeat(2, 1fr); }
-  .hc-donation-card { padding: 28px 20px; }
+  .hc-offering-title { font-size: 30px; }
+  .hc-offering-amounts { grid-template-columns: repeat(2, 1fr); }
+  .hc-offering-card { padding: 28px 20px; }
 }
 
 /* ---------- 헌금 결과 페이지 (성공/실패) ---------- */
-.hc-donation-result-page {
+.hc-offering-result-page {
   max-width: 500px;
   margin: 0 auto;
   padding: 120px 32px 160px;
   text-align: center;
 }
 
-.hc-donation-result-icon {
+.hc-offering-result-icon {
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -2350,20 +2350,20 @@
   margin: 0 auto 28px;
   font-size: 32px;
 }
-.hc-donation-result-icon--success {
+.hc-offering-result-icon--success {
   background: var(--success);
   color: #fff;
 }
-.hc-donation-result-icon--error {
+.hc-offering-result-icon--error {
   background: var(--danger);
   color: #fff;
 }
-.hc-donation-result-icon--pending {
+.hc-offering-result-icon--pending {
   background: var(--paper-tint);
   border: 1px solid var(--line);
 }
 
-.hc-donation-result-title {
+.hc-offering-result-title {
   font-family: 'Pretendard', sans-serif;
   font-size: 26px;
   font-weight: 700;
@@ -2371,14 +2371,14 @@
   margin-bottom: 16px;
 }
 
-.hc-donation-result-desc {
+.hc-offering-result-desc {
   font-size: 15px;
   color: var(--ink-soft);
   line-height: 1.7;
   margin-bottom: 40px;
 }
 
-.hc-donation-result-btn {
+.hc-offering-result-btn {
   display: inline-block;
   padding: 14px 32px;
   border-radius: 10px;
@@ -2390,6 +2390,6 @@
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
-.hc-donation-result-btn:hover {
+.hc-offering-result-btn:hover {
   opacity: 0.85;
 }
