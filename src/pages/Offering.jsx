@@ -97,9 +97,11 @@ export default function Offering() {
             <span className="hc-offering-divider-label">Offering</span>
             <span className="hc-offering-divider-line" />
           </div>
-          <p className="hc-offering-desc">
-            정성을 담아 드리는 헌금이 하나님께 온전히 드려지길 바랍니다.
-          </p>
+          {!result && (
+            <p className="hc-offering-desc">
+              정성을 담아 드리는 헌금이 하나님께 온전히 드려지길 바랍니다.
+            </p>
+          )}
         </div>
 
         <div className="hc-offering-card">
