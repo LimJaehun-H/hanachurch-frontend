@@ -2357,8 +2357,28 @@
 .hc-offering-result-page {
   max-width: 500px;
   margin: 0 auto;
-  padding: 120px 32px 160px;
+  padding: 180px 32px 160px;
   text-align: center;
+}
+/* 온라인 헌금 페이지 카드 안에서, 페이지 이동 없이 보여주는 결제 실패/취소 결과 */
+.hc-offering-result-inline {
+  text-align: center;
+  padding: 20px 0;
+}
+.hc-offering-result-inline .hc-offering-result-icon {
+  margin: 0 auto 20px;
+}
+.hc-offering-result-inline .hc-offering-result-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.hc-offering-result-inline .hc-offering-result-desc {
+  margin-bottom: 28px;
+}
+.hc-offering-result-inline .hc-offering-submit {
+  width: auto;
+  padding: 14px 32px;
+  display: inline-block;
 }
 
 .hc-offering-result-icon {

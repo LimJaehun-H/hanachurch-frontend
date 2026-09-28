@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
@@ -10,7 +10,6 @@ import { getMemberLoginId, getMemberName, memberAuthFetch } from "../utils/membe
 const AMOUNT_OPTIONS = [1000, 3000, 5000, 10000];
 
 export default function Offering() {
-  const navigate = useNavigate();
   const isLoggedIn = !!getMemberLoginId();
   const [selectedAmount, setSelectedAmount] = useState(10000);
   const [isCustom, setIsCustom] = useState(false);
@@ -18,6 +17,8 @@ export default function Offering() {
   const [donorName, setDonorName] = useState(() => getMemberName() || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  // 결제 취소/실패 시, 페이지 이동 없이 카드 영역만 결과 화면으로 바꿔서 보여주기 위한 상태
+  const [result, setResult] = useState(null); // { message: string } | null
 
   const finalAmount = isCustom ? Number(customAmount.replace(/[^0-9]/g, "")) : selectedAmount;
 
@@ -72,14 +73,14 @@ export default function Offering() {
       });
     } catch (err) {
       console.error(err);
-      // 토스페이먼츠 결제창에서 사용자가 직접 닫거나 취소한 경우 vs 진짜 오류를
-      // 구분해서, 결제 성공 화면과 똑같은 스타일의 결과 페이지로 안내
+      // 토스페이먼츠 결제창에서 사용자가 직접 닫거나 취소한 경우 vs 진짜 오류를 구분해서 안내
       const isUserCancel = err?.code === "USER_CANCEL" || err?.code === "PAY_PROCESS_CANCELED";
       const message = isUserCancel
         ? "결제를 취소하셨습니다."
         : "결제 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
       setLoading(false);
-      navigate(`/offering/fail?message=${encodeURIComponent(message)}`);
+      // 페이지 이동 없이, "온라인 헌금" 제목/설명은 그대로 두고 카드 영역만 결과 화면으로 전환
+      setResult({ message });
     }
   };
 
@@ -111,7 +112,22 @@ export default function Offering() {
             </div>
           )}
 
-          {isLoggedIn && (
+          {isLoggedIn && result && (
+            <div className="hc-offering-result-inline">
+              <div className="hc-offering-result-icon hc-offering-result-icon--error">✕</div>
+              <h2 className="hc-offering-result-title">결제가 완료되지 않았습니다</h2>
+              <p className="hc-offering-result-desc">{result.message}</p>
+              <button
+                type="button"
+                className="hc-offering-submit"
+                onClick={() => setResult(null)}
+              >
+                다시 시도하기
+              </button>
+            </div>
+          )}
+
+          {isLoggedIn && !result && (
           <>
           <div className="hc-offering-field">
             <label className="hc-offering-label">헌금 금액</label>
