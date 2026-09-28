@@ -71,7 +71,13 @@ export default function Offering() {
       });
     } catch (err) {
       console.error(err);
-      setError("결제 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      // 토스페이먼츠 결제창에서 사용자가 직접 닫거나 취소한 경우
+      const isUserCancel = err?.code === "USER_CANCEL" || err?.code === "PAY_PROCESS_CANCELED";
+      setError(
+        isUserCancel
+          ? "결제를 취소하셨습니다."
+          : "결제 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
       setLoading(false);
     }
   };
