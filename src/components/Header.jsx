@@ -6,7 +6,7 @@ import {
   HEADER_LOGO_WHITE_IMAGE_URL,
   HEADER_LOGO_DARK_IMAGE_URL,
 } from "../config.js";
-import { getMemberLoginId, clearMemberSession, subscribeMemberAuthChange } from "../utils/memberAuth.js";
+import { getMemberLoginId, getMemberName, clearMemberSession, subscribeMemberAuthChange } from "../utils/memberAuth.js";
 
 // variant: "overlay" (히어로 위, 스크롤에 따라 투명↔흰색 전환) | "solid" (내부 페이지, 항상 흰색)
 export default function Header({ variant = "solid" }) {
@@ -17,6 +17,7 @@ export default function Header({ variant = "solid" }) {
   const [topbarHidden, setTopbarHidden] = useState(false);
   // 로그인한 회원의 아이디 (로그인 안 했으면 null)
   const [memberLoginId, setMemberLoginId] = useState(() => getMemberLoginId());
+  const [memberName, setMemberName] = useState(() => getMemberName());
   // 맨 위(투명 히어로 위, 스크롤 전) 상태용 흰색 로고
   const [logoWhiteUrl, setLogoWhiteUrl] = useState(HEADER_LOGO_WHITE_IMAGE_URL || null);
   // 스크롤 후 / 내부 페이지(흰 배경) 상태용 기본(컬러) 로고
@@ -67,7 +68,10 @@ export default function Header({ variant = "solid" }) {
 
   // 로그인 상태 변화(로그인/로그아웃, 다른 탭에서의 변경) 구독
   useEffect(() => {
-    const update = () => setMemberLoginId(getMemberLoginId());
+    const update = () => {
+      setMemberLoginId(getMemberLoginId());
+      setMemberName(getMemberName());
+    };
     return subscribeMemberAuthChange(update);
   }, []);
 
@@ -101,7 +105,7 @@ export default function Header({ variant = "solid" }) {
         <div className="hc-topbar-inner">
           {memberLoginId ? (
             <>
-              <span className="hc-topbar-link hc-topbar-link--static">{memberLoginId}님</span>
+              <span className="hc-topbar-link hc-topbar-link--static">{(memberName || memberLoginId)}성도님</span>
               <button type="button" className="hc-topbar-link hc-topbar-btn" onClick={handleLogout}>
                 로그아웃
               </button>

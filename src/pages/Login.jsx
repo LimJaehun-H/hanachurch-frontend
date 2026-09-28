@@ -31,7 +31,7 @@ export default function Login() {
         throw new Error(data.message || "로그인에 실패했습니다.");
       }
 
-      setMemberSession(data.token, loginId.trim());
+      setMemberSession(data.token, loginId.trim(), data.name);
       navigate("/");
     } catch (err) {
       setError(err.message);
