@@ -1969,6 +1969,13 @@
   background: #000;
 }
 /* ---------- 관리자: 사이트 이미지 관리 패널 ---------- */
+.hc-admin-siteimage-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 .hc-admin-siteimage-select {
   width: 100%;
   max-width: 320px;
@@ -1977,7 +1984,21 @@
   border-radius: 6px;
   font-size: 14px;
   background: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+}
+.hc-admin-siteimage-preview-btn {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper-tint);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.hc-admin-siteimage-preview-btn:hover {
+  background: #ececea;
 }
 .hc-admin-siteimage-current {
   display: flex;

@@ -75,21 +75,45 @@ export default function AdminSiteImagePanel({ token, onAuthExpired }) {
     }
   };
 
+  // 드롭다운을 section(홈 화면/교회소개/예배안내 등)별로 묶어서 보여주기 위한 그룹핑
+  const groupedBySection = SITE_IMAGE_GROUPS.reduce((acc, g) => {
+    (acc[g.section] = acc[g.section] || []).push(g);
+    return acc;
+  }, {});
+
+  const handlePreview = () => {
+    if (selectedGroup?.page) {
+      window.open(selectedGroup.page, "_blank");
+    }
+  };
+
   return (
     <section className="hc-admin-panel">
       <h2 className="hc-admin-panel-title">사이트 이미지 관리</h2>
 
-      <select
-        className="hc-admin-siteimage-select"
-        value={selectedKey}
-        onChange={(e) => setSelectedKey(e.target.value)}
-      >
-        {SITE_IMAGE_GROUPS.map((g) => (
-          <option key={g.key} value={g.key}>
-            {g.label}
-          </option>
-        ))}
-      </select>
+      <div className="hc-admin-siteimage-picker">
+        <select
+          className="hc-admin-siteimage-select"
+          value={selectedKey}
+          onChange={(e) => setSelectedKey(e.target.value)}
+        >
+          {Object.entries(groupedBySection).map(([section, items]) => (
+            <optgroup key={section} label={section}>
+              {items.map((g) => (
+                <option key={g.key} value={g.key}>
+                  {g.label}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+
+        {selectedGroup?.page && (
+          <button type="button" className="hc-admin-siteimage-preview-btn" onClick={handlePreview}>
+            이 사진이 쓰이는 페이지 보기 ↗
+          </button>
+        )}
+      </div>
 
       <div className="hc-admin-siteimage-current">
         {images.length === 0 && <p className="hc-empty">등록된 사진이 없습니다.</p>}

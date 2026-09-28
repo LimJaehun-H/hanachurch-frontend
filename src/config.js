@@ -238,27 +238,40 @@ export const NAV_GROUPS = [
 ];
 // 어떤 자리(groupKey)들이 있고, 각각 단일형인지 갤러리형인지 정의
 // 나중에 새 이미지 자리가 필요하면, 여기에 한 줄만 추가하면 됩니다.
+// section: 관리자 화면에서 드롭다운을 묶어 보여줄 때 쓰는 그룹명
+// page: "미리보기" 버튼을 눌렀을 때 이동할 실제 페이지 경로
 export const SITE_IMAGE_GROUPS = [
-  { key: "notice_hero", label: "교회공지 배너", type: "single" },
-  { key: "bulletin_hero", label: "교회주보 배너", type: "single" },
-  { key: "worship_hero", label: "예배안내 배너", type: "single" },
-  { key: "location_hero", label: "오시는길 배너", type: "single" },
-  { key: "album_hero", label: "교회앨범 배너", type: "single" },
-  { key: "about_hero", label: "교회소개 배너", type: "single" },
-  { key: "offering_hero", label: "온라인 헌금 배너", type: "single" },
-  { key: "about_content_bg", label: "교회소개 본문 고정 배경", type: "single" },
-  { key: "sunday_worship_hero", label: "주일예배 배너", type: "single" },
-  { key: "dawn_worship_hero", label: "새벽예배 배너", type: "single" },
-  { key: "worship_preview", label: "홈 예배안내 사진", type: "gallery" },
-  { key: "home_gallery", label: "홈 갤러리 사진", type: "gallery" },
-  { key: "home_hero_image", label: "홈 배경 이미지", type: "single" },
-  { key: "home_logo", label: "홈 로고", type: "single" },
-  { key: "header_logo_white", label: "헤더 로고 (흰색, 맨 위)", type: "single" },
-  { key: "header_logo_dark", label: "헤더 로고 (기본/컬러, 스크롤 시)", type: "single" },
-  { key: "footer_logo_white", label: "푸터 로고 (전체 흰색)", type: "single" },
-  { key: "home_banner", label: "홈 패럴랙스 배너", type: "single" },
-  { key: "worship_page_bg", label: "예배안내 배경사진", type: "single" },
-  { key: "home_banner_badge", label: "홈 배너 배지/로고 이미지", type: "single" },
-  { key: "worship_gallery", label: "예배안내 상세 사진들", type: "gallery" },
-  { key: "church_school_gallery", label: "교회학교 예배 사진들", type: "gallery" },
+  // 홈 화면
+  { key: "home_hero_image", label: "홈 배경 이미지", type: "single", section: "홈 화면", page: "/" },
+  { key: "home_logo", label: "홈 로고", type: "single", section: "홈 화면", page: "/" },
+  { key: "home_banner", label: "홈 패럴랙스 배너", type: "single", section: "홈 화면", page: "/" },
+  { key: "home_banner_badge", label: "홈 배너 배지/로고 이미지", type: "single", section: "홈 화면", page: "/" },
+  { key: "home_gallery", label: "홈 갤러리 사진", type: "gallery", section: "홈 화면", page: "/" },
+  { key: "worship_preview", label: "홈 예배안내 미리보기 사진", type: "gallery", section: "홈 화면", page: "/" },
+
+  // 헤더 / 푸터 (전체 페이지 공통)
+  { key: "header_logo_white", label: "헤더 로고 (흰색, 맨 위)", type: "single", section: "헤더/푸터 (전체 페이지 공통)", page: "/" },
+  { key: "header_logo_dark", label: "헤더 로고 (기본/컬러, 스크롤 시)", type: "single", section: "헤더/푸터 (전체 페이지 공통)", page: "/" },
+  { key: "footer_logo_white", label: "푸터 로고 (전체 흰색)", type: "single", section: "헤더/푸터 (전체 페이지 공통)", page: "/" },
+
+  // 교회소개
+  { key: "about_hero", label: "교회소개 배너", type: "single", section: "교회소개", page: "/about" },
+  { key: "about_content_bg", label: "교회소개 본문 고정 배경", type: "single", section: "교회소개", page: "/about" },
+
+  // 예배안내
+  { key: "worship_hero", label: "예배안내 배너", type: "single", section: "예배안내", page: "/worship" },
+  { key: "worship_page_bg", label: "예배안내 배경사진", type: "single", section: "예배안내", page: "/worship" },
+  { key: "worship_gallery", label: "예배안내 상세 사진들", type: "gallery", section: "예배안내", page: "/worship" },
+  { key: "church_school_gallery", label: "교회학교 예배 사진들", type: "gallery", section: "예배안내", page: "/worship" },
+  { key: "sunday_worship_hero", label: "주일예배 배너", type: "single", section: "예배안내", page: "/worship/sunday" },
+  { key: "dawn_worship_hero", label: "새벽예배 배너", type: "single", section: "예배안내", page: "/worship/dawn" },
+
+  // 교회소식 / 주보 / 앨범
+  { key: "notice_hero", label: "교회공지 배너", type: "single", section: "교회소식", page: "/notice" },
+  { key: "bulletin_hero", label: "교회주보 배너", type: "single", section: "교회주보", page: "/bulletin" },
+  { key: "album_hero", label: "교회앨범 배너", type: "single", section: "교회앨범", page: "/album" },
+
+  // 오시는 길 / 온라인 헌금
+  { key: "location_hero", label: "오시는길 배너", type: "single", section: "오시는 길", page: "/location" },
+  { key: "offering_hero", label: "온라인 헌금 배너", type: "single", section: "온라인 헌금", page: "/offering" },
 ];

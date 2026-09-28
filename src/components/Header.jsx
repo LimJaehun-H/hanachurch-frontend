@@ -59,6 +59,9 @@ export default function Header({ variant = "solid" }) {
   }, [variant]);
 
   // 상단바(로그인/회원가입)는 variant와 상관없이 페이지 맨 위에서만 노출
+  // 단, 관리자 페이지에서는 표시하지 않음 (헤더 높이가 달라져 사이드바와 겹치는 문제 방지)
+  const isAdminPage = location.pathname.startsWith("/admin");
+
   useEffect(() => {
     const handleTopbarScroll = () => setTopbarHidden(window.scrollY > 10);
     handleTopbarScroll();
@@ -101,7 +104,7 @@ export default function Header({ variant = "solid" }) {
     <header
       className={`hc-header hc-header--${variant} ${scrolled ? "hc-header--scrolled" : ""}`}
     >
-      <div className={`hc-topbar ${topbarHidden ? "hc-topbar--hidden" : ""}`}>
+      <div className={`hc-topbar ${(topbarHidden || isAdminPage) ? "hc-topbar--hidden" : ""}`}>
         <div className="hc-topbar-inner">
           {memberLoginId ? (
             <>
