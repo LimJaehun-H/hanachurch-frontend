@@ -105,6 +105,7 @@ export default function Offering() {
           )}
 
           {isLoggedIn && (
+          <>
           <div className="hc-offering-field">
             <label className="hc-offering-label">헌금 금액</label>
             <div className="hc-offering-amounts">
@@ -172,7 +173,7 @@ export default function Offering() {
           >
             {loading ? "결제창 여는 중..." : "헌금하기"}
           </button>
-          </div>
+          </>
           )}
         </div>
       </main>
