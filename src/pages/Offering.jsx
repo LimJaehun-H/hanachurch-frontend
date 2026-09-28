@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
@@ -10,6 +10,7 @@ import { getMemberLoginId, getMemberName, memberAuthFetch } from "../utils/membe
 const AMOUNT_OPTIONS = [1000, 3000, 5000, 10000];
 
 export default function Offering() {
+  const navigate = useNavigate();
   const isLoggedIn = !!getMemberLoginId();
   const [selectedAmount, setSelectedAmount] = useState(10000);
   const [isCustom, setIsCustom] = useState(false);
@@ -71,14 +72,14 @@ export default function Offering() {
       });
     } catch (err) {
       console.error(err);
-      // 토스페이먼츠 결제창에서 사용자가 직접 닫거나 취소한 경우
+      // 토스페이먼츠 결제창에서 사용자가 직접 닫거나 취소한 경우 vs 진짜 오류를
+      // 구분해서, 결제 성공 화면과 똑같은 스타일의 결과 페이지로 안내
       const isUserCancel = err?.code === "USER_CANCEL" || err?.code === "PAY_PROCESS_CANCELED";
-      setError(
-        isUserCancel
-          ? "결제를 취소하셨습니다."
-          : "결제 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
-      );
+      const message = isUserCancel
+        ? "결제를 취소하셨습니다."
+        : "결제 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
       setLoading(false);
+      navigate(`/offering/fail?message=${encodeURIComponent(message)}`);
     }
   };
 
