@@ -2622,3 +2622,27 @@
   .hc-auth-card { padding: 28px 20px; }
   .hc-topbar-inner { padding: 6px 20px 0; }
 }
+
+/* 로그인 후 상단바 표시 & 로그아웃 버튼 (button을 링크처럼 보이게 리셋) */
+.hc-topbar-link--static {
+  cursor: default;
+}
+.hc-topbar-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+/* 로그인 페이지 하단 안내 문구 */
+.hc-auth-switch {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.hc-auth-switch a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+}
