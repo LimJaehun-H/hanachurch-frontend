@@ -2393,3 +2393,221 @@
 .hc-offering-result-btn:hover {
   opacity: 0.85;
 }
+
+/* ---------- 헤더 상단 유틸리티 바 (로그인/회원가입) ---------- */
+.hc-topbar-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 40px 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+.hc-topbar-link {
+  font-size: 12px;
+  font-family: 'Pretendard', sans-serif;
+  text-decoration: none;
+  color: var(--ink-soft);
+  transition: color 0.3s ease;
+}
+.hc-header--overlay .hc-topbar-link { color: rgba(255, 255, 255, 0.85); }
+.hc-header--overlay.hc-header--scrolled .hc-topbar-link,
+.hc-header--solid .hc-topbar-link { color: var(--ink-soft); }
+.hc-topbar-link:hover { color: var(--ink); }
+.hc-header--overlay:not(.hc-header--scrolled) .hc-topbar-link:hover { color: #FFFFFF; }
+.hc-topbar-link--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ---------- 회원가입 / 약관동의 페이지 ---------- */
+.hc-auth-page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 140px 32px 120px;
+}
+
+.hc-auth-heading {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hc-auth-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.hc-auth-desc {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.hc-auth-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 36px 32px;
+  text-align: left;
+}
+
+.hc-auth-field {
+  margin-bottom: 24px;
+}
+.hc-auth-field:last-of-type {
+  margin-bottom: 32px;
+}
+
+.hc-auth-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.hc-auth-input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Pretendard', sans-serif;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+.hc-auth-input:focus {
+  outline: none;
+  border-color: #B8860B;
+}
+.hc-auth-input:disabled {
+  background: var(--paper-tint);
+  color: var(--ink-soft);
+}
+
+.hc-auth-input-row {
+  display: flex;
+  gap: 8px;
+}
+.hc-auth-input-row .hc-auth-input {
+  flex: 1;
+}
+
+.hc-auth-btn-inline {
+  flex-shrink: 0;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-tint);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.hc-auth-btn-inline:hover:not(:disabled) {
+  border-color: #B8860B;
+}
+.hc-auth-btn-inline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hc-auth-hint {
+  margin: 8px 2px 0;
+  font-size: 13px;
+}
+.hc-auth-hint--success { color: var(--success); }
+.hc-auth-hint--error { color: var(--danger); }
+
+.hc-auth-error {
+  color: var(--danger);
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.hc-auth-submit {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Pretendard', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.hc-auth-submit:hover:not(:disabled) {
+  opacity: 0.85;
+}
+.hc-auth-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 약관 동의 페이지 전용 */
+.hc-auth-agree-all {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.hc-auth-agree-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.hc-auth-agree-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hc-auth-agree-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.hc-auth-agree-detail {
+  margin: 0 0 0 26px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.hc-auth-checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .hc-auth-page { padding: 120px 20px 100px; }
+  .hc-auth-card { padding: 28px 20px; }
+  .hc-topbar-inner { padding: 6px 20px 0; }
+}

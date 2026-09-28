@@ -73,6 +73,17 @@ export default function Header({ variant = "solid" }) {
     <header
       className={`hc-header hc-header--${variant} ${scrolled ? "hc-header--scrolled" : ""}`}
     >
+      <div className="hc-topbar">
+        <div className="hc-topbar-inner">
+          <span className="hc-topbar-link hc-topbar-link--disabled" aria-disabled="true">
+            로그인
+          </span>
+          <Link to="/signup/agree" className="hc-topbar-link">
+            회원가입
+          </Link>
+        </div>
+      </div>
+
       <div className="hc-header-inner">
         <Link to="/" className="hc-wordmark" onClick={handleWordmarkClick}>
           {activeLogoUrl ? (

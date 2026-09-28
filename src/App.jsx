@@ -21,6 +21,8 @@ import SermonDetail from "./pages/SermonDetail.jsx";
 import Offering from "./pages/Offering.jsx";
 import OfferingSuccess from "./pages/OfferingSuccess.jsx";
 import OfferingFail from "./pages/OfferingFail.jsx";
+import SignupAgree from "./pages/SignupAgree.jsx";
+import Signup from "./pages/Signup.jsx";
 
 export default function App() {
   return (
@@ -45,6 +47,8 @@ export default function App() {
           <Route path="/offering" element={<Offering />} />
           <Route path="/offering/success" element={<OfferingSuccess />} />
           <Route path="/offering/fail" element={<OfferingFail />} />
+          <Route path="/signup/agree" element={<SignupAgree />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </PageTransition>
     </>
