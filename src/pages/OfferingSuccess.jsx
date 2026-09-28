@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { API_BASE_URL } from "../config.js";
+import { memberAuthFetch } from "../utils/memberAuth.js";
 
 export default function OfferingSuccess() {
   const [searchParams] = useSearchParams();
@@ -20,7 +21,7 @@ export default function OfferingSuccess() {
       return;
     }
 
-    fetch(`${API_BASE_URL}/api/offerings/confirm`, {
+    memberAuthFetch(`${API_BASE_URL}/api/offerings/confirm`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),

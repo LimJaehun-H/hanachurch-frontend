@@ -1,17 +1,20 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
 import { API_BASE_URL, TOSS_CLIENT_KEY, OFFERING_HERO_IMAGE_URL } from "../config.js";
+import { getMemberLoginId, getMemberName, memberAuthFetch } from "../utils/memberAuth.js";
 
 const AMOUNT_OPTIONS = [1000, 3000, 5000, 10000];
 
 export default function Offering() {
+  const isLoggedIn = !!getMemberLoginId();
   const [selectedAmount, setSelectedAmount] = useState(10000);
   const [isCustom, setIsCustom] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
-  const [donorName, setDonorName] = useState("");
+  const [donorName, setDonorName] = useState(() => getMemberName() || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -43,7 +46,7 @@ export default function Offering() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/offerings`, {
+      const res = await memberAuthFetch(`${API_BASE_URL}/api/offerings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: finalAmount, donorName: donorName.trim() || null }),
@@ -92,6 +95,16 @@ export default function Offering() {
         </div>
 
         <div className="hc-offering-card">
+          {!isLoggedIn && (
+            <div className="hc-offering-login-required">
+              <p>온라인 헌금은 로그인 후 이용하실 수 있습니다.</p>
+              <Link to="/login" className="hc-offering-submit" style={{ display: "inline-block", textDecoration: "none", textAlign: "center" }}>
+                로그인하러 가기
+              </Link>
+            </div>
+          )}
+
+          {isLoggedIn && (
           <div className="hc-offering-field">
             <label className="hc-offering-label">헌금 금액</label>
             <div className="hc-offering-amounts">
@@ -159,6 +172,8 @@ export default function Offering() {
           >
             {loading ? "결제창 여는 중..." : "헌금하기"}
           </button>
+          </div>
+          )}
         </div>
       </main>
 
