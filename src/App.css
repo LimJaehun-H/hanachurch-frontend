@@ -2395,6 +2395,17 @@
 }
 
 /* ---------- 헤더 상단 유틸리티 바 (로그인/회원가입) ---------- */
+.hc-topbar {
+  max-height: 40px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+.hc-topbar--hidden {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
 .hc-topbar-inner {
   max-width: 1440px;
   margin: 0 auto;

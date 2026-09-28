@@ -12,6 +12,8 @@ export default function Header({ variant = "solid" }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(variant !== "overlay");
+  // 로그인/회원가입 상단바: 페이지 맨 위에서만 보이고 스크롤하면 숨김 (variant와 무관하게 공통 적용)
+  const [topbarHidden, setTopbarHidden] = useState(false);
   // 맨 위(투명 히어로 위, 스크롤 전) 상태용 흰색 로고
   const [logoWhiteUrl, setLogoWhiteUrl] = useState(HEADER_LOGO_WHITE_IMAGE_URL || null);
   // 스크롤 후 / 내부 페이지(흰 배경) 상태용 기본(컬러) 로고
@@ -52,6 +54,14 @@ export default function Header({ variant = "solid" }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [variant]);
 
+  // 상단바(로그인/회원가입)는 variant와 상관없이 페이지 맨 위에서만 노출
+  useEffect(() => {
+    const handleTopbarScroll = () => setTopbarHidden(window.scrollY > 10);
+    handleTopbarScroll();
+    window.addEventListener("scroll", handleTopbarScroll);
+    return () => window.removeEventListener("scroll", handleTopbarScroll);
+  }, []);
+
   // 지금이 "투명 히어로 위, 스크롤 전" 상태인지 여부
   const isOverlayState = variant === "overlay" && !scrolled;
   // 해당 상태의 로고가 없으면 반대쪽 로고로라도 보여주고, 그것도 없으면 아래에서 텍스트로 대체
@@ -73,7 +83,7 @@ export default function Header({ variant = "solid" }) {
     <header
       className={`hc-header hc-header--${variant} ${scrolled ? "hc-header--scrolled" : ""}`}
     >
-      <div className="hc-topbar">
+      <div className={`hc-topbar ${topbarHidden ? "hc-topbar--hidden" : ""}`}>
         <div className="hc-topbar-inner">
           <span className="hc-topbar-link hc-topbar-link--disabled" aria-disabled="true">
             로그인
