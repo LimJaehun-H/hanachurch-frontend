@@ -135,10 +135,7 @@ export const OFFERING_HERO_IMAGE_URL = null;
 export const ABOUT_CONTENT_BG_IMAGE_URL = null;
 
 // 교회소개 페이지 상단 패럴랙스 배경 (홈 배너와 동일한 방식, 이미지만 별도)
-export const ABOUT_PARALLAX_IMAGE_URL = null;
 // 문구는 나중에 정해지면 여기 텍스트만 채우면 됩니다 (비워두면 사진+오버레이만 보임)
-export const ABOUT_PARALLAX_TITLE = null;
-export const ABOUT_PARALLAX_SUBTITLE = null;
 export const SUNDAY_WORSHIP_HERO_IMAGE_URL = "images/sunday-worship-hero.jpg";
 export const DAWN_WORSHIP_HERO_IMAGE_URL = "images/dawn-worship-hero.jpg";
 export const HOME_GALLERY_IMAGES = [
@@ -177,7 +174,7 @@ export const CHURCH_SCHOOL_GALLERY_IMAGES = [
   "images/church-school-4.jpg",
 ];
 
-export const HERO_LOGO_IMAGE_URL = "images/hana-logo.png";
+export const HERO_LOGO_IMAGE_URL = null;
 
 // 좌측 상단 헤더의 "하나교회" 워드마크 자리에 넣을 로고 이미지
 // 관리자 페이지에서 업로드하지 않으면 지금처럼 텍스트("하나교회")가 그대로 보임
@@ -249,11 +246,6 @@ export const SITE_IMAGE_GROUPS = [
   { key: "home_gallery", label: "홈 갤러리 사진", type: "gallery", section: "홈 화면", page: "/" },
   { key: "worship_preview", label: "홈 예배안내 미리보기 사진", type: "gallery", section: "홈 화면", page: "/" },
 
-  // 헤더 / 푸터 (전체 페이지 공통)
-  { key: "header_logo_white", label: "헤더 로고 (흰색, 맨 위)", type: "single", section: "헤더/푸터 (전체 페이지 공통)", page: "/" },
-  { key: "header_logo_dark", label: "헤더 로고 (기본/컬러, 스크롤 시)", type: "single", section: "헤더/푸터 (전체 페이지 공통)", page: "/" },
-  { key: "footer_logo_white", label: "푸터 로고 (전체 흰색)", type: "single", section: "헤더/푸터 (전체 페이지 공통)", page: "/" },
-
   // 교회소개
   { key: "about_hero", label: "교회소개 배너", type: "single", section: "교회소개", page: "/about" },
   { key: "about_content_bg", label: "교회소개 본문 고정 배경", type: "single", section: "교회소개", page: "/about" },
@@ -274,4 +266,9 @@ export const SITE_IMAGE_GROUPS = [
   // 오시는 길 / 온라인 헌금
   { key: "location_hero", label: "오시는길 배너", type: "single", section: "오시는 길", page: "/location" },
   { key: "offering_hero", label: "온라인 헌금 배너", type: "single", section: "온라인 헌금", page: "/offering" },
+
+  // 헤더 / 푸터 (전체 페이지 공통, 거의 안 바꾸는 항목이라 맨 아래로 배치)
+  { key: "header_logo_white", label: "헤더 로고 (흰색, 맨 위)", type: "single", section: "헤더/푸터 (전체 페이지 공통, 거의 안 바뀜)", page: "/" },
+  { key: "header_logo_dark", label: "헤더 로고 (기본/컬러, 스크롤 시)", type: "single", section: "헤더/푸터 (전체 페이지 공통, 거의 안 바뀜)", page: "/" },
+  { key: "footer_logo_white", label: "푸터 로고 (전체 흰색)", type: "single", section: "헤더/푸터 (전체 페이지 공통, 거의 안 바뀜)", page: "/" },
 ];
