@@ -105,6 +105,18 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 발송 중에 새로고침/창 닫기를 하면 브라우저 경고창 표시
+  // (새로고침해도 서버 발송은 취소되지 않아서, 결과를 못 보고 다시 발송하면 중복으로 나감)
+  useEffect(() => {
+    if (!sending) return;
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ""; // 크롬 등은 이 값을 넣어야 경고창이 뜸 (문구는 브라우저 기본 문구로 표시)
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [sending]);
+
   // 미리보기용 object URL 정리
   useEffect(() => () => images.forEach((img) => URL.revokeObjectURL(img.url)), [images]);
 
@@ -323,6 +335,13 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
         <button type="button" className="hc-admin-btn hc-sms-send" onClick={handleSend} disabled={sending}>
           {sending ? "발송 중..." : `${selectedIds.size}명에게 발송 (총 ${messageCount}건)`}
         </button>
+        {sending && (
+          <p className="hc-sms-warning">
+            발송 중입니다. 새로고침하거나 창을 닫지 마세요.
+            <br />
+            (새로고침해도 발송은 취소되지 않습니다. 결과가 안 보이면 다시 보내기 전에 아래 발송 이력을 먼저 확인하세요.)
+          </p>
+        )}
         {status && <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>}
         {lastBulletinId && (
           <button type="button" className="hc-sms-link" onClick={() => openPreview(lastBulletinId)}>

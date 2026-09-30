@@ -3006,3 +3006,13 @@
   border: 1px solid var(--line);
   border-radius: 6px;
 }
+
+.hc-sms-warning {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #FFF6E5;
+  color: #8A5A00;
+  font-size: 13px;
+  line-height: 1.5;
+}
