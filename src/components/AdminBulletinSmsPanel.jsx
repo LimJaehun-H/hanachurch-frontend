@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { authFetch } from "../utils/auth.js";
+import { API_BASE_URL } from "../config.js";
 
 const MAX_IMAGES = 2;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -22,8 +23,11 @@ function defaultText(isoDate) {
   return `[하나교회] ${m}월 ${d}일 주보입니다.\n이번 주도 평안한 한 주 보내세요.`;
 }
 
-// 주보 보기 페이지 주소 (문자/알림톡 링크가 여는 곳)
-const viewUrl = (id) => `${window.location.origin}/b/${id}`;
+function formatBulletinDate(value) {
+  if (!value) return "";
+  const [y, m, d] = value.split("-").map(Number);
+  return `${y}년 ${m}월 ${d}일`;
+}
 
 function formatDateTime(value) {
   if (!value) return "";
@@ -48,6 +52,18 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState(null);
   const [lastBulletinId, setLastBulletinId] = useState(null);
+  const [preview, setPreview] = useState(null); // 이력 미리보기 모달: { bulletinDate, images }
+
+  // 발송 이력 미리보기: 그때 보낸 주보 사진 불러와서 모달로 표시 (관리자 토큰 필요)
+  const openPreview = async (smsBulletinId) => {
+    try {
+      const res = await authFetch(token, `/api/admin/bulletin-sms/bulletins/${smsBulletinId}`);
+      if (!res.ok) throw new Error(await readError(res, "보낸 주보를 불러오지 못했습니다."));
+      setPreview(await res.json());
+    } catch (err) {
+      handleError(err);
+    }
+  };
 
   // 날짜를 바꾸면, 관리자가 문구를 직접 고치지 않은 경우에만 기본 문구도 같이 바꿈
   const handleDateChange = (value) => {
@@ -309,12 +325,9 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
         </button>
         {status && <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>}
         {lastBulletinId && (
-          <p className="hc-sms-note">
-            교인들이 보게 될 주보 보기 페이지:{" "}
-            <a href={viewUrl(lastBulletinId)} target="_blank" rel="noreferrer">
-              {viewUrl(lastBulletinId)}
-            </a>
-          </p>
+          <button type="button" className="hc-sms-link" onClick={() => openPreview(lastBulletinId)}>
+            방금 보낸 주보 보기
+          </button>
         )}
       </div>
 
@@ -335,9 +348,9 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
                   {log.smsBulletinId && (
                     <>
                       {" · "}
-                      <a href={viewUrl(log.smsBulletinId)} target="_blank" rel="noreferrer">
+                      <button type="button" className="hc-sms-link" onClick={() => openPreview(log.smsBulletinId)}>
                         주보 보기
-                      </a>
+                      </button>
                     </>
                   )}
                 </span>
@@ -346,6 +359,28 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
           </ul>
         )}
       </div>
+
+      {/* 발송 이력 미리보기 모달 */}
+      {preview && (
+        <div className="hc-sms-modal" onClick={() => setPreview(null)}>
+          <div className="hc-sms-modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="hc-sms-modal-head">
+              <strong>{formatBulletinDate(preview.bulletinDate)} 발송 주보</strong>
+              <button type="button" onClick={() => setPreview(null)}>닫기</button>
+            </div>
+            <div className="hc-sms-modal-images">
+              {preview.images.map((fileName, i) => {
+                const src = `${API_BASE_URL}/uploads/bulletin-sms/${encodeURIComponent(fileName)}`;
+                return (
+                  <a key={fileName} href={src} target="_blank" rel="noreferrer">
+                    <img src={src} alt={`보낸 주보 ${i + 1}`} />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

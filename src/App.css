@@ -2942,61 +2942,6 @@
   color: var(--ink-soft);
 }
 
-/* ===== 주보 보기 공개 페이지 (/b/:id) ===== */
-.hc-bview {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 120px 16px 80px;
-}
-.hc-bview-status {
-  text-align: center;
-  color: var(--ink-soft);
-  font-size: 15px;
-  padding: 60px 0;
-}
-.hc-bview-heading {
-  text-align: center;
-  margin-bottom: 28px;
-}
-.hc-bview-eyebrow {
-  font-size: 13px;
-  color: var(--ink-soft);
-  margin: 0 0 8px;
-}
-.hc-bview-title {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 0 0 10px;
-}
-.hc-bview-hint {
-  font-size: 13px;
-  color: var(--ink-soft);
-  margin: 0;
-}
-.hc-bview-images {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.hc-bview-image {
-  display: block;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
-  background: #fff;
-}
-.hc-bview-image img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-@media (max-width: 600px) {
-  .hc-bview { padding-top: 100px; }
-  .hc-bview-title { font-size: 22px; }
-}
-
 /* 관리자 발송 화면: 날짜 입력 */
 .hc-sms-date {
   width: 200px;
@@ -3005,4 +2950,59 @@
   border-radius: 6px;
   font-size: 14px;
   font-family: inherit;
+}
+
+/* 관리자 발송 이력 미리보기 */
+.hc-sms-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--ink);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.hc-sms-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.hc-sms-modal-box {
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+.hc-sms-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+.hc-sms-modal-head button {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+.hc-sms-modal-images {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hc-sms-modal-images img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
