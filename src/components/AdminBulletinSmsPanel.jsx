@@ -4,12 +4,26 @@ import { authFetch } from "../utils/auth.js";
 const MAX_IMAGES = 2;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
-// 다가오는(또는 오늘) 일요일 날짜로 기본 문구 생성
-function defaultText() {
+// 다가오는(또는 오늘) 일요일
+function upcomingSunday() {
   const d = new Date();
   d.setDate(d.getDate() + ((7 - d.getDay()) % 7));
-  return `[하나교회] ${d.getMonth() + 1}월 ${d.getDate()}일 주보입니다.\n이번 주도 평안한 한 주 보내세요.`;
+  return d;
 }
+
+// Date → "2026-10-05" (서버 LocalDate 형식)
+function toIsoDate(d) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function defaultText(isoDate) {
+  const [, m, d] = isoDate.split("-").map(Number);
+  return `[하나교회] ${m}월 ${d}일 주보입니다.\n이번 주도 평안한 한 주 보내세요.`;
+}
+
+// 주보 보기 페이지 주소 (문자/알림톡 링크가 여는 곳)
+const viewUrl = (id) => `${window.location.origin}/b/${id}`;
 
 function formatDateTime(value) {
   if (!value) return "";
@@ -24,13 +38,22 @@ async function readError(res, fallback) {
 
 export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
   const [images, setImages] = useState([]); // [{ file, url }]
-  const [text, setText] = useState(defaultText);
+  const [bulletinDate, setBulletinDate] = useState(() => toIsoDate(upcomingSunday()));
+  const [text, setText] = useState(() => defaultText(toIsoDate(upcomingSunday())));
+  const [textEdited, setTextEdited] = useState(false);
   const [recipients, setRecipients] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [testPhone, setTestPhone] = useState("");
   const [logs, setLogs] = useState([]);
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState(null);
+  const [lastBulletinId, setLastBulletinId] = useState(null);
+
+  // 날짜를 바꾸면, 관리자가 문구를 직접 고치지 않은 경우에만 기본 문구도 같이 바꿈
+  const handleDateChange = (value) => {
+    setBulletinDate(value);
+    if (!textEdited && value) setText(defaultText(value));
+  };
 
   const handleError = (err) => {
     if (err.message === "AUTH_EXPIRED") return onAuthExpired();
@@ -119,6 +142,7 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
 
   const validateCommon = () => {
     if (images.length === 0) return "발송할 주보 이미지를 선택해주세요.";
+    if (!bulletinDate) return "주보 날짜를 선택해주세요.";
     if (!text.trim()) return "문구를 입력해주세요.";
     return null;
   };
@@ -127,6 +151,7 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
     const form = new FormData();
     images.forEach((img) => form.append("images", img.file));
     form.append("text", text.trim());
+    form.append("bulletinDate", bulletinDate);
     return form;
   };
 
@@ -158,6 +183,7 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
   const submit = async (path, form, label) => {
     setSending(true);
     setStatus(null);
+    setLastBulletinId(null);
     try {
       // FormData는 Content-Type을 직접 지정하지 않아야 브라우저가 boundary를 붙여줌
       const res = await authFetch(token, path, { method: "POST", body: form });
@@ -169,6 +195,7 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
           `${label} 완료: ${data.targetCount}명 × 이미지 ${data.imageCount}장 → ` +
           `접수 성공 ${data.successCount}건 / 실패 ${data.failCount}건`,
       });
+      setLastBulletinId(data.smsBulletinId);
       loadLogs();
     } catch (err) {
       handleError(err);
@@ -208,11 +235,24 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
         </div>
       </div>
 
-      {/* 2. 문구 */}
+      {/* 2. 날짜 + 문구 */}
       <div className="hc-sms-block">
-        <h3 className="hc-sms-subtitle">2. 문구</h3>
+        <h3 className="hc-sms-subtitle">2. 주보 날짜 · 문구</h3>
         <div className="hc-admin-form">
-          <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={500} />
+          <input
+            type="date"
+            className="hc-sms-date"
+            value={bulletinDate}
+            onChange={(e) => handleDateChange(e.target.value)}
+          />
+          <textarea
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              setTextEdited(true);
+            }}
+            maxLength={500}
+          />
         </div>
         <p className="hc-sms-note">
           {images.length > 1 ? "사진이 2장이면 각 문자 끝에 (1/2), (2/2)가 자동으로 붙습니다. " : ""}
@@ -268,6 +308,14 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
           {sending ? "발송 중..." : `${selectedIds.size}명에게 발송 (총 ${messageCount}건)`}
         </button>
         {status && <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>}
+        {lastBulletinId && (
+          <p className="hc-sms-note">
+            교인들이 보게 될 주보 보기 페이지:{" "}
+            <a href={viewUrl(lastBulletinId)} target="_blank" rel="noreferrer">
+              {viewUrl(lastBulletinId)}
+            </a>
+          </p>
+        )}
       </div>
 
       {/* 최근 발송 이력 */}
@@ -284,6 +332,14 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
                 </span>
                 <span className="hc-sms-note">
                   {log.targetCount}명 × {log.imageCount}장 · 성공 {log.successCount} / 실패 {log.failCount}
+                  {log.smsBulletinId && (
+                    <>
+                      {" · "}
+                      <a href={viewUrl(log.smsBulletinId)} target="_blank" rel="noreferrer">
+                        주보 보기
+                      </a>
+                    </>
+                  )}
                 </span>
               </li>
             ))}

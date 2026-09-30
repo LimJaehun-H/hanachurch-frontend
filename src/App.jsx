@@ -25,6 +25,7 @@ import SignupAgree from "./pages/SignupAgree.jsx";
 import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
 import MyPage from "./pages/MyPage.jsx";
+import BulletinSmsView from "./pages/BulletinSmsView.jsx";
 
 export default function App() {
   return (
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/b/:id" element={<BulletinSmsView />} />
         </Routes>
       </PageTransition>
     </>
