@@ -7,12 +7,14 @@ import AdminSermonPanel from "../components/AdminSermonPanel.jsx";
 import AdminHomeVideoPanel from "../components/AdminHomeVideoPanel.jsx";
 import AdminSiteImagePanel from "../components/AdminSiteImagePanel.jsx";
 import AdminPasswordPanel from "../components/AdminPasswordPanel.jsx";
+import AdminBulletinSmsPanel from "../components/AdminBulletinSmsPanel.jsx";
 import { API_BASE_URL } from "../config.js";
 
 const TABS = [
   { key: "password", label: "비밀번호 변경" },
   { key: "notice", label: "교회소식 관리" },
   { key: "bulletin", label: "주보 관리" },
+  { key: "bulletinsms", label: "주보 문자 발송" },
   { key: "album", label: "앨범 관리" },
   { key: "sermon", label: "말씀 관리" },
   { key: "homevideo", label: "홈화면 영상 관리" },
@@ -117,6 +119,7 @@ export default function Admin() {
               {activeTab === "password" && <AdminPasswordPanel {...panelProps} />}
               {activeTab === "notice" && <AdminNoticePanel {...panelProps} />}
               {activeTab === "bulletin" && <AdminBulletinPanel {...panelProps} />}
+              {activeTab === "bulletinsms" && <AdminBulletinSmsPanel {...panelProps} />}
               {activeTab === "album" && <AdminAlbumPanel {...panelProps} />}
               {activeTab === "sermon" && <AdminSermonPanel {...panelProps} />}
               {activeTab === "homevideo" && <AdminHomeVideoPanel {...panelProps} />}
