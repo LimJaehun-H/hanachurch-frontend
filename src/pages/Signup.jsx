@@ -158,11 +158,14 @@ export default function Signup() {
           loginId,
           password,
           passwordConfirm,
+          // 약관 페이지에서 선택한 주보 문자 수신 동의 여부
+          smsReceive: sessionStorage.getItem("hc_signup_sms_receive") === "true",
         }),
       });
       if (!res.ok) throw new Error(await readErrorMessage(res, "회원가입에 실패했습니다."));
 
       sessionStorage.removeItem("hc_signup_agreed");
+      sessionStorage.removeItem("hc_signup_sms_receive");
       alert("회원가입이 완료되었습니다.");
       navigate("/");
     } catch (err) {

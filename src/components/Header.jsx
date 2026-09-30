@@ -108,7 +108,7 @@ export default function Header({ variant = "solid" }) {
         <div className="hc-topbar-inner">
           {memberLoginId ? (
             <>
-              <span className="hc-topbar-link hc-topbar-link--static">{(memberName || memberLoginId)}성도님</span>
+              <Link to="/mypage" className="hc-topbar-link">{(memberName || memberLoginId)}성도님</Link>
               <button type="button" className="hc-topbar-link hc-topbar-btn" onClick={handleLogout}>
                 로그아웃
               </button>

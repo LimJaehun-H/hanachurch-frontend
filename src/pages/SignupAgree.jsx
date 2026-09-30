@@ -23,6 +23,13 @@ const AGREEMENT_ITEMS = [
     detail:
       "회원가입 및 본인확인을 위해 이름, 생년월일, 전화번호, 아이디를 수집하며, 탈퇴 시 즉시 파기됩니다.",
   },
+  {
+    key: "smsReceive",
+    required: false,
+    label: "주보 알림 문자 수신 동의 (선택)",
+    detail:
+      "매주 주보를 문자로 받아보실 수 있습니다. 동의하지 않아도 가입할 수 있으며, 마이페이지에서 언제든 변경할 수 있습니다.",
+  },
 ];
 
 export default function SignupAgree() {
@@ -31,7 +38,12 @@ export default function SignupAgree() {
     Object.fromEntries(AGREEMENT_ITEMS.map((item) => [item.key, false]))
   );
 
+  // 전체 동의 체크박스 상태: 선택 항목까지 모두 체크됐는지
   const allChecked = AGREEMENT_ITEMS.every((item) => checked[item.key]);
+  // 다음 버튼 활성화 조건: 필수 항목만 체크되면 됨
+  const requiredChecked = AGREEMENT_ITEMS.filter((item) => item.required).every(
+    (item) => checked[item.key]
+  );
 
   const handleToggleAll = () => {
     const next = !allChecked;
@@ -43,8 +55,10 @@ export default function SignupAgree() {
   };
 
   const handleNext = () => {
-    if (!allChecked) return;
+    if (!requiredChecked) return;
     sessionStorage.setItem("hc_signup_agreed", "true");
+    // 선택 동의 값을 가입 폼(Signup.jsx)으로 전달
+    sessionStorage.setItem("hc_signup_sms_receive", String(checked.smsReceive));
     navigate("/signup");
   };
 
@@ -89,7 +103,7 @@ export default function SignupAgree() {
           <button
             type="button"
             className="hc-auth-submit"
-            disabled={!allChecked}
+            disabled={!requiredChecked}
             onClick={handleNext}
           >
             다음

@@ -24,6 +24,7 @@ import OfferingFail from "./pages/OfferingFail.jsx";
 import SignupAgree from "./pages/SignupAgree.jsx";
 import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
+import MyPage from "./pages/MyPage.jsx";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/signup/agree" element={<SignupAgree />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </PageTransition>
     </>
