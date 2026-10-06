@@ -22,6 +22,7 @@ const AGREEMENT_ITEMS = [
     label: "개인정보 수집 및 이용 동의 (필수)",
     detail:
       "회원가입 및 본인확인을 위해 이름, 생년월일, 전화번호, 아이디를 수집하며, 탈퇴 시 즉시 파기됩니다.",
+    link: { to: "/privacy", label: "개인정보처리방침 전문 보기" },
   },
   {
     key: "smsReceive",
@@ -96,6 +97,16 @@ export default function SignupAgree() {
                   <span>{item.label}</span>
                 </label>
                 {item.detail && <p className="hc-auth-agree-detail">{item.detail}</p>}
+                {item.link && (
+                  <a
+                    href={item.link.to}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hc-auth-agree-link"
+                  >
+                    {item.link.label}
+                  </a>
+                )}
               </div>
             ))}
           </div>

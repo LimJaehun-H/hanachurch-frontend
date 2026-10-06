@@ -252,6 +252,66 @@
   text-decoration: none;
 }
 .hc-home-footer-admin:hover { opacity: 1; }
+/* 개인정보처리방침: 법상 다른 링크보다 눈에 띄게 */
+.hc-home-footer-privacy {
+  display: block;
+  width: fit-content;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFD66B;
+  text-decoration: none;
+}
+.hc-home-footer-privacy:hover { text-decoration: underline; }
+
+/* ---------- 개인정보처리방침 페이지 ---------- */
+.hc-privacy-page {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 140px 32px 120px;
+  color: var(--ink);
+  line-height: 1.75;
+  font-size: 15px;
+}
+.hc-privacy-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.hc-privacy-intro { color: var(--ink-soft); margin-bottom: 40px; }
+.hc-privacy-section { margin-bottom: 36px; }
+.hc-privacy-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.hc-privacy-section ol,
+.hc-privacy-section ul { padding-left: 22px; margin: 8px 0; }
+.hc-privacy-section ol { list-style: decimal; }
+.hc-privacy-section ul { list-style: disc; }
+.hc-privacy-note { margin-top: 10px; font-size: 13px; color: var(--ink-soft); }
+.hc-privacy-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14px; }
+.hc-privacy-table th,
+.hc-privacy-table td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+.hc-privacy-table th { background: var(--paper); font-weight: 600; white-space: nowrap; }
+.hc-privacy-pending { color: #D0402B; font-weight: 700; }
+@media (max-width: 640px) {
+  .hc-privacy-page { padding: 110px 16px 80px; font-size: 14px; }
+  .hc-privacy-title { font-size: 26px; }
+  .hc-privacy-table th { white-space: normal; }
+}
+
+.hc-auth-agree-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-decoration: underline;
+}
 
 /* ---------- 내부 페이지 공통 ---------- */
 .hc-page {

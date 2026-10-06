@@ -61,6 +61,10 @@ export default function Footer() {
           Copyright © {CHURCH_INFO.name}. All rights reserved.
         </p>
 
+        <Link to="/privacy" className="hc-home-footer-privacy">
+          개인정보처리방침
+        </Link>
+
         <Link to="/admin" className="hc-home-footer-admin">
           관리자
         </Link>
