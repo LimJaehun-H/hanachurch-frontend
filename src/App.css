@@ -2813,6 +2813,54 @@
   line-height: 1.5;
 }
 
+/* 회원 탈퇴 */
+.hc-mypage-withdraw-toggle {
+  display: block;
+  margin: 28px auto 0;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.hc-mypage-withdraw-notice {
+  margin: 0 0 20px;
+  padding-left: 18px;
+  list-style: disc;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.hc-mypage-withdraw-notice a { color: var(--ink); text-decoration: underline; }
+.hc-mypage-withdraw-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.hc-mypage-withdraw-cancel,
+.hc-mypage-withdraw-submit {
+  flex: 1;
+  height: 48px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.hc-mypage-withdraw-cancel {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.hc-mypage-withdraw-submit {
+  background: #D0402B;
+  border: none;
+  color: #FFFFFF;
+}
+.hc-mypage-withdraw-cancel:disabled,
+.hc-mypage-withdraw-submit:disabled { opacity: 0.5; cursor: default; }
+
 .hc-mypage-updated {
   margin: 16px 0 0;
   font-size: 12px;

@@ -28,6 +28,12 @@ export default function MyPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
+  // 회원 탈퇴
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [withdrawPassword, setWithdrawPassword] = useState("");
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawError, setWithdrawError] = useState("");
+
   // 토큰 만료/무효(401, 403)면 세션을 지우고 로그인 페이지로
   const handleAuthError = (res) => {
     if (res.status === 401 || res.status === 403) {
@@ -80,6 +86,40 @@ export default function MyPage() {
       setMessage(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleWithdraw = async (e) => {
+    e.preventDefault();
+    if (withdrawing) return;
+    if (!withdrawPassword) {
+      setWithdrawError("비밀번호를 입력해주세요.");
+      return;
+    }
+    if (!window.confirm("정말 탈퇴하시겠습니까? 탈퇴 후에는 되돌릴 수 없습니다.")) return;
+
+    setWithdrawing(true);
+    setWithdrawError("");
+    try {
+      const res = await memberAuthFetch(`${API_BASE_URL}/api/members/me/withdraw`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: withdrawPassword }),
+      });
+      if (handleAuthError(res)) return;
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.message || "탈퇴에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
+
+      // 성공(204): 저장된 로그인 정보 삭제 후 홈으로
+      clearMemberSession();
+      alert("회원 탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다.");
+      navigate("/", { replace: true });
+    } catch (err) {
+      setWithdrawError(err.message);
+    } finally {
+      setWithdrawing(false);
     }
   };
 
@@ -145,6 +185,61 @@ export default function MyPage() {
               )}
               {message && <p className="hc-auth-hint hc-auth-hint--success">{message}</p>}
             </section>
+
+            {!withdrawOpen ? (
+              <button
+                type="button"
+                className="hc-mypage-withdraw-toggle"
+                onClick={() => setWithdrawOpen(true)}
+              >
+                회원 탈퇴
+              </button>
+            ) : (
+              <form className="hc-auth-card hc-mypage-card" onSubmit={handleWithdraw}>
+                <h2 className="hc-mypage-section-title">회원 탈퇴</h2>
+                <ul className="hc-mypage-withdraw-notice">
+                  <li>탈퇴 시 이름, 생년월일, 전화번호, 아이디 등 회원 정보가 즉시 삭제되며 복구할 수 없습니다.</li>
+                  <li>주보 알림 문자 발송도 중단됩니다.</li>
+                  <li>
+                    헌금 기록은 회원 정보와 별도로 보관됩니다. 자세한 내용은{" "}
+                    <a href="/privacy" target="_blank" rel="noreferrer">개인정보처리방침</a>을 확인해주세요.
+                  </li>
+                </ul>
+
+                <div className="hc-auth-field">
+                  <label className="hc-auth-label" htmlFor="withdrawPassword">비밀번호 확인</label>
+                  <input
+                    id="withdrawPassword"
+                    type="password"
+                    className="hc-auth-input"
+                    autoComplete="current-password"
+                    value={withdrawPassword}
+                    onChange={(e) => setWithdrawPassword(e.target.value)}
+                    disabled={withdrawing}
+                  />
+                </div>
+
+                {withdrawError && <p className="hc-auth-error">{withdrawError}</p>}
+
+                <div className="hc-mypage-withdraw-actions">
+                  <button
+                    type="button"
+                    className="hc-mypage-withdraw-cancel"
+                    onClick={() => {
+                      setWithdrawOpen(false);
+                      setWithdrawPassword("");
+                      setWithdrawError("");
+                    }}
+                    disabled={withdrawing}
+                  >
+                    취소
+                  </button>
+                  <button type="submit" className="hc-mypage-withdraw-submit" disabled={withdrawing}>
+                    {withdrawing ? "처리 중..." : "탈퇴하기"}
+                  </button>
+                </div>
+              </form>
+            )}
           </>
         )}
       </main>
