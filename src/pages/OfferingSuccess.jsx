@@ -26,16 +26,20 @@ export default function OfferingSuccess() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("승인 실패");
+      .then(async (res) => {
+        if (!res.ok) {
+          // 서버가 보낸 실패 이유(금액 불일치, 이미 처리된 주문 등)를 그대로 보여줌
+          const data = await res.json().catch(() => null);
+          throw new Error(data?.message || "결제 승인 처리 중 문제가 발생했습니다. 교회로 문의해주세요.");
+        }
         return res.json();
       })
       .then(() => {
         setStatus("success");
       })
-      .catch(() => {
+      .catch((err) => {
         setStatus("error");
-        setMessage("결제 승인 처리 중 문제가 발생했습니다. 교회로 문의해주세요.");
+        setMessage(err.message);
       });
   }, [paymentKey, orderId, amount]);
 
