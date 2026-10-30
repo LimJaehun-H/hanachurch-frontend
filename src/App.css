@@ -124,6 +124,11 @@
   background-size: cover;
   background-position: center;
 }
+/* 영상은 항상 아래에 깔려 있고, 위의 사진이 투명해지면서 드러남 */
+.hc-hero-image-fade {
+  z-index: 1;          /* 영상 위에 덮임 */
+  will-change: opacity; /* 스크롤 중 부드럽게 */
+}
 
 .hc-hero-fallback-bg {
   position: absolute;
