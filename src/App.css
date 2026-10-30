@@ -121,8 +121,10 @@
   object-fit: cover;
 }
 .hc-hero-image-bg {
-  background-size: cover;
+  background-size: contain;      /* 사진 전체가 잘리지 않게 (비율 유지) */
   background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0E0E0E;     /* 좌우(또는 상하) 남는 공백은 검은색 */
 }
 /* 영상은 항상 아래에 깔려 있고, 위의 사진이 투명해지면서 드러남 */
 .hc-hero-image-fade {
