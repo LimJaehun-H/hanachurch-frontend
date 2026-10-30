@@ -59,11 +59,9 @@ export default function Home() {
       if (heroImageRef.current) {
         heroImageRef.current.style.opacity = String(1 - progress);
       }
+      // 한번 내려서 재생이 시작되면, 맨 위로 올라와도 멈추지 않고 계속 재생
       const video = heroVideoRef.current;
-      if (video) {
-        if (progress > 0) video.play().catch(() => {}); // 내리기 시작하면 재생(실패는 무시)
-        else video.pause();                              // 맨 위로 올라오면 정지
-      }
+      if (video && progress > 0) video.play().catch(() => {});
     };
     const onScroll = () => {
       if (ticking) return;
