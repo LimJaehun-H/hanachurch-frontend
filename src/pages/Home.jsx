@@ -14,12 +14,10 @@ export default function Home() {
   const [heroImageUrl, setHeroImageUrl] = useState(HERO_IMAGE_URL || null);
   const [logoUrl, setLogoUrl] = useState(HERO_LOGO_IMAGE_URL || null);
 
-  // 맨 위에서는 사진만, 내릴수록 사진이 서서히 투명해지며 영상이 드러남
-  // 히어로 높이의 이 비율만큼 내리면 사진이 완전히 사라지고 영상만 남음 (0.2 = 20%)
-  const HERO_FADE_FRACTION = 0.2;
-  const heroRef = useRef(null);
+  // 처음엔 사진을 보여주고, 영상이 로딩되면 2초 뒤 영상 재생(사진은 서서히 사라짐)
+  const HERO_VIDEO_START_DELAY = 2000; // ms
   const heroVideoRef = useRef(null);
-  const heroImageRef = useRef(null);
+  const [heroVideoStarted, setHeroVideoStarted] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/home-video`)
@@ -46,34 +44,29 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  // 스크롤 양에 따라 사진 투명도를 조절하고, 내리기 시작하면 영상을 재생
+  // 영상이 재생 가능한 상태가 되면, 2초 뒤에 재생 시작 + 사진 서서히 사라짐
   useEffect(() => {
-    let ticking = false;
-    const apply = () => {
-      ticking = false;
-      const heroHeight = heroRef.current ? heroRef.current.offsetHeight : window.innerHeight;
-      const range = heroHeight * HERO_FADE_FRACTION || 1;
-      // progress: 0(맨 위) → 1(사진 완전히 사라짐)
-      const progress = Math.min(Math.max(window.scrollY / range, 0), 1);
+    const video = heroVideoRef.current;
+    if (!video) return;
 
-      if (heroImageRef.current) {
-        heroImageRef.current.style.opacity = String(1 - progress);
-      }
-      // 한번 내려서 재생이 시작되면, 맨 위로 올라와도 멈추지 않고 계속 재생
-      const video = heroVideoRef.current;
-      if (video && progress > 0) video.play().catch(() => {});
+    let timer;
+    const startAfterDelay = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        video.play().catch(() => {}); // 자동재생 차단 등 실패는 무시
+        setHeroVideoStarted(true);    // 사진 페이드아웃
+      }, HERO_VIDEO_START_DELAY);
     };
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(apply);
-    };
-    apply(); // 새로고침 시 현재 스크롤 위치 즉시 반영
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+
+    if (video.readyState >= 3) {
+      startAfterDelay(); // 이미 로딩이 충분히 된 경우
+    } else {
+      video.addEventListener("canplay", startAfterDelay, { once: true });
+    }
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      clearTimeout(timer);
+      video.removeEventListener("canplay", startAfterDelay);
     };
   }, [homeVideo]);
 
@@ -86,10 +79,10 @@ export default function Home() {
     <div>
       <Header variant="overlay" />
 
-      <div className="hc-hero" ref={heroRef}>
+      <div className="hc-hero">
         {heroVideoUrl ? (
           <>
-            {/* 영상 (아래 깔려 있고, 위의 사진이 투명해지면서 드러남) */}
+            {/* 영상 (아래 깔려 있고, 2초 뒤 재생되며 위의 사진이 사라지면 드러남) */}
             <video
               key={heroVideoUrl}
               ref={heroVideoRef}
@@ -101,11 +94,10 @@ export default function Home() {
               preload="auto"
               poster={heroImageUrl || undefined}
             />
-            {/* 맨 위에서 보이는 사진 (스크롤하면 서서히 투명해짐) */}
+            {/* 처음 보이는 사진 (영상 시작되면 서서히 사라짐) */}
             {heroImageUrl && (
               <div
-                ref={heroImageRef}
-                className="hc-hero-image-bg hc-hero-image-fade"
+                className={`hc-hero-image-bg hc-hero-image-fade${heroVideoStarted ? " is-hidden" : ""}`}
                 style={{ backgroundImage: `url(${heroImageUrl})` }}
                 aria-hidden="true"
               />

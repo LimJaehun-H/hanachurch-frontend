@@ -126,10 +126,14 @@
   background-repeat: no-repeat;
   background-color: #0E0E0E;     /* 좌우(또는 상하) 남는 공백은 검은색 */
 }
-/* 영상은 항상 아래에 깔려 있고, 위의 사진이 투명해지면서 드러남 */
+/* 영상은 항상 아래에 깔려 있고, 처음엔 사진이 덮고 있다가 영상 시작되면 사라짐 */
 .hc-hero-image-fade {
-  z-index: 1;          /* 영상 위에 덮임 */
-  will-change: opacity; /* 스크롤 중 부드럽게 */
+  z-index: 1;                      /* 영상 위에 덮임 */
+  opacity: 1;
+  transition: opacity 1.2s ease;   /* 사진 → 영상 부드럽게 전환 */
+}
+.hc-hero-image-fade.is-hidden {
+  opacity: 0;
 }
 
 .hc-hero-fallback-bg {
