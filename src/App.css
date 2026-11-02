@@ -3234,6 +3234,7 @@ button.hc-nav-parent {
   .hc-header {
     --hc-drawer-width: min(64vw, 248px);
     --hc-drawer-ease: 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+    --hc-toggle-lift: -16px;
   }
 
   /* 모바일에선 로그인/회원가입이 드로어 상단 띠로 이동 */
@@ -3271,8 +3272,10 @@ button.hc-nav-parent {
   .hc-header--overlay:not(.hc-header--scrolled) .hc-nav-toggle { color: #FFFFFF; }
   .hc-header--overlay.hc-header--scrolled .hc-nav-toggle,
   .hc-header--solid .hc-nav-toggle { color: var(--ink); }
-  /* 열렸을 때: 드로어와 함께 왼쪽으로 밀려나 어두운 배경 위에 흰 X로 표시 */
-  .hc-nav-toggle--open { transform: translateX(calc(-1 * var(--hc-drawer-width))); }
+  /* 열렸을 때: 드로어와 함께 왼쪽으로 밀려나 어두운 배경 위에 흰 X로 표시 (위로 올려 상단 띠와 세로 중앙 맞춤) */
+  .hc-nav-toggle--open {
+    transform: translate(calc(-1 * var(--hc-drawer-width)), var(--hc-toggle-lift));
+  }
   .hc-nav-toggle--open span { background: #FFFFFF; }
   .hc-nav-toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hc-nav-toggle--open span:nth-child(2) { opacity: 0; }
@@ -3314,27 +3317,27 @@ button.hc-nav-parent {
     box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
   }
 
-  /* 드로어 상단 띠: 높이를 헤더와 맞춰 왼쪽 X와 세로 중앙을 일치시킴 */
+  /* 드로어 상단 띠: 메뉴 한 줄보다 낮게, 링크는 오른쪽으로 모음 */
   .hc-nav-auth {
     display: flex;
     flex: none;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: flex-end;
+    gap: 16px;
     box-sizing: border-box;
-    min-height: calc(env(safe-area-inset-top, 0px) + 84px);
+    min-height: calc(env(safe-area-inset-top, 0px) + 46px);
     padding: env(safe-area-inset-top, 0px) 26px 0;
     background: #ECB33F;
     color: var(--ink);
   }
   .hc-header .hc-nav .hc-nav-auth-link {
     flex: none;
-    padding: 10px 0;
+    padding: 8px 0;
     border: none;
     background: none;
     font: inherit;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
     color: inherit;
     text-decoration: none;
     cursor: pointer;
@@ -3418,6 +3421,10 @@ button.hc-nav-parent {
     opacity: 0.5;
   }
   .hc-nav-item--open .hc-nav-caret { transform: rotate(-135deg); opacity: 0.85; }
+}
+/* 760px 이하는 헤더 세로 여백이 4px 더 커서 X도 그만큼 더 올림 */
+@media (max-width: 760px) {
+  .hc-header { --hc-toggle-lift: -20px; }
 }
 
 /* ===== 모바일 드로어 메뉴: 다크모드 대응 ===== */
