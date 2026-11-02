@@ -3321,3 +3321,35 @@ button.hc-nav-parent {
     color: var(--ink);
   }
 }
+
+/* ===== 모바일 드로어 메뉴: 다크모드 대응 ===== */
+/* 폰이 다크모드면 어두운 배경 + 밝은 글자로 자동 전환 */
+@media (max-width: 860px) and (prefers-color-scheme: dark) {
+  .hc-nav {
+    background: #16181D;
+    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.55);
+  }
+  .hc-nav-item { border-bottom-color: rgba(255, 255, 255, 0.08); }
+
+  .hc-header .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
+    color: #F2F2F2;
+  }
+
+  .hc-nav-dropdown { background: #1D2026; }
+  .hc-header .hc-nav-item .hc-nav-dropdown a,
+  .hc-nav .hc-nav-dropdown a {
+    color: rgba(255, 255, 255, 0.72);
+    border-top-color: rgba(255, 255, 255, 0.07);
+  }
+  .hc-nav .hc-nav-dropdown a:hover,
+  .hc-nav .hc-nav-dropdown a:active {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* 햄버거가 X로 열렸을 때, 어두운 드로어 위에선 밝게 */
+  .hc-nav-toggle--open span { background: #F2F2F2; }
+}
