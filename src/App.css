@@ -294,6 +294,34 @@ button.hc-nav-parent {
   text-decoration: none;
 }
 .hc-home-footer-privacy:hover { text-decoration: underline; }
+/* 모바일: 푸터가 화면을 적게 차지하도록 압축 (오시는 길은 메뉴/퀵링크에 있어 숨김) */
+@media (max-width: 760px) {
+  .hc-home-footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 14px;
+    padding: 14px 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+  .hc-home-footer-link { display: none; }
+  .hc-home-footer-row {
+    flex: 0 0 100%;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+  .hc-home-footer-logo { height: 26px; }
+  .hc-home-footer-brand { flex-shrink: 0; font-size: 16px; }
+  .hc-home-footer-line { font-size: 11px; line-height: 1.45; margin-bottom: 0; }
+  .hc-home-footer-copyright {
+    flex: 0 0 100%;
+    font-size: 10.5px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top-color: rgba(255, 255, 255, 0.2);
+  }
+  .hc-home-footer-privacy { margin-top: 6px; font-size: 12px; }
+  .hc-home-footer-admin { margin-top: 6px; font-size: 11px; }
+}
 
 /* ---------- 개인정보처리방침 페이지 ---------- */
 .hc-privacy-page {
