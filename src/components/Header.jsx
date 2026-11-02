@@ -116,32 +116,37 @@ export default function Header({ variant = "solid" }) {
 
   const handleLogout = () => {
     clearMemberSession();
+    setMenuOpen(false); // 홈에서 로그아웃하면 경로가 그대로라 드로어가 자동으로 닫히지 않음
     navigate("/");
   };
 
+  // 로그인/회원가입 (로그인 후엔 이름/로그아웃): 데스크톱 상단바와 모바일 드로어 공용
+  const renderAuthLinks = (linkClass, logoutClass = linkClass) =>
+    memberLoginId ? (
+      <>
+        <Link to="/mypage" className={linkClass}>{(memberName || memberLoginId)}성도님</Link>
+        <button type="button" className={logoutClass} onClick={handleLogout}>
+          로그아웃
+        </button>
+      </>
+    ) : (
+      <>
+        <Link to="/login" className={linkClass}>
+          로그인
+        </Link>
+        <Link to="/signup/agree" className={linkClass}>
+          회원가입
+        </Link>
+      </>
+    );
+
   return (
     <header
-      className={`hc-header hc-header--${variant} ${scrolled ? "hc-header--scrolled" : ""}`}
+      className={`hc-header hc-header--${variant} ${scrolled ? "hc-header--scrolled" : ""} ${menuOpen ? "hc-header--menu-open" : ""}`}
     >
       <div className={`hc-topbar ${(topbarHidden || isAdminPage) ? "hc-topbar--hidden" : ""}`}>
         <div className="hc-topbar-inner">
-          {memberLoginId ? (
-            <>
-              <Link to="/mypage" className="hc-topbar-link">{(memberName || memberLoginId)}성도님</Link>
-              <button type="button" className="hc-topbar-link hc-topbar-btn" onClick={handleLogout}>
-                로그아웃
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="hc-topbar-link">
-                로그인
-              </Link>
-              <Link to="/signup/agree" className="hc-topbar-link">
-                회원가입
-              </Link>
-            </>
-          )}
+          {renderAuthLinks("hc-topbar-link", "hc-topbar-link hc-topbar-btn")}
         </div>
       </div>
 
@@ -171,6 +176,9 @@ export default function Header({ variant = "solid" }) {
         </button>
 
         <nav className={`hc-nav ${menuOpen ? "hc-nav--open" : ""}`}>
+          {/* 모바일 드로어 상단 띠 (데스크톱에선 숨김) */}
+          <div className="hc-nav-auth">{renderAuthLinks("hc-nav-auth-link")}</div>
+
           <div className={`hc-nav-item ${openIdx === 0 ? "hc-nav-item--open" : ""}`}>
             <button type="button" className="hc-nav-parent" onClick={() => toggleSection(0)}>
               교회소개<span className="hc-nav-caret" aria-hidden="true" />

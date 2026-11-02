@@ -103,6 +103,10 @@ button.hc-nav-parent {
 .hc-nav-backdrop {
   display: none;
 }
+/* 드로어 상단 로그인/회원가입 띠: 데스크톱에선 없음 */
+.hc-nav-auth {
+  display: none;
+}
 .hc-nav a {
   flex: 1;
   text-align: center;
@@ -3227,6 +3231,18 @@ button.hc-nav-parent {
 /* ===== 모바일 헤더: 햄버거 + 오른쪽 슬라이드 드로어 메뉴 ===== */
 /* 데스크톱용 메뉴/드롭다운 규칙보다 뒤에 있어야 덮어써지므로 파일 끝에 둠 */
 @media (max-width: 860px) {
+  .hc-header {
+    --hc-drawer-width: min(64vw, 248px);
+    --hc-drawer-ease: 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 모바일에선 로그인/회원가입이 드로어 상단 띠로 이동 */
+  .hc-topbar { display: none; }
+
+  /* 드로어가 열리면 왼쪽으로 온 X와 겹치지 않게 로고를 숨김 */
+  .hc-wordmark { transition: opacity 0.2s ease; }
+  .hc-header--menu-open .hc-wordmark { opacity: 0; }
+
   /* 햄버거 버튼 (드로어보다 위에 떠서 X로 닫기 가능) */
   .hc-nav-toggle {
     display: flex;
@@ -3242,6 +3258,7 @@ button.hc-nav-parent {
     cursor: pointer;
     position: relative;
     z-index: 130;
+    transition: transform var(--hc-drawer-ease);
   }
   .hc-nav-toggle span {
     display: block;
@@ -3254,8 +3271,9 @@ button.hc-nav-parent {
   .hc-header--overlay:not(.hc-header--scrolled) .hc-nav-toggle { color: #FFFFFF; }
   .hc-header--overlay.hc-header--scrolled .hc-nav-toggle,
   .hc-header--solid .hc-nav-toggle { color: var(--ink); }
-  /* 열렸을 때 X 모양 + 흰 드로어 위에서 보이도록 어둡게 */
-  .hc-nav-toggle--open span { background: var(--ink); }
+  /* 열렸을 때: 드로어와 함께 왼쪽으로 밀려나 어두운 배경 위에 흰 X로 표시 */
+  .hc-nav-toggle--open { transform: translateX(calc(-1 * var(--hc-drawer-width))); }
+  .hc-nav-toggle--open span { background: #FFFFFF; }
   .hc-nav-toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hc-nav-toggle--open span:nth-child(2) { opacity: 0; }
   .hc-nav-toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -3279,14 +3297,14 @@ button.hc-nav-parent {
     top: 0;
     right: 0;
     bottom: 0;
-    width: min(64vw, 248px);
+    width: var(--hc-drawer-width);
     flex: none;
     flex-direction: column;
     gap: 0;
     background: #FFFFFF;
-    padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 28px;
+    padding: 0 0 28px;
     transform: translateX(105%);
-    transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--hc-drawer-ease);
     overflow-y: auto;
     z-index: 115;
   }
@@ -3294,6 +3312,40 @@ button.hc-nav-parent {
   .hc-nav--open {
     transform: translateX(0);
     box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
+  }
+
+  /* 드로어 상단 띠: 높이를 헤더와 맞춰 왼쪽 X와 세로 중앙을 일치시킴 */
+  .hc-nav-auth {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-sizing: border-box;
+    min-height: calc(env(safe-area-inset-top, 0px) + 84px);
+    padding: env(safe-area-inset-top, 0px) 26px 0;
+    background: #ECB33F;
+    color: var(--ink);
+  }
+  .hc-header .hc-nav .hc-nav-auth-link {
+    flex: none;
+    padding: 10px 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  /* 긴 이름은 말줄임 (로그아웃 버튼이 밀려나지 않게) */
+  .hc-header .hc-nav a.hc-nav-auth-link:first-child:not(:last-child) {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .hc-nav-item {
@@ -3392,7 +3444,4 @@ button.hc-nav-parent {
     color: #FFFFFF;
     background: rgba(255, 255, 255, 0.06);
   }
-
-  /* 햄버거가 X로 열렸을 때, 어두운 드로어 위에선 밝게 */
-  .hc-nav-toggle--open span { background: #F2F2F2; }
 }
