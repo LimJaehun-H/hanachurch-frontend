@@ -1523,9 +1523,6 @@ button.hc-nav-parent {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
-@media (max-width: 600px) {
-  .hc-quicklinks-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-}
 
 .hc-quicklink {
   display: flex;
@@ -1552,6 +1549,17 @@ button.hc-nav-parent {
   font-size: 14px;
   font-weight: 700;
   color: var(--ink);
+}
+/* 모바일에서도 4개를 가로 한 줄로 유지 */
+@media (max-width: 600px) {
+  .hc-quicklinks { padding: 40px 16px; }
+  .hc-quicklinks-grid { gap: 8px; }
+  .hc-quicklink { gap: 10px; }
+  .hc-quicklink-icon { width: 48px; height: 48px; }
+  .hc-quicklink-label {
+    font-size: clamp(11.5px, 3.2vw, 13px);
+    white-space: nowrap;
+  }
 }
 
 /* ---------- 페이지 전환 애니메이션 ---------- */
@@ -1917,6 +1925,25 @@ button.hc-nav-parent {
 .hc-worship-preview-sep {
   margin: 0 8px;
   color: var(--line);
+}
+/* 모바일: 라벨 아래에 예배 시간을 2열로, 시간 중간에서 줄바꿈되지 않게 */
+@media (max-width: 720px) {
+  .hc-worship-preview-boxes { padding: 0 16px; gap: 12px; }
+  .hc-worship-preview-box {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 14px 16px;
+    text-align: left;
+  }
+  .hc-worship-preview-box-times {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 12px;
+    font-size: clamp(12px, 3.4vw, 14px);
+  }
+  .hc-worship-preview-part { white-space: nowrap; }
+  .hc-worship-preview-sep { display: none; }
 }
 /* ---------- 홈 풀블리드 패럴랙스 배너 ---------- */
 .hc-parallax-banner {
@@ -3229,13 +3256,16 @@ button.hc-nav-parent {
     gap: 0;
     background: #FFFFFF;
     padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 28px;
-    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
     transform: translateX(105%);
     transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
     z-index: 115;
   }
-  .hc-nav--open { transform: translateX(0); }
+  /* 그림자는 열렸을 때만: 닫힌 드로어의 그림자가 화면 오른쪽 끝에 비치지 않게 */
+  .hc-nav--open {
+    transform: translateX(0);
+    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
+  }
 
   .hc-nav-item {
     flex: none;
@@ -3312,10 +3342,8 @@ button.hc-nav-parent {
 /* ===== 모바일 드로어 메뉴: 다크모드 대응 ===== */
 /* 폰이 다크모드면 어두운 배경 + 밝은 글자로 자동 전환 */
 @media (max-width: 860px) and (prefers-color-scheme: dark) {
-  .hc-nav {
-    background: #16181D;
-    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.55);
-  }
+  .hc-nav { background: #16181D; }
+  .hc-nav--open { box-shadow: -16px 0 44px rgba(0, 0, 0, 0.55); }
   .hc-nav-item { border-bottom-color: rgba(255, 255, 255, 0.08); }
 
   .hc-header .hc-nav-item > .hc-nav-parent,

@@ -52,8 +52,10 @@ export default function HomeWorshipPreview() {
             <span className="hc-worship-preview-box-times">
               {group.parts.map((p, i) => (
                 <React.Fragment key={i}>
-                  {p.part && <strong>{p.part}</strong>}{" "}
-                  {p.time}
+                  <span className="hc-worship-preview-part">
+                    {p.part && <strong>{p.part}</strong>}{" "}
+                    {p.time}
+                  </span>
                   {i < group.parts.length - 1 && (
                     <span className="hc-worship-preview-sep">|</span>
                   )}
