@@ -375,6 +375,12 @@
   background: #fff;
 }
 
+/* 아주 좁은 폰: 로고 더 축소 + 히어로 조금 더 낮춰 확대감 최소화 */
+@media (max-width: 480px) {
+  .hc-wordmark-logo { height: 38px; max-width: 150px; }
+  .hc-hero { height: 60vh; min-height: 400px; }
+}
+
 @media (max-width: 560px) {
   .hc-table { font-size: 13px; }
   .hc-table thead th, .hc-table tbody td { padding: 10px 8px; }
@@ -640,6 +646,10 @@
 
 @media (max-width: 760px) {
   .hc-header-inner { gap: 24px; padding: 20px 20px; }
+  /* 로고 축소 (비율 유지) */
+  .hc-wordmark-logo { height: 44px; max-width: 180px; }
+  /* 히어로 높이를 줄여 영상이 덜 잘리게(확대감 완화) */
+  .hc-hero { height: 66vh; min-height: 440px; }
   .hc-hero-content { padding-bottom: 140px; }
   .hc-hero-next { left: 32px; right: auto; bottom: 20px; }
   .hc-page-content { padding: 120px 20px 80px; }
