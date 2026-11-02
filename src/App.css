@@ -83,6 +83,10 @@
   display: flex;
   flex: 1;
 }
+/* 모바일 햄버거 버튼: 데스크톱에선 숨김 */
+.hc-nav-toggle {
+  display: none;
+}
 .hc-nav a {
   flex: 1;
   text-align: center;
@@ -546,9 +550,95 @@
   background: var(--paper-tint);
 }
 
+/* ===== 모바일 헤더: 가로 메뉴 → 햄버거 메뉴로 전환 ===== */
+@media (max-width: 860px) {
+  /* 햄버거 버튼 보이기 */
+  .hc-nav-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 9px;
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 120;
+  }
+  .hc-nav-toggle span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+  /* 햄버거 색: 헤더 상태(투명/흰색)에 맞춤 */
+  .hc-header--overlay:not(.hc-header--scrolled) .hc-nav-toggle { color: #FFFFFF; }
+  .hc-header--overlay.hc-header--scrolled .hc-nav-toggle,
+  .hc-header--solid .hc-nav-toggle { color: var(--ink); }
+  /* 열렸을 때 X 모양 */
+  .hc-nav-toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hc-nav-toggle--open span:nth-child(2) { opacity: 0; }
+  .hc-nav-toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* 가로 메뉴 → 헤더 아래로 펼쳐지는 패널 */
+  .hc-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    display: none;                 /* 닫힌 상태 */
+    background: #1A1A1A;
+    padding: 6px 0 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  }
+  .hc-nav--open { display: flex; } /* 햄버거 누르면 열림 */
+
+  .hc-nav-item {
+    flex: none;
+    text-align: left;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  /* 상위 메뉴명(교회소개 등) = 섹션 제목, 배경이 어두우니 항상 흰색 */
+  .hc-header .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
+    display: block;
+    color: #FFFFFF;
+    padding: 14px 24px 6px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  /* 온라인 헌금처럼 단독 링크인 상위 메뉴는 탭 가능한 한 줄로 */
+  .hc-nav-item > a.hc-nav-parent { padding: 15px 24px; }
+
+  /* 드롭다운 → 그냥 목록으로 펼쳐서 보여줌 */
+  .hc-nav-dropdown {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    min-width: 0;
+    background: transparent;
+    padding: 0 0 6px;
+    box-shadow: none;
+  }
+  .hc-nav .hc-nav-dropdown a,
+  .hc-header .hc-nav-item .hc-nav-dropdown a {
+    text-align: left;
+    padding: 11px 36px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
 @media (max-width: 760px) {
-  .hc-nav { gap: 20px; }
-  .hc-nav a { font-size: 13px; }
   .hc-header-inner { gap: 24px; padding: 20px 20px; }
   .hc-hero-content { padding-bottom: 140px; }
   .hc-hero-next { left: 32px; right: auto; bottom: 20px; }

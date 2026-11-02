@@ -13,6 +13,8 @@ export default function Header({ variant = "solid" }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(variant !== "overlay");
+  // 모바일 햄버거 메뉴 열림 여부
+  const [menuOpen, setMenuOpen] = useState(false);
   // 로그인/회원가입 상단바: 페이지 맨 위에서만 보이고 스크롤하면 숨김 (variant와 무관하게 공통 적용)
   const [topbarHidden, setTopbarHidden] = useState(false);
   // 로그인한 회원의 아이디 (로그인 안 했으면 null)
@@ -78,6 +80,11 @@ export default function Header({ variant = "solid" }) {
     return subscribeMemberAuthChange(update);
   }, []);
 
+  // 페이지 이동(메뉴의 링크 클릭 등) 시 모바일 메뉴 자동 닫기
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   // 지금이 "투명 히어로 위, 스크롤 전" 상태인지 여부
   const isOverlayState = variant === "overlay" && !scrolled;
   // 해당 상태의 로고가 없으면 반대쪽 로고로라도 보여주고, 그것도 없으면 아래에서 텍스트로 대체
@@ -139,7 +146,19 @@ export default function Header({ variant = "solid" }) {
           )}
         </Link>
 
-        <nav className="hc-nav">
+        <button
+          type="button"
+          className={`hc-nav-toggle ${menuOpen ? "hc-nav-toggle--open" : ""}`}
+          aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`hc-nav ${menuOpen ? "hc-nav--open" : ""}`}>
           <div className="hc-nav-item">
             <span className="hc-nav-parent">교회소개</span>
             <div className="hc-nav-dropdown">
