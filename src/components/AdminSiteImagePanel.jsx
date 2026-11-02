@@ -143,6 +143,11 @@ export default function AdminSiteImagePanel({ token, onAuthExpired }) {
                 </button>
               </>
             )}
+            {selectedGroup.deletable && (
+              <button type="button" onClick={() => handleDelete(img.id)}>
+                삭제
+              </button>
+            )}
           </div>
         ))}
       </div>

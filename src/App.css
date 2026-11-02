@@ -2018,6 +2018,7 @@ button.hc-nav-parent {
   font-weight: 700;
   line-height: 1.4;
   text-shadow: 0 2px 16px rgba(0,0,0,0.35);
+  word-break: keep-all;
 }
 .hc-parallax-banner-subtitle {
   margin-top: 14px;

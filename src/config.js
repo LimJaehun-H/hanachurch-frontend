@@ -193,8 +193,8 @@ export const WORSHIP_PREVIEW_VERSE = "말씀 가능";
 // (스크롤하면 배경은 고정된 채 문구가 아래에서 올라오는 효과)
 export const HOME_BANNER_IMAGE_URL = "images/home-banner.jpg";
 // 지금은 비워두고, 나중에 문구 넣고 싶을 때 이 두 줄만 채우면 됩니다.
-export const HOME_BANNER_TITLE = "으하하하하하";
-export const HOME_BANNER_SUBTITLE = "I am spiderman";
+export const HOME_BANNER_TITLE = "다 그리스도 예수 안에서 하나이니라";
+export const HOME_BANNER_SUBTITLE = "갈라디아서 3:28";
 
 
 
@@ -234,6 +234,7 @@ export const NAV_GROUPS = [
   },
 ];
 // 어떤 자리(groupKey)들이 있고, 각각 단일형인지 갤러리형인지 정의
+// deletable: 단일형인데 비워둘 수도 있는 자리면 true (관리자에 삭제 버튼 표시)
 // 나중에 새 이미지 자리가 필요하면, 여기에 한 줄만 추가하면 됩니다.
 // section: 관리자 화면에서 드롭다운을 묶어 보여줄 때 쓰는 그룹명
 // page: "미리보기" 버튼을 눌렀을 때 이동할 실제 페이지 경로
@@ -242,7 +243,7 @@ export const SITE_IMAGE_GROUPS = [
   { key: "home_hero_image", label: "홈 배경 이미지", type: "single", section: "홈 화면", page: "/" },
   { key: "home_logo", label: "홈 로고", type: "single", section: "홈 화면", page: "/" },
   { key: "home_banner", label: "홈 패럴랙스 배너", type: "single", section: "홈 화면", page: "/" },
-  { key: "home_banner_badge", label: "홈 배너 배지/로고 이미지", type: "single", section: "홈 화면", page: "/" },
+  { key: "home_banner_badge", label: "홈 배너 배지/로고 이미지", type: "single", deletable: true, section: "홈 화면", page: "/" },
   { key: "home_gallery", label: "홈 갤러리 사진", type: "gallery", section: "홈 화면", page: "/" },
   { key: "worship_preview", label: "홈 예배안내 미리보기 사진", type: "gallery", section: "홈 화면", page: "/" },
 
