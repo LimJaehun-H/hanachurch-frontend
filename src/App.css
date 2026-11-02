@@ -3327,8 +3327,8 @@ button.hc-nav-parent {
     box-sizing: border-box;
     min-height: calc(env(safe-area-inset-top, 0px) + 46px);
     padding: env(safe-area-inset-top, 0px) 26px 0;
-    background: #ECB33F;
     color: var(--ink);
+    border-bottom: 1px solid var(--line);
   }
   .hc-header .hc-nav .hc-nav-auth-link {
     flex: none;
@@ -3433,6 +3433,7 @@ button.hc-nav-parent {
   .hc-nav { background: #16181D; }
   .hc-nav--open { box-shadow: -16px 0 44px rgba(0, 0, 0, 0.55); }
   .hc-nav-item { border-bottom-color: rgba(255, 255, 255, 0.08); }
+  .hc-nav-auth { color: #F2F2F2; border-bottom-color: rgba(255, 255, 255, 0.08); }
 
   .hc-header .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
