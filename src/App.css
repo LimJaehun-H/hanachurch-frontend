@@ -572,143 +572,6 @@ button.hc-nav-parent {
   background: var(--paper-tint);
 }
 
-/* ===== 모바일 헤더: 햄버거 + 오른쪽 슬라이드 드로어 메뉴 ===== */
-@media (max-width: 860px) {
-  /* 햄버거 버튼 (드로어보다 위에 떠서 X로 닫기 가능) */
-  .hc-nav-toggle {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 44px;
-    height: 44px;
-    padding: 9px;
-    margin-left: auto;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    z-index: 130;
-  }
-  .hc-nav-toggle span {
-    display: block;
-    width: 26px;
-    height: 2px;
-    border-radius: 2px;
-    background: currentColor;
-    transition: transform 0.3s ease, opacity 0.2s ease;
-  }
-  .hc-header--overlay:not(.hc-header--scrolled) .hc-nav-toggle { color: #FFFFFF; }
-  .hc-header--overlay.hc-header--scrolled .hc-nav-toggle,
-  .hc-header--solid .hc-nav-toggle { color: var(--ink); }
-  /* 열렸을 때 X 모양 + 흰 드로어 위에서 보이도록 어둡게 */
-  .hc-nav-toggle--open span { background: var(--ink); }
-  .hc-nav-toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .hc-nav-toggle--open span:nth-child(2) { opacity: 0; }
-  .hc-nav-toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  /* 뒤 어두운 배경 */
-  .hc-nav-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(12, 12, 18, 0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 110;
-  }
-  .hc-nav-backdrop.is-open { opacity: 1; visibility: visible; }
-
-  /* 오른쪽에서 부드럽게 슬라이드되는 드로어 */
-  .hc-nav {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(82vw, 330px);
-    flex: none;
-    flex-direction: column;
-    gap: 0;
-    background: #FFFFFF;
-    padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 28px;
-    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
-    transform: translateX(105%);
-    transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
-    z-index: 115;
-  }
-  .hc-nav--open { transform: translateX(0); }
-
-  .hc-nav-item {
-    flex: none;
-    text-align: left;
-    border-bottom: 1px solid var(--line);
-  }
-  /* 상위 메뉴 한 줄 (버튼/링크 공통) — 드로어 배경이 흰색이라 어두운 글자 고정 */
-  .hc-header .hc-nav-item > .hc-nav-parent,
-  .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
-  .hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
-  .hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 17px 26px;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    background: none;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-  }
-  .hc-nav-item > a.hc-nav-parent { text-decoration: none; }
-
-  /* 하위 메뉴: 아코디언(부드럽게 펼침) */
-  .hc-nav-dropdown {
-    position: static;
-    transform: none;
-    opacity: 1;
-    visibility: visible;
-    min-width: 0;
-    background: var(--paper);
-    box-shadow: none;
-    max-height: 0;
-    overflow: hidden;
-    padding: 0;
-    transition: max-height 0.32s ease;
-  }
-  .hc-nav-item--open .hc-nav-dropdown { max-height: 260px; }
-  .hc-nav .hc-nav-dropdown a,
-  .hc-header .hc-nav-item .hc-nav-dropdown a {
-    display: block;
-    text-align: left;
-    padding: 13px 26px 13px 40px;
-    font-size: 14.5px;
-    color: var(--ink-soft);
-    border-top: 1px solid var(--line);
-  }
-  .hc-nav .hc-nav-dropdown a:first-child { border-top: none; }
-  .hc-nav .hc-nav-dropdown a:hover,
-  .hc-nav .hc-nav-dropdown a:active { background: rgba(0, 0, 0, 0.03); color: var(--ink); }
-
-  /* 상위 메뉴 오른쪽 펼침 화살표 (열리면 회전) */
-  .hc-nav-caret {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin-left: 12px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg);
-    transition: transform 0.25s ease, opacity 0.2s ease;
-    opacity: 0.5;
-  }
-  .hc-nav-item--open .hc-nav-caret { transform: rotate(-135deg); opacity: 0.85; }
-}
 
 @media (max-width: 760px) {
   .hc-header-inner { gap: 24px; padding: 20px 20px; }
@@ -933,10 +796,13 @@ button.hc-nav-parent {
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 30;
 }
-.hc-nav-item:hover .hc-nav-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
+/* 터치 기기는 탭한 뒤에도 hover가 남으므로 데스크톱 폭에서만 적용 */
+@media (min-width: 861px) {
+  .hc-nav-item:hover .hc-nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 .hc-nav .hc-nav-dropdown a {
   display: block;
@@ -3302,24 +3168,145 @@ button.hc-nav-parent {
   line-height: 1.5;
 }
 
-/* ===== (보정) 모바일 드로어 메뉴 글자색 ===== */
-/* 뒤쪽 데스크톱용 규칙(상위메뉴/드롭다운 흰색)이 모바일 드로어를 덮어써서
-   흰 배경에 흰 글자가 되던 문제 수정. 파일 맨 끝에 둬서 항상 우선 적용됨. */
+/* ===== 모바일 헤더: 햄버거 + 오른쪽 슬라이드 드로어 메뉴 ===== */
+/* 데스크톱용 메뉴/드롭다운 규칙보다 뒤에 있어야 덮어써지므로 파일 끝에 둠 */
 @media (max-width: 860px) {
+  /* 햄버거 버튼 (드로어보다 위에 떠서 X로 닫기 가능) */
+  .hc-nav-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 9px;
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 130;
+  }
+  .hc-nav-toggle span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+  .hc-header--overlay:not(.hc-header--scrolled) .hc-nav-toggle { color: #FFFFFF; }
+  .hc-header--overlay.hc-header--scrolled .hc-nav-toggle,
+  .hc-header--solid .hc-nav-toggle { color: var(--ink); }
+  /* 열렸을 때 X 모양 + 흰 드로어 위에서 보이도록 어둡게 */
+  .hc-nav-toggle--open span { background: var(--ink); }
+  .hc-nav-toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hc-nav-toggle--open span:nth-child(2) { opacity: 0; }
+  .hc-nav-toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* 뒤 어두운 배경 */
+  .hc-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 12, 18, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 110;
+  }
+  .hc-nav-backdrop.is-open { opacity: 1; visibility: visible; }
+
+  /* 오른쪽에서 부드럽게 슬라이드되는 드로어 */
+  .hc-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(64vw, 248px);
+    flex: none;
+    flex-direction: column;
+    gap: 0;
+    background: #FFFFFF;
+    padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 28px;
+    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
+    transform: translateX(105%);
+    transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    z-index: 115;
+  }
+  .hc-nav--open { transform: translateX(0); }
+
+  .hc-nav-item {
+    flex: none;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  /* 상위 메뉴 한 줄 (버튼/링크 공통) — 드로어 배경이 흰색이라 어두운 글자 고정 */
   .hc-header .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 17px 26px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--ink);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
   }
-  .hc-header .hc-nav-item .hc-nav-dropdown a,
-  .hc-nav .hc-nav-dropdown a {
+  .hc-nav-item > a.hc-nav-parent { text-decoration: none; }
+
+  /* 하위 메뉴: 아코디언(부드럽게 펼침) */
+  .hc-nav-dropdown {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    min-width: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: max-height 0.32s ease;
+  }
+  .hc-nav-item--open .hc-nav-dropdown { max-height: 260px; }
+  .hc-nav .hc-nav-dropdown a,
+  .hc-header .hc-nav-item .hc-nav-dropdown a {
+    display: block;
+    text-align: left;
+    padding: 13px 26px 13px 40px;
+    font-size: 14.5px;
     color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    border-bottom: none;
   }
+  .hc-nav .hc-nav-dropdown a:first-child { border-top: none; }
   .hc-nav .hc-nav-dropdown a:hover,
-  .hc-nav .hc-nav-dropdown a:active {
-    color: var(--ink);
+  .hc-nav .hc-nav-dropdown a:active { background: rgba(0, 0, 0, 0.03); color: var(--ink); }
+
+  /* 상위 메뉴 오른쪽 펼침 화살표 (열리면 회전) */
+  .hc-nav-caret {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-left: 12px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.25s ease, opacity 0.2s ease;
+    opacity: 0.5;
   }
+  .hc-nav-item--open .hc-nav-caret { transform: rotate(-135deg); opacity: 0.85; }
 }
 
 /* ===== 모바일 드로어 메뉴: 다크모드 대응 ===== */
@@ -3338,7 +3325,6 @@ button.hc-nav-parent {
     color: #F2F2F2;
   }
 
-  .hc-nav-dropdown { background: #1D2026; }
   .hc-header .hc-nav-item .hc-nav-dropdown a,
   .hc-nav .hc-nav-dropdown a {
     color: rgba(255, 255, 255, 0.72);
