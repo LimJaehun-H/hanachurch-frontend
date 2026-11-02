@@ -5,6 +5,8 @@ import {
   CHURCH_INFO,
   HEADER_LOGO_WHITE_IMAGE_URL,
   HEADER_LOGO_DARK_IMAGE_URL,
+  HEADER_LOGO_WHITE_SOURCE_ID,
+  HEADER_LOGO_DARK_SOURCE_ID,
 } from "../config.js";
 import { getMemberLoginId, getMemberName, clearMemberSession, subscribeMemberAuthChange } from "../utils/memberAuth.js";
 
@@ -32,7 +34,7 @@ export default function Header({ variant = "solid" }) {
     fetch(`${API_BASE_URL}/api/site-images/header_logo_white`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
-        if (data && data.length > 0) {
+        if (data && data.length > 0 && data[0].id !== HEADER_LOGO_WHITE_SOURCE_ID) {
           setLogoWhiteUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
         }
       })
@@ -43,7 +45,7 @@ export default function Header({ variant = "solid" }) {
     fetch(`${API_BASE_URL}/api/site-images/header_logo_dark`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
-        if (data && data.length > 0) {
+        if (data && data.length > 0 && data[0].id !== HEADER_LOGO_DARK_SOURCE_ID) {
           setLogoDarkUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
         }
       })

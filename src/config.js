@@ -66,7 +66,10 @@ export const TOSS_CLIENT_KEY = "test_ck_DnyRpQWGrNDJ9gZAGjm73Kwv1M9E";
 // public/images 폴더에 사진 넣고 파일명만 바꿔주면 됩니다.
 // 예: public/images/hero.jpg 에 넣었으면 "/images/hero.jpg"
 // 없으면 null로 두면 그라데이션 배경으로 자동 대체됩니다.
-export const HERO_IMAGE_URL = "images/hana.jpg";
+export const HERO_IMAGE_URL = "/images/home-hero.jpg";
+// 위 사진의 원본인 관리자 업로드 이미지 id. 서버 이미지가 이 id면 내장본을 그대로 씀 (호주 서버를 거치지 않아 바로 뜸)
+// 관리자에서 사진을 바꾸면 id가 달라져 서버 이미지로 자동 교체됨 (단, 내장본이 잠깐 먼저 보였다가 바뀜)
+export const HERO_IMAGE_SOURCE_ID = 58;
 
 // public/videos 폴더에 영상 넣고 파일명만 바꿔주면 됩니다.
 // 영상이 있으면 이미지보다 우선 재생됩니다. 없으면 null로 두세요.
@@ -180,8 +183,11 @@ export const HERO_LOGO_IMAGE_URL = null;
 // 관리자 페이지에서 업로드하지 않으면 지금처럼 텍스트("하나교회")가 그대로 보임
 // HEADER_LOGO_WHITE_IMAGE_URL = 히어로 위 투명 상태 (맨 위, 스크롤 전) 로고 → 흰색 버전
 // HEADER_LOGO_DARK_IMAGE_URL  = 흰 배경 상태 (스크롤 후 / 내부 페이지) 로고 → 원래 색(컬러) 버전
-export const HEADER_LOGO_WHITE_IMAGE_URL = null;
-export const HEADER_LOGO_DARK_IMAGE_URL = null;
+export const HEADER_LOGO_WHITE_IMAGE_URL = "/images/header-logo-white.png";
+export const HEADER_LOGO_DARK_IMAGE_URL = "/images/header-logo-dark.png";
+// 위 로고들의 원본인 관리자 업로드 이미지 id (동작은 HERO_IMAGE_SOURCE_ID와 같음)
+export const HEADER_LOGO_WHITE_SOURCE_ID = 46;
+export const HEADER_LOGO_DARK_SOURCE_ID = 47;
 
 // 하단 푸터의 "하나교회" 텍스트 자리에 넣을 로고 (전체 흰색 버전, 어두운 푸터 배경용)
 export const FOOTER_LOGO_WHITE_IMAGE_URL = null;
