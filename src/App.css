@@ -607,8 +607,8 @@ button.hc-nav-parent {
 
 @media (max-width: 760px) {
   .hc-header-inner { gap: 24px; padding: 20px 20px; }
-  /* 로고 축소 (비율 유지) */
-  .hc-wordmark-logo { height: 44px; max-width: 180px; }
+  /* 로고 축소: 화면 가로의 37% (비율 유지) */
+  .hc-wordmark-logo { width: 37vw; height: auto; max-width: 162px; }
   /* 히어로 높이를 줄여 영상이 덜 잘리게(확대감 완화) */
   .hc-hero { height: 66vh; min-height: 440px; }
   .hc-hero-content { padding-bottom: 140px; }
