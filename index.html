@@ -4,16 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>하나교회</title>
-    <!-- 홈 첫 화면 이미지를 JS가 뜨기 전부터 미리 받기 시작 (내부 페이지는 쓰는 로고가 달라 생략) -->
+    <!-- 홈 첫 화면 로고를 JS가 뜨기 전부터 미리 받기 시작 (내부 페이지는 쓰는 로고가 달라 생략) -->
     <script>
       if (location.pathname === "/") {
-        ["/images/header-logo-white.png", "/images/home-hero.jpg"].forEach(function (href) {
-          var link = document.createElement("link");
-          link.rel = "preload";
-          link.as = "image";
-          link.href = href;
-          document.head.appendChild(link);
-        });
+        var link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = "/images/header-logo-white.png";
+        document.head.appendChild(link);
       }
     </script>
   </head>

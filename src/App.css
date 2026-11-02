@@ -160,13 +160,6 @@ button.hc-nav-parent {
   opacity: 0;
 }
 
-.hc-hero-fallback-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(55% 60% at 60% 30%, rgba(255,255,255,0.10), transparent 70%),
-    linear-gradient(180deg, #2B2B2B, #0E0E0E);
-}
 .hc-hero-overlay {
   position: absolute;
   inset: 0;

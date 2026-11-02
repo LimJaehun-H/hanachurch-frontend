@@ -7,7 +7,7 @@ import HomeRecentBoards from "../components/HomeRecentBoards.jsx";
 import HomeQuickLinks from "../components/HomeQuickLinks.jsx";
 import HomeWorshipPreview from "../components/HomeWorshipPreview.jsx";
 import HomeParallaxBanner from "../components/HomeParallaxBanner.jsx";
-import { API_BASE_URL, HERO_IMAGE_URL, HERO_IMAGE_SOURCE_ID, HERO_LOGO_IMAGE_URL } from "../config.js";
+import { API_BASE_URL, HERO_IMAGE_URL, HERO_LOGO_IMAGE_URL } from "../config.js";
 
 export default function Home() {
   const [homeVideo, setHomeVideo] = useState(undefined);
@@ -28,7 +28,7 @@ export default function Home() {
     fetch(`${API_BASE_URL}/api/site-images/home_hero_image`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
-        if (data && data.length > 0 && data[0].id !== HERO_IMAGE_SOURCE_ID) {
+        if (data && data.length > 0) {
           setHeroImageUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
         }
       })
@@ -109,9 +109,7 @@ export default function Home() {
             style={{ backgroundImage: `url(${heroImageUrl})` }}
             aria-hidden="true"
           />
-        ) : (
-          <div className="hc-hero-fallback-bg" aria-hidden="true" />
-        )}
+        ) : null /* 사진·영상이 뜨기 전까지는 .hc-hero의 검은 배경 */}
 
         <div className="hc-hero-overlay" aria-hidden="true" />
 
