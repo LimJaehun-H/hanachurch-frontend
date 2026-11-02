@@ -87,6 +87,22 @@
 .hc-nav-toggle {
   display: none;
 }
+/* 상위 메뉴 펼침 화살표: 데스크톱에선 숨김 (모바일에서만 노출) */
+.hc-nav-caret {
+  display: none;
+}
+/* 상위 메뉴가 <button>이어도 데스크톱에서 기존 텍스트처럼 보이게 리셋 */
+button.hc-nav-parent {
+  font: inherit;
+  background: none;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* 모바일 메뉴 뒤 배경: 데스크톱에선 없음 */
+.hc-nav-backdrop {
+  display: none;
+}
 .hc-nav a {
   flex: 1;
   text-align: center;
@@ -556,9 +572,9 @@
   background: var(--paper-tint);
 }
 
-/* ===== 모바일 헤더: 가로 메뉴 → 햄버거 메뉴로 전환 ===== */
+/* ===== 모바일 헤더: 햄버거 + 오른쪽 슬라이드 드로어 메뉴 ===== */
 @media (max-width: 860px) {
-  /* 햄버거 버튼 보이기 */
+  /* 햄버거 버튼 (드로어보다 위에 떠서 X로 닫기 가능) */
   .hc-nav-toggle {
     display: flex;
     flex-direction: column;
@@ -571,7 +587,8 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 120;
+    position: relative;
+    z-index: 130;
   }
   .hc-nav-toggle span {
     display: block;
@@ -579,69 +596,118 @@
     height: 2px;
     border-radius: 2px;
     background: currentColor;
-    transition: transform 0.25s ease, opacity 0.2s ease;
+    transition: transform 0.3s ease, opacity 0.2s ease;
   }
-  /* 햄버거 색: 헤더 상태(투명/흰색)에 맞춤 */
   .hc-header--overlay:not(.hc-header--scrolled) .hc-nav-toggle { color: #FFFFFF; }
   .hc-header--overlay.hc-header--scrolled .hc-nav-toggle,
   .hc-header--solid .hc-nav-toggle { color: var(--ink); }
-  /* 열렸을 때 X 모양 */
+  /* 열렸을 때 X 모양 + 흰 드로어 위에서 보이도록 어둡게 */
+  .hc-nav-toggle--open span { background: var(--ink); }
   .hc-nav-toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hc-nav-toggle--open span:nth-child(2) { opacity: 0; }
   .hc-nav-toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  /* 가로 메뉴 → 헤더 아래로 펼쳐지는 패널 */
+  /* 뒤 어두운 배경 */
+  .hc-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 12, 18, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 110;
+  }
+  .hc-nav-backdrop.is-open { opacity: 1; visibility: visible; }
+
+  /* 오른쪽에서 부드럽게 슬라이드되는 드로어 */
   .hc-nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
+    position: fixed;
+    top: 0;
     right: 0;
+    bottom: 0;
+    width: min(82vw, 330px);
+    flex: none;
     flex-direction: column;
     gap: 0;
-    display: none;                 /* 닫힌 상태 */
-    background: #1A1A1A;
-    padding: 6px 0 14px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    background: #FFFFFF;
+    padding: calc(env(safe-area-inset-top, 0px) + 82px) 0 28px;
+    box-shadow: -16px 0 44px rgba(0, 0, 0, 0.22);
+    transform: translateX(105%);
+    transition: transform 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    z-index: 115;
   }
-  .hc-nav--open { display: flex; } /* 햄버거 누르면 열림 */
+  .hc-nav--open { transform: translateX(0); }
 
   .hc-nav-item {
     flex: none;
     text-align: left;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--line);
   }
-  /* 상위 메뉴명(교회소개 등) = 섹션 제목, 배경이 어두우니 항상 흰색 */
+  /* 상위 메뉴 한 줄 (버튼/링크 공통) — 드로어 배경이 흰색이라 어두운 글자 고정 */
   .hc-header .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
   .hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
-    display: block;
-    color: #FFFFFF;
-    padding: 14px 24px 6px;
-    font-size: 15px;
-    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 17px 26px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
   }
-  /* 온라인 헌금처럼 단독 링크인 상위 메뉴는 탭 가능한 한 줄로 */
-  .hc-nav-item > a.hc-nav-parent { padding: 15px 24px; }
+  .hc-nav-item > a.hc-nav-parent { text-decoration: none; }
 
-  /* 드롭다운 → 그냥 목록으로 펼쳐서 보여줌 */
+  /* 하위 메뉴: 아코디언(부드럽게 펼침) */
   .hc-nav-dropdown {
     position: static;
     transform: none;
     opacity: 1;
     visibility: visible;
     min-width: 0;
-    background: transparent;
-    padding: 0 0 6px;
+    background: var(--paper);
     box-shadow: none;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    transition: max-height 0.32s ease;
   }
+  .hc-nav-item--open .hc-nav-dropdown { max-height: 260px; }
   .hc-nav .hc-nav-dropdown a,
   .hc-header .hc-nav-item .hc-nav-dropdown a {
+    display: block;
     text-align: left;
-    padding: 11px 36px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
+    padding: 13px 26px 13px 40px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
   }
+  .hc-nav .hc-nav-dropdown a:first-child { border-top: none; }
+  .hc-nav .hc-nav-dropdown a:hover,
+  .hc-nav .hc-nav-dropdown a:active { background: rgba(0, 0, 0, 0.03); color: var(--ink); }
+
+  /* 상위 메뉴 오른쪽 펼침 화살표 (열리면 회전) */
+  .hc-nav-caret {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-left: 12px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.25s ease, opacity 0.2s ease;
+    opacity: 0.5;
+  }
+  .hc-nav-item--open .hc-nav-caret { transform: rotate(-135deg); opacity: 0.85; }
 }
 
 @media (max-width: 760px) {

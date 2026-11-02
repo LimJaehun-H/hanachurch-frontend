@@ -15,6 +15,9 @@ export default function Header({ variant = "solid" }) {
   const [scrolled, setScrolled] = useState(variant !== "overlay");
   // 모바일 햄버거 메뉴 열림 여부
   const [menuOpen, setMenuOpen] = useState(false);
+  // 모바일 메뉴에서 펼쳐진 상위 메뉴(아코디언) 인덱스, 없으면 null
+  const [openIdx, setOpenIdx] = useState(null);
+  const toggleSection = (i) => setOpenIdx((prev) => (prev === i ? null : i));
   // 로그인/회원가입 상단바: 페이지 맨 위에서만 보이고 스크롤하면 숨김 (variant와 무관하게 공통 적용)
   const [topbarHidden, setTopbarHidden] = useState(false);
   // 로그인한 회원의 아이디 (로그인 안 했으면 null)
@@ -83,7 +86,16 @@ export default function Header({ variant = "solid" }) {
   // 페이지 이동(메뉴의 링크 클릭 등) 시 모바일 메뉴 자동 닫기
   useEffect(() => {
     setMenuOpen(false);
+    setOpenIdx(null);
   }, [location.pathname]);
+
+  // 모바일 메뉴 열려 있을 때 뒤 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   // 지금이 "투명 히어로 위, 스크롤 전" 상태인지 여부
   const isOverlayState = variant === "overlay" && !scrolled;
@@ -159,8 +171,10 @@ export default function Header({ variant = "solid" }) {
         </button>
 
         <nav className={`hc-nav ${menuOpen ? "hc-nav--open" : ""}`}>
-          <div className="hc-nav-item">
-            <span className="hc-nav-parent">교회소개</span>
+          <div className={`hc-nav-item ${openIdx === 0 ? "hc-nav-item--open" : ""}`}>
+            <button type="button" className="hc-nav-parent" onClick={() => toggleSection(0)}>
+              교회소개<span className="hc-nav-caret" aria-hidden="true" />
+            </button>
             <div className="hc-nav-dropdown">
               <Link to="/worship">예배안내</Link>
               <Link to="/location">오시는 길</Link>
@@ -168,16 +182,20 @@ export default function Header({ variant = "solid" }) {
             </div>
           </div>
 
-          <div className="hc-nav-item">
-            <span className="hc-nav-parent">예배와 말씀</span>
+          <div className={`hc-nav-item ${openIdx === 1 ? "hc-nav-item--open" : ""}`}>
+            <button type="button" className="hc-nav-parent" onClick={() => toggleSection(1)}>
+              예배와 말씀<span className="hc-nav-caret" aria-hidden="true" />
+            </button>
             <div className="hc-nav-dropdown">
               <Link to="/worship/sunday">주일예배</Link>
               <Link to="/worship/dawn">새벽예배</Link>
             </div>
           </div>
 
-          <div className="hc-nav-item">
-            <span className="hc-nav-parent">교회소식</span>
+          <div className={`hc-nav-item ${openIdx === 2 ? "hc-nav-item--open" : ""}`}>
+            <button type="button" className="hc-nav-parent" onClick={() => toggleSection(2)}>
+              교회소식<span className="hc-nav-caret" aria-hidden="true" />
+            </button>
             <div className="hc-nav-dropdown">
               <Link to="/notice">교회공지</Link>
               <Link to="/bulletin">교회주보</Link>
@@ -192,6 +210,13 @@ export default function Header({ variant = "solid" }) {
           </div>
         </nav>
       </div>
+
+      {/* 모바일 메뉴 뒤 어두운 배경 (탭하면 닫힘) */}
+      <div
+        className={`hc-nav-backdrop ${menuOpen ? "is-open" : ""}`}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+      />
     </header>
   );
 }
