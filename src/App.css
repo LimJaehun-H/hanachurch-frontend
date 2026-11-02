@@ -3301,3 +3301,23 @@ button.hc-nav-parent {
   font-size: 13px;
   line-height: 1.5;
 }
+
+/* ===== (보정) 모바일 드로어 메뉴 글자색 ===== */
+/* 뒤쪽 데스크톱용 규칙(상위메뉴/드롭다운 흰색)이 모바일 드로어를 덮어써서
+   흰 배경에 흰 글자가 되던 문제 수정. 파일 맨 끝에 둬서 항상 우선 적용됨. */
+@media (max-width: 860px) {
+  .hc-header .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--overlay .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--overlay.hc-header--scrolled .hc-nav-item > .hc-nav-parent,
+  .hc-header.hc-header--solid .hc-nav-item > .hc-nav-parent {
+    color: var(--ink);
+  }
+  .hc-header .hc-nav-item .hc-nav-dropdown a,
+  .hc-nav .hc-nav-dropdown a {
+    color: var(--ink-soft);
+  }
+  .hc-nav .hc-nav-dropdown a:hover,
+  .hc-nav .hc-nav-dropdown a:active {
+    color: var(--ink);
+  }
+}
