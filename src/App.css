@@ -2014,7 +2014,7 @@ button.hc-nav-parent {
 }
 .hc-parallax-banner-title {
   font-family: 'Pretendard', sans-serif;
-  font-size: clamp(24px, 3.5vw, 38px);
+  font-size: clamp(19px, 2.2vw, 28px);
   font-weight: 700;
   line-height: 1.4;
   text-shadow: 0 2px 16px rgba(0,0,0,0.35);
