@@ -42,6 +42,8 @@ export default function Signup() {
 
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -294,28 +296,48 @@ export default function Signup() {
 
           <div className="hc-auth-field">
             <label className="hc-auth-label" htmlFor="password">비밀번호</label>
-            <input
-              id="password"
-              type="password"
-              className="hc-auth-input"
-              placeholder="8~30자"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              maxLength={30}
-            />
+            <div className="hc-auth-input-row">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                className="hc-auth-input"
+                placeholder="8~30자"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                maxLength={30}
+              />
+              <button
+                type="button"
+                className="hc-auth-btn-inline"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? "숨기기" : "보기"}
+              </button>
+            </div>
           </div>
 
           <div className="hc-auth-field">
             <label className="hc-auth-label" htmlFor="passwordConfirm">비밀번호 확인</label>
-            <input
-              id="passwordConfirm"
-              type="password"
-              className="hc-auth-input"
-              placeholder="비밀번호를 다시 입력하세요"
-              value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
-              maxLength={30}
-            />
+            <div className="hc-auth-input-row">
+              <input
+                id="passwordConfirm"
+                type={showPasswordConfirm ? "text" : "password"}
+                className="hc-auth-input"
+                placeholder="비밀번호를 다시 입력하세요"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                maxLength={30}
+              />
+              <button
+                type="button"
+                className="hc-auth-btn-inline"
+                onClick={() => setShowPasswordConfirm((v) => !v)}
+                aria-pressed={showPasswordConfirm}
+              >
+                {showPasswordConfirm ? "숨기기" : "보기"}
+              </button>
+            </div>
             {passwordConfirm.length > 0 && (
               <p className={`hc-auth-hint hc-auth-hint--${isPasswordMatched ? "success" : "error"}`}>
                 {isPasswordMatched ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다."}
