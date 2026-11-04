@@ -41,7 +41,9 @@ export default function SermonDetail() {
             <h2 className="hc-bulletin-detail-title">{sermon.title}</h2>
             <p className="hc-bulletin-detail-date">{formatDate(sermon.createdAt)}</p>
 
-            <p className="hc-notice-detail-content">{sermon.content}</p>
+            {sermon.content?.trim() && (
+              <p className="hc-notice-detail-content">{sermon.content}</p>
+            )}
 
             <audio
               controls

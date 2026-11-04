@@ -97,7 +97,7 @@ export default function AdminSermonPanel({ token, onAuthExpired }) {
           onChange={(e) => setTitle(e.target.value)}
         />
         <textarea
-          placeholder="내용"
+          placeholder="내용 (선택, 예: 성경 본문이나 설교 요약. 비워 두면 표시되지 않습니다)"
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />

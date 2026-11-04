@@ -3612,3 +3612,13 @@ button.hc-nav-parent {
 .hc-admin-popup-hint {
   margin-top: 12px;
 }
+
+/* 관리자 목록·폼의 버튼 묶음 (수정/삭제, 저장/취소) */
+.hc-admin-row-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+.hc-admin-editing-mark {
+  color: var(--success);
+}
