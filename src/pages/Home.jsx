@@ -7,6 +7,7 @@ import HomeRecentBoards from "../components/HomeRecentBoards.jsx";
 import HomeQuickLinks from "../components/HomeQuickLinks.jsx";
 import HomeWorshipPreview from "../components/HomeWorshipPreview.jsx";
 import HomeParallaxBanner from "../components/HomeParallaxBanner.jsx";
+import HomePopup from "../components/HomePopup.jsx";
 import { API_BASE_URL, HERO_IMAGE_URL, HERO_LOGO_IMAGE_URL } from "../config.js";
 
 export default function Home() {
@@ -124,6 +125,7 @@ export default function Home() {
       <HomeWorshipPreview />
 
       <Footer />
+      <HomePopup />
     </div>
   );
 }

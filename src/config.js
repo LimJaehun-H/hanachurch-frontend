@@ -277,3 +277,17 @@ export const SITE_IMAGE_GROUPS = [
   { key: "header_logo_dark", label: "헤더 로고 (기본/컬러, 스크롤 시)", type: "single", section: "헤더/푸터 (전체 페이지 공통, 거의 안 바뀜)", page: "/" },
   { key: "footer_logo_white", label: "푸터 로고 (전체 흰색)", type: "single", section: "헤더/푸터 (전체 페이지 공통, 거의 안 바뀜)", page: "/" },
 ];
+
+// 홈 화면에 들어오자마자 뜨는 안내 팝업
+// - 끄려면 enabled: false
+// - 문구를 바꿔서 이미 닫은 사람에게도 다시 보여주려면 id도 바꿀 것
+// - link가 비어 있으면 버튼 없이 안내만 보여줌. "/inquiry"처럼 사이트 주소나 구글폼 주소(https://...)를 넣으면 버튼이 생김
+export const HOME_POPUP = {
+  enabled: true,
+  id: "beta-2026-11",
+  title: "하나교회 홈페이지 시범 운영 중",
+  message: "새 홈페이지를 시범 운영하고 있습니다.\n이용하시면서 불편한 점이나 오류가 있으면 알려주세요.\n보내주신 의견은 더 편리한 홈페이지를 만드는 데 활용됩니다.",
+  buttonText: "오류 제보하기",
+  link: "",
+  hideDays: 7,
+};
