@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
-import { compressImages } from "../utils/imageCompress.js";
+import { compressImage } from "../utils/imageCompress.js";
+import { isPdf, pdfToImages } from "../utils/pdfToImages.js";
 
 export default function AdminBulletinPanel({ token, onAuthExpired }) {
   const [bulletins, setBulletins] = useState(null);
   const [title, setTitle] = useState("");
   const [serviceDate, setServiceDate] = useState("");
   const [status, setStatus] = useState(null);
+  const [busy, setBusy] = useState(false);
   const fileRef = useRef(null);
 
   const load = () => {
@@ -27,17 +29,40 @@ export default function AdminBulletinPanel({ token, onAuthExpired }) {
       return;
     }
 
-    setStatus({ ok: true, msg: "사진 용량을 줄이는 중..." });
-    const formData = new FormData();
-    // PDF는 compressImage가 원본 그대로 돌려줌
-    (await compressImages(files)).forEach((file) => formData.append("files", file));
-    formData.append("title", title);
-    formData.append("serviceDate", serviceDate);
-
+    setBusy(true);
     try {
+      // PDF는 페이지별 JPG로, 사진은 용량을 줄여서 올림 (선택한 순서 유지)
+      const uploadFiles = [];
+      let pdfFailed = false;
+      for (const file of Array.from(files)) {
+        if (isPdf(file)) {
+          setStatus({ ok: true, msg: "PDF를 이미지로 바꾸는 중..." });
+          try {
+            uploadFiles.push(...(await pdfToImages(file)));
+          } catch {
+            pdfFailed = true;
+            uploadFiles.push(file); // 변환에 실패하면 원본 PDF를 그대로 올림
+          }
+        } else {
+          setStatus({ ok: true, msg: "사진 용량을 줄이는 중..." });
+          uploadFiles.push(await compressImage(file));
+        }
+      }
+
+      setStatus({ ok: true, msg: "업로드 중..." });
+      const formData = new FormData();
+      uploadFiles.forEach((file) => formData.append("files", file));
+      formData.append("title", title);
+      formData.append("serviceDate", serviceDate);
+
       const res = await authFetch(token, "/api/bulletins", { method: "POST", body: formData });
       if (!res.ok) throw new Error();
-      setStatus({ ok: true, msg: "등록되었습니다." });
+      setStatus({
+        ok: true,
+        msg: pdfFailed
+          ? "등록되었습니다. (PDF를 이미지로 바꾸지 못해 원본 PDF로 올렸습니다)"
+          : "등록되었습니다.",
+      });
       setTitle("");
       setServiceDate("");
       if (fileRef.current) fileRef.current.value = "";
@@ -45,6 +70,8 @@ export default function AdminBulletinPanel({ token, onAuthExpired }) {
     } catch (err) {
       if (err.message === "AUTH_EXPIRED") return onAuthExpired();
       setStatus({ ok: false, msg: "등록에 실패했습니다." });
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -77,9 +104,13 @@ export default function AdminBulletinPanel({ token, onAuthExpired }) {
           onChange={(e) => setServiceDate(e.target.value)}
         />
         <input type="file" ref={fileRef} accept="application/pdf,image/*" multiple />
-        <button type="submit" className="hc-admin-btn">업로드</button>
+        <button type="submit" className="hc-admin-btn" disabled={busy}>
+          {busy ? "처리 중..." : "업로드"}
+        </button>
       </form>
-      <p className="hc-admin-hint">파일을 여러 개 선택하면(예: 주보 1쪽, 2쪽) 한 주보에 순서대로 저장됩니다.</p>
+      <p className="hc-admin-hint">
+        PDF를 올리면 쪽마다 이미지로 자동 변환되어 휴대폰에서도 바로 보입니다. 사진을 여러 장 선택하면 한 주보에 순서대로 저장됩니다.
+      </p>
 
       {status && (
         <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
