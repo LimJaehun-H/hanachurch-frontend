@@ -57,7 +57,8 @@
 // };
 // 이 파일 값들만 바꾸면 사이트 전체에 반영됩니다.
 
-export const API_BASE_URL = "https://13.210.86.184.nip.io";
+export const API_BASE_URL = "https://api.hanachurch.co.kr";
+// export const API_BASE_URL = "https://13.210.86.184.nip.io"; // 도메인 연결 전 주소 (서버는 아직 이 주소도 받음)
 // export const API_BASE_URL = "http://localhost:8080";
 
 // 토스페이먼츠 클라이언트 키 (공개키, 테스트키로 시작 — 실결제 승인 나면 live_ck_ 로 교체)
