@@ -75,7 +75,8 @@ export default function HomePopup() {
 
   const { title, message, buttonText, link } = popup;
   const isExternal = /^https:\/\//.test(link || "");
-  const showButton = Boolean(link && buttonText);
+  // 역슬래시가 든 주소("/\\다른사이트")는 브라우저가 외부 주소로 해석할 수 있어 버튼을 숨김
+  const showButton = Boolean(link && buttonText && !link.includes("\\"));
 
   return (
     <div className="hc-popup-backdrop" onClick={close}>
