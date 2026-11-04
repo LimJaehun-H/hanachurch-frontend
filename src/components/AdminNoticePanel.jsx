@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
 import RichContentEditor from "./RichContentEditor.jsx";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus, AdminList, AdminRow, formatDate } from "./AdminUI.jsx";
 
 export default function AdminNoticePanel({ token, onAuthExpired }) {
   const [notices, setNotices] = useState(null);
@@ -81,57 +82,63 @@ export default function AdminNoticePanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-admin-panel">
-      <h2 className="hc-admin-panel-title">
-        {editingId ? "교회소식 수정" : "교회소식 관리"}
-      </h2>
-
-      <form className="hc-admin-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="제목"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <RichContentEditor value={content} onChange={setContent} token={token} resetKey={resetKey} />
-        <div className="hc-admin-row-actions">
-          <button type="submit" className="hc-admin-btn" disabled={saving}>
-            {saving ? "저장 중..." : editingId ? "수정 저장" : "등록"}
-          </button>
-          {editingId && (
-            <button type="button" className="hc-admin-btn hc-admin-btn--ghost" onClick={handleCancel}>
-              취소
+    <>
+      <AdminSection
+        title={editingId ? "교회소식 수정" : "새 교회소식 쓰기"}
+        desc={editingId ? "내용을 고친 뒤 '수정 저장'을 누르세요. 본문에서 뺀 사진은 서버에서도 지워집니다." : null}
+      >
+        <form onSubmit={handleSubmit}>
+          <AdminFieldTable>
+            <AdminField label="제목" required>
+              <input
+                className="hc-adm-input"
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </AdminField>
+            <AdminField label="본문">
+              <RichContentEditor value={content} onChange={setContent} token={token} resetKey={resetKey} />
+            </AdminField>
+          </AdminFieldTable>
+          <AdminFormActions>
+            {editingId && (
+              <button type="button" className="hc-adm-btn" onClick={handleCancel}>
+                취소
+              </button>
+            )}
+            <button type="submit" className="hc-adm-btn hc-adm-btn--primary" disabled={saving}>
+              {saving ? "저장 중..." : editingId ? "수정 저장" : "등록"}
             </button>
-          )}
-        </div>
-      </form>
+          </AdminFormActions>
+          <AdminStatus status={status} />
+        </form>
+      </AdminSection>
 
-      {status && (
-        <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
-      )}
-
-      {notices === null && <p className="hc-loading">불러오는 중…</p>}
-      {notices && notices.length === 0 && <p className="hc-empty">등록된 공지사항이 없습니다.</p>}
-      {notices && notices.length > 0 && (
-        <ul className="hc-admin-list">
-          {notices.map((n) => (
-            <li key={n.id} className="hc-admin-list-row">
-              <span>
-                {editingId === n.id && <strong className="hc-admin-editing-mark">수정 중 · </strong>}
-                {n.title}
-              </span>
-              <div className="hc-admin-row-actions">
-                <button type="button" className="hc-admin-btn hc-admin-btn--ghost" onClick={() => startEdit(n)}>
-                  수정
-                </button>
-                <button type="button" className="hc-admin-btn hc-admin-btn--danger" onClick={() => handleDelete(n.id)}>
-                  삭제
-                </button>
-              </div>
-            </li>
+      <AdminSection title="등록된 교회소식" count={notices?.length}>
+        <AdminList loading={notices === null} empty={notices?.length === 0} emptyText="등록된 공지사항이 없습니다.">
+          {notices?.map((n) => (
+            <AdminRow
+              key={n.id}
+              highlight={editingId === n.id}
+              badge={editingId === n.id && <span className="hc-adm-badge hc-adm-badge--on">수정 중</span>}
+              title={n.title}
+              meta={formatDate(n.createdAt)}
+              actions={
+                <>
+                  <button type="button" className="hc-adm-btn hc-adm-btn--sm" onClick={() => startEdit(n)}>
+                    수정
+                  </button>
+                  <button type="button" className="hc-adm-btn hc-adm-btn--sm hc-adm-btn--danger" onClick={() => handleDelete(n.id)}>
+                    삭제
+                  </button>
+                </>
+              }
+            />
           ))}
-        </ul>
-      )}
-    </section>
+        </AdminList>
+      </AdminSection>
+    </>
   );
 }

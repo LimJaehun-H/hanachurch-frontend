@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { authFetch } from "../utils/auth.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus } from "./AdminUI.jsx";
 
 export default function AdminPasswordPanel({ token, onAuthExpired }) {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -41,35 +42,45 @@ export default function AdminPasswordPanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section>
-      <h2 className="hc-admin-panel-title">비밀번호 변경</h2>
-      <form className="hc-admin-form" onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="현재 비밀번호"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="새 비밀번호 (8자 이상)"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="새 비밀번호 확인"
-          value={newPasswordConfirm}
-          onChange={(e) => setNewPasswordConfirm(e.target.value)}
-          required
-        />
-        <button type="submit" className="hc-admin-btn">비밀번호 변경</button>
-        {status && (
-          <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
-        )}
+    <AdminSection title="새 비밀번호 설정" desc="바꾼 비밀번호는 다음 로그인부터 사용합니다.">
+      <form onSubmit={handleSubmit}>
+        <AdminFieldTable>
+          <AdminField label="현재 비밀번호" required>
+            <input
+              className="hc-adm-input"
+              type="password"
+              autoComplete="current-password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+            />
+          </AdminField>
+          <AdminField label="새 비밀번호" required hint="8자 이상으로 입력해주세요.">
+            <input
+              className="hc-adm-input"
+              type="password"
+              autoComplete="new-password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+          </AdminField>
+          <AdminField label="새 비밀번호 확인" required>
+            <input
+              className="hc-adm-input"
+              type="password"
+              autoComplete="new-password"
+              value={newPasswordConfirm}
+              onChange={(e) => setNewPasswordConfirm(e.target.value)}
+              required
+            />
+          </AdminField>
+        </AdminFieldTable>
+        <AdminFormActions>
+          <button type="submit" className="hc-adm-btn hc-adm-btn--primary">비밀번호 변경</button>
+        </AdminFormActions>
+        <AdminStatus status={status} />
       </form>
-    </section>
+    </AdminSection>
   );
 }

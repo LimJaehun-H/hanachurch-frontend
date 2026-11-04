@@ -3,6 +3,7 @@ import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
 import { compressImage } from "../utils/imageCompress.js";
 import { isPdf, pdfToImages } from "../utils/pdfToImages.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus, AdminList, AdminRow, formatDate } from "./AdminUI.jsx";
 
 export default function AdminBulletinPanel({ token, onAuthExpired }) {
   const [bulletins, setBulletins] = useState(null);
@@ -88,50 +89,60 @@ export default function AdminBulletinPanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-admin-panel">
-      <h2 className="hc-admin-panel-title">주보 관리</h2>
+    <>
+      <AdminSection title="새 주보 올리기">
+        <form onSubmit={handleCreate}>
+          <AdminFieldTable>
+            <AdminField label="제목" required>
+              <input
+                className="hc-adm-input"
+                type="text"
+                placeholder="예: 2026년 8월 1주 주보"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </AdminField>
+            <AdminField label="예배일" required>
+              <input
+                className="hc-adm-input hc-adm-input--date"
+                type="date"
+                value={serviceDate}
+                onChange={(e) => setServiceDate(e.target.value)}
+              />
+            </AdminField>
+            <AdminField
+              label="파일"
+              required
+              hint="PDF를 올리면 쪽마다 사진으로 자동 변환됩니다. 사진을 여러 장 고르면 고른 순서대로 한 주보에 저장됩니다."
+            >
+              <input className="hc-adm-file" type="file" ref={fileRef} accept="application/pdf,image/*" multiple />
+            </AdminField>
+          </AdminFieldTable>
+          <AdminFormActions>
+            <button type="submit" className="hc-adm-btn hc-adm-btn--primary" disabled={busy}>
+              {busy ? "처리 중..." : "업로드"}
+            </button>
+          </AdminFormActions>
+          <AdminStatus status={status} />
+        </form>
+      </AdminSection>
 
-      <form className="hc-admin-form" onSubmit={handleCreate}>
-        <input
-          type="text"
-          placeholder="제목 (예: 2026년 8월 1주 주보)"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="date"
-          value={serviceDate}
-          onChange={(e) => setServiceDate(e.target.value)}
-        />
-        <input type="file" ref={fileRef} accept="application/pdf,image/*" multiple />
-        <button type="submit" className="hc-admin-btn" disabled={busy}>
-          {busy ? "처리 중..." : "업로드"}
-        </button>
-      </form>
-      <p className="hc-admin-hint">
-        PDF를 올리면 쪽마다 이미지로 자동 변환되어 휴대폰에서도 바로 보입니다. 사진을 여러 장 선택하면 한 주보에 순서대로 저장됩니다.
-      </p>
-
-      {status && (
-        <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
-      )}
-
-      {bulletins === null && <p className="hc-loading">불러오는 중…</p>}
-      {bulletins && bulletins.length === 0 && <p className="hc-empty">등록된 주보가 없습니다.</p>}
-      {bulletins && bulletins.length > 0 && (
-        <ul className="hc-admin-list">
-          {bulletins.map((b) => (
-            <li key={b.id} className="hc-admin-list-row">
-              <span>
-                {b.serviceDate} · {b.title} · 파일 {b.files?.length ?? 0}개
-              </span>
-              <button className="hc-admin-btn hc-admin-btn--danger" onClick={() => handleDelete(b.id)}>
-                삭제
-              </button>
-            </li>
+      <AdminSection title="등록된 주보" count={bulletins?.length}>
+        <AdminList loading={bulletins === null} empty={bulletins?.length === 0} emptyText="등록된 주보가 없습니다.">
+          {bulletins?.map((b) => (
+            <AdminRow
+              key={b.id}
+              title={b.title}
+              meta={`예배일 ${formatDate(b.serviceDate)} · 파일 ${b.files?.length ?? 0}개`}
+              actions={
+                <button type="button" className="hc-adm-btn hc-adm-btn--sm hc-adm-btn--danger" onClick={() => handleDelete(b.id)}>
+                  삭제
+                </button>
+              }
+            />
           ))}
-        </ul>
-      )}
-    </section>
+        </AdminList>
+      </AdminSection>
+    </>
   );
 }

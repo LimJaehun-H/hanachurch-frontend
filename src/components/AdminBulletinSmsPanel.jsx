@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { authFetch } from "../utils/auth.js";
 import { API_BASE_URL } from "../config.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus, AdminList, AdminRow } from "./AdminUI.jsx";
 
 const MAX_IMAGES = 2;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -233,15 +234,13 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-sms">
-      <h2 className="hc-admin-panel-title">주보 문자 발송</h2>
-      <p className="hc-admin-panel-hint">
-        주보 사진(최대 2장)을 골라 수신 동의한 회원에게 문자(MMS)로 보냅니다. 사진은 자동으로 문자 규격(JPG, 200KB 이하)에 맞게 줄여집니다.
+    <>
+      <p className="hc-adm-notice">
+        사진은 최대 2장까지 고를 수 있고, 문자 규격(JPG, 200KB 이하)에 맞게 자동으로 줄여집니다.
       </p>
 
       {/* 1. 이미지 */}
-      <div className="hc-sms-block">
-        <h3 className="hc-sms-subtitle">1. 주보 이미지 ({images.length}/{MAX_IMAGES})</h3>
+      <AdminSection title={`1. 주보 사진 (${images.length}/${MAX_IMAGES})`}>
         <div className="hc-sms-images">
           {images.map((img, i) => (
             <div key={img.url} className="hc-sms-thumb">
@@ -261,40 +260,40 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
             </label>
           )}
         </div>
-      </div>
+      </AdminSection>
 
       {/* 2. 날짜 + 문구 */}
-      <div className="hc-sms-block">
-        <h3 className="hc-sms-subtitle">2. 주보 날짜 · 문구</h3>
-        <div className="hc-admin-form">
-          <input
-            type="date"
-            className="hc-sms-date"
-            value={bulletinDate}
-            onChange={(e) => handleDateChange(e.target.value)}
-          />
-          <textarea
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              setTextEdited(true);
-            }}
-            maxLength={500}
-          />
-        </div>
-        <p className="hc-sms-note">
-          {images.length > 1 ? "사진이 2장이면 각 문자 끝에 (1/2), (2/2)가 자동으로 붙습니다. " : ""}
-          {text.length}/500자
-        </p>
-      </div>
+      <AdminSection title="2. 주보 날짜 · 문구">
+        <AdminFieldTable>
+          <AdminField label="주보 날짜">
+            <input
+              type="date"
+              className="hc-adm-input hc-adm-input--date"
+              value={bulletinDate}
+              onChange={(e) => handleDateChange(e.target.value)}
+            />
+          </AdminField>
+          <AdminField
+            label="문구"
+            hint={`${images.length > 1 ? "사진이 2장이면 각 문자 끝에 (1/2), (2/2)가 자동으로 붙습니다. " : ""}${text.length}/500자`}
+          >
+            <textarea
+              className="hc-adm-textarea"
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+                setTextEdited(true);
+              }}
+              maxLength={500}
+            />
+          </AdminField>
+        </AdminFieldTable>
+      </AdminSection>
 
       {/* 3. 수신자 */}
-      <div className="hc-sms-block">
-        <h3 className="hc-sms-subtitle">
-          3. 받는 사람 (수신 동의 {recipients.length}명 중 {selectedIds.size}명 선택)
-        </h3>
+      <AdminSection title="3. 받는 사람" desc={`수신 동의 ${recipients.length}명 중 ${selectedIds.size}명 선택`}>
         {recipients.length === 0 ? (
-          <p className="hc-sms-note">아직 문자 수신에 동의한 회원이 없습니다.</p>
+          <p className="hc-adm-empty">아직 문자 수신에 동의한 회원이 없습니다.</p>
         ) : (
           <div className="hc-sms-recipients">
             <label className="hc-sms-recipient hc-sms-recipient--all">
@@ -314,27 +313,33 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
             ))}
           </div>
         )}
-      </div>
+      </AdminSection>
 
       {/* 4. 발송 */}
-      <div className="hc-sms-block">
-        <h3 className="hc-sms-subtitle">4. 발송</h3>
-        <div className="hc-sms-test">
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="테스트 받을 번호 (숫자만)"
-            value={testPhone}
-            onChange={(e) => setTestPhone(e.target.value.replace(/[^0-9]/g, ""))}
-            maxLength={11}
-          />
-          <button type="button" className="hc-admin-btn hc-sms-btn-outline" onClick={handleTestSend} disabled={sending}>
-            테스트 발송
+      <AdminSection title="4. 발송" desc="먼저 내 번호로 테스트 발송해 보고, 이상이 없으면 전체 발송하세요.">
+        <AdminFieldTable>
+          <AdminField label="테스트 발송">
+            <div className="hc-adm-inline">
+              <input
+                className="hc-adm-input hc-adm-input--phone"
+                type="text"
+                inputMode="numeric"
+                placeholder="받을 번호 (숫자만)"
+                value={testPhone}
+                onChange={(e) => setTestPhone(e.target.value.replace(/[^0-9]/g, ""))}
+                maxLength={11}
+              />
+              <button type="button" className="hc-adm-btn" onClick={handleTestSend} disabled={sending}>
+                테스트 발송
+              </button>
+            </div>
+          </AdminField>
+        </AdminFieldTable>
+        <AdminFormActions>
+          <button type="button" className="hc-adm-btn hc-adm-btn--primary" onClick={handleSend} disabled={sending}>
+            {sending ? "발송 중..." : `${selectedIds.size}명에게 발송 (총 ${messageCount}건)`}
           </button>
-        </div>
-        <button type="button" className="hc-admin-btn hc-sms-send" onClick={handleSend} disabled={sending}>
-          {sending ? "발송 중..." : `${selectedIds.size}명에게 발송 (총 ${messageCount}건)`}
-        </button>
+        </AdminFormActions>
         {sending && (
           <p className="hc-sms-warning">
             발송 중입니다. 새로고침하거나 창을 닫지 마세요.
@@ -342,42 +347,34 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
             (새로고침해도 발송은 취소되지 않습니다. 결과가 안 보이면 다시 보내기 전에 아래 발송 이력을 먼저 확인하세요.)
           </p>
         )}
-        {status && <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>}
+        <AdminStatus status={status} />
         {lastBulletinId && (
           <button type="button" className="hc-sms-link" onClick={() => openPreview(lastBulletinId)}>
             방금 보낸 주보 보기
           </button>
         )}
-      </div>
+      </AdminSection>
 
       {/* 최근 발송 이력 */}
-      <div className="hc-sms-block">
-        <h3 className="hc-sms-subtitle">최근 발송 이력</h3>
-        {logs.length === 0 ? (
-          <p className="hc-sms-note">발송 이력이 없습니다.</p>
-        ) : (
-          <ul className="hc-admin-list">
-            {logs.map((log) => (
-              <li key={log.id} className="hc-admin-list-row">
-                <span>
-                  {formatDateTime(log.sentAt)} {log.test && <em className="hc-sms-badge">테스트</em>}
-                </span>
-                <span className="hc-sms-note">
-                  {log.targetCount}명 × {log.imageCount}장 · 성공 {log.successCount} / 실패 {log.failCount}
-                  {log.smsBulletinId && (
-                    <>
-                      {" · "}
-                      <button type="button" className="hc-sms-link" onClick={() => openPreview(log.smsBulletinId)}>
-                        주보 보기
-                      </button>
-                    </>
-                  )}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <AdminSection title="최근 발송 이력" count={logs.length}>
+        <AdminList loading={false} empty={logs.length === 0} emptyText="발송 이력이 없습니다.">
+          {logs.map((log) => (
+            <AdminRow
+              key={log.id}
+              badge={log.test && <span className="hc-adm-badge hc-adm-badge--off">테스트</span>}
+              title={formatDateTime(log.sentAt)}
+              meta={`${log.targetCount}명 × ${log.imageCount}장 · 성공 ${log.successCount} / 실패 ${log.failCount}`}
+              actions={
+                log.smsBulletinId && (
+                  <button type="button" className="hc-adm-btn hc-adm-btn--sm" onClick={() => openPreview(log.smsBulletinId)}>
+                    주보 보기
+                  </button>
+                )
+              }
+            />
+          ))}
+        </AdminList>
+      </AdminSection>
 
       {/* 발송 이력 미리보기 모달 */}
       {preview && (
@@ -400,6 +397,6 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 }

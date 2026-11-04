@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus, AdminList, AdminRow, formatDate } from "./AdminUI.jsx";
 
 const CATEGORY_LABELS = {
   SUNDAY: "주일예배",
@@ -71,72 +72,84 @@ export default function AdminSermonPanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-admin-panel">
-      <h2 className="hc-admin-panel-title">말씀 관리</h2>
-
-      <form className="hc-admin-form" onSubmit={handleCreate}>
-        <div className="hc-admin-category-select">
-          {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
-            <label key={value} className="hc-admin-category-option">
+    <>
+      <AdminSection title="새 말씀 올리기">
+        <form onSubmit={handleCreate}>
+          <AdminFieldTable>
+            <AdminField label="예배 구분" required>
+              <div className="hc-adm-segment" role="radiogroup">
+                {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
+                  <label key={value} className={`hc-adm-segment-item ${category === value ? "hc-adm-segment-item--on" : ""}`}>
+                    <input
+                      type="radio"
+                      name="sermonCategory"
+                      value={value}
+                      checked={category === value}
+                      onChange={() => setCategory(value)}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </AdminField>
+            <AdminField label="제목" required>
               <input
-                type="radio"
-                name="sermonCategory"
-                value={value}
-                checked={category === value}
-                onChange={() => setCategory(value)}
+                className="hc-adm-input"
+                type="text"
+                placeholder="설교 제목"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
-              {label}
-            </label>
-          ))}
-        </div>
-
-        <input
-          type="text"
-          placeholder="제목"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          placeholder="내용 (선택, 예: 성경 본문이나 설교 요약. 비워 두면 표시되지 않습니다)"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
-        />
-        <button type="submit" className="hc-admin-btn">등록</button>
-      </form>
-
-      {status && (
-        <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
-      )}
+            </AdminField>
+            <AdminField label="내용" hint="선택 입력입니다. 성경 본문이나 설교 요약을 적을 수 있고, 비워 두면 화면에 표시되지 않습니다.">
+              <textarea
+                className="hc-adm-textarea"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+            </AdminField>
+            <AdminField label="녹음 파일" required>
+              <input
+                className="hc-adm-file"
+                type="file"
+                accept="audio/*"
+                onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
+              />
+            </AdminField>
+          </AdminFieldTable>
+          <AdminFormActions>
+            <button type="submit" className="hc-adm-btn hc-adm-btn--primary">등록</button>
+          </AdminFormActions>
+          <AdminStatus status={status} />
+        </form>
+      </AdminSection>
 
       {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
-        <div key={value} className="hc-admin-sermon-group">
-          <p className="hc-admin-sermon-group-title">{label}</p>
-          {sermons[value] === null && <p className="hc-loading">불러오는 중…</p>}
-          {sermons[value] && sermons[value].length === 0 && (
-            <p className="hc-empty">등록된 말씀이 없습니다.</p>
-          )}
-          {sermons[value] && sermons[value].length > 0 && (
-            <ul className="hc-admin-list">
-              {sermons[value].map((s) => (
-                <li key={s.id} className="hc-admin-list-row">
-                  <span>{s.title}</span>
+        <AdminSection key={value} title={label} count={sermons[value]?.length}>
+          <AdminList
+            loading={sermons[value] === null}
+            empty={sermons[value]?.length === 0}
+            emptyText="등록된 말씀이 없습니다."
+          >
+            {sermons[value]?.map((s) => (
+              <AdminRow
+                key={s.id}
+                title={s.title}
+                meta={formatDate(s.createdAt)}
+                actions={
                   <button
-                    className="hc-admin-btn hc-admin-btn--danger"
+                    type="button"
+                    className="hc-adm-btn hc-adm-btn--sm hc-adm-btn--danger"
                     onClick={() => handleDelete(s.id, value)}
                   >
                     삭제
                   </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+                }
+              />
+            ))}
+          </AdminList>
+        </AdminSection>
       ))}
-    </section>
+    </>
   );
 }

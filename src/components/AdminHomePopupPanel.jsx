@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { authFetch } from "../utils/auth.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus, AdminList, AdminRow } from "./AdminUI.jsx";
 
 // 홈 화면 안내 팝업 관리 (여러 개 등록 가능, 순서가 작은 것부터 차례로 뜸)
 const EMPTY_FORM = {
@@ -145,116 +146,128 @@ export default function AdminHomePopupPanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-admin-panel">
-      <h2 className="hc-admin-panel-title">
-        {editingId ? "팝업 수정" : "새 팝업 등록"}
-      </h2>
-
-      <form className="hc-admin-form" onSubmit={handleSubmit}>
-        <label className="hc-admin-category-option">
-          <input type="checkbox" checked={form.enabled} onChange={setField("enabled")} />
-          홈 화면에 띄우기
-        </label>
-
-        <input
-          type="text"
-          placeholder="제목 (예: 하나교회 홈페이지 시범 운영 중)"
-          value={form.title}
-          onChange={setField("title")}
-          maxLength={100}
-        />
-        <textarea
-          placeholder={"내용 (줄바꿈이 그대로 보입니다)\n예: 불편한 점이나 오류가 있으면 알려주세요.\n문의: 010-0000-0000"}
-          value={form.message}
-          onChange={setField("message")}
-          maxLength={2000}
-          rows={5}
-        />
-
-        <div className="hc-admin-popup-row">
-          <input
-            type="text"
-            placeholder="버튼 글자 (선택, 예: 오류 제보하기)"
-            value={form.buttonText}
-            onChange={setField("buttonText")}
-            maxLength={30}
-          />
-          <input
-            type="text"
-            placeholder="버튼 링크 (선택, /inquiry 또는 https://...)"
-            value={form.link}
-            onChange={setField("link")}
-            maxLength={500}
-          />
-        </div>
-
-        <div className="hc-admin-popup-row">
-          <label className="hc-admin-popup-field">
-            <span>시작일 (선택)</span>
-            <input type="date" value={form.startDate} onChange={setField("startDate")} />
-          </label>
-          <label className="hc-admin-popup-field">
-            <span>종료일 (선택, 이날까지 표시)</span>
-            <input type="date" value={form.endDate} onChange={setField("endDate")} />
-          </label>
-          <label className="hc-admin-popup-field hc-admin-popup-field--narrow">
-            <span>순서</span>
-            <input
-              type="number"
-              min="0"
-              value={form.sortOrder}
-              onChange={setField("sortOrder")}
-            />
-          </label>
-        </div>
-
-        <div className="hc-admin-popup-actions">
-          <button type="submit" className="hc-admin-btn" disabled={saving}>
-            {saving ? "저장 중..." : editingId ? "수정 저장" : "등록"}
-          </button>
-          {editingId && (
-            <button type="button" className="hc-admin-btn hc-admin-btn--ghost" onClick={resetForm}>
-              취소
+    <>
+      <AdminSection
+        title={editingId ? "팝업 수정" : "새 팝업 등록"}
+        desc='여러 개를 켜 두면 순서 숫자가 작은 것부터 차례로 뜹니다. 내용을 수정하면 "일주일간 보지 않기"를 누른 분에게도 다시 보입니다.'
+      >
+        <form onSubmit={handleSubmit}>
+          <AdminFieldTable>
+            <AdminField label="표시">
+              <label className="hc-adm-check">
+                <input type="checkbox" checked={form.enabled} onChange={setField("enabled")} />
+                홈 화면에 띄우기
+              </label>
+            </AdminField>
+            <AdminField label="제목" required>
+              <input
+                className="hc-adm-input"
+                type="text"
+                placeholder="예: 하나교회 홈페이지 시범 운영 중"
+                value={form.title}
+                onChange={setField("title")}
+                maxLength={100}
+              />
+            </AdminField>
+            <AdminField label="내용" hint="줄바꿈이 그대로 보입니다.">
+              <textarea
+                className="hc-adm-textarea"
+                placeholder={"예: 불편한 점이나 오류가 있으면 알려주세요.\n문의: 010-0000-0000"}
+                value={form.message}
+                onChange={setField("message")}
+                maxLength={2000}
+                rows={5}
+              />
+            </AdminField>
+            <AdminField label="버튼" hint="선택 입력입니다. 링크를 넣으면 버튼 글자도 넣어주세요.">
+              <div className="hc-adm-grid2">
+                <input
+                  className="hc-adm-input"
+                  type="text"
+                  placeholder="버튼 글자 (예: 오류 제보하기)"
+                  value={form.buttonText}
+                  onChange={setField("buttonText")}
+                  maxLength={30}
+                />
+                <input
+                  className="hc-adm-input"
+                  type="text"
+                  placeholder="링크 (/inquiry 또는 https://...)"
+                  value={form.link}
+                  onChange={setField("link")}
+                  maxLength={500}
+                />
+              </div>
+            </AdminField>
+            <AdminField label="기간" hint="비워 두면 기간 제한 없이 표시됩니다. 종료일 당일까지 보입니다.">
+              <div className="hc-adm-range">
+                <input
+                  className="hc-adm-input hc-adm-input--date"
+                  type="date"
+                  aria-label="시작일"
+                  value={form.startDate}
+                  onChange={setField("startDate")}
+                />
+                <span className="hc-adm-range-sep">~</span>
+                <input
+                  className="hc-adm-input hc-adm-input--date"
+                  type="date"
+                  aria-label="종료일"
+                  value={form.endDate}
+                  onChange={setField("endDate")}
+                />
+              </div>
+            </AdminField>
+            <AdminField label="순서" hint="숫자가 작을수록 먼저 뜹니다.">
+              <input
+                className="hc-adm-input hc-adm-input--num"
+                type="number"
+                min="0"
+                value={form.sortOrder}
+                onChange={setField("sortOrder")}
+              />
+            </AdminField>
+          </AdminFieldTable>
+          <AdminFormActions>
+            {editingId && (
+              <button type="button" className="hc-adm-btn" onClick={resetForm}>
+                취소
+              </button>
+            )}
+            <button type="submit" className="hc-adm-btn hc-adm-btn--primary" disabled={saving}>
+              {saving ? "저장 중..." : editingId ? "수정 저장" : "등록"}
             </button>
-          )}
-        </div>
-      </form>
-      <p className="hc-admin-hint hc-admin-popup-hint">
-        여러 개를 켜 두면 순서 숫자가 작은 것부터 차례로 뜹니다. 내용을 수정하면 "일주일간 보지 않기"를 누른 분에게도 다시 보입니다.
-      </p>
+          </AdminFormActions>
+          <AdminStatus status={status} />
+        </form>
+      </AdminSection>
 
-      {status && (
-        <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
-      )}
-
-      {popups === null && <p className="hc-loading">불러오는 중…</p>}
-      {popups && popups.length === 0 && <p className="hc-empty">등록된 팝업이 없습니다.</p>}
-      {popups && popups.length > 0 && (
-        <ul className="hc-admin-list">
-          {popups.map((p) => {
+      <AdminSection title="등록된 팝업" count={popups?.length}>
+        <AdminList loading={popups === null} empty={popups?.length === 0} emptyText="등록된 팝업이 없습니다.">
+          {popups?.map((p) => {
             const st = statusOf(p);
             return (
-              <li key={p.id} className="hc-admin-list-row">
-                <div className="hc-admin-popup-info">
-                  <span className={`hc-admin-popup-badge hc-admin-popup-badge--${st.tone}`}>{st.label}</span>
-                  <strong>{p.title}</strong>
-                  <span className="hc-admin-popup-meta">
-                    순서 {p.sortOrder} · {periodOf(p)}
-                  </span>
-                </div>
-                <div className="hc-admin-popup-actions">
-                  <button type="button" className="hc-admin-btn hc-admin-btn--ghost" onClick={() => startEdit(p)}>
-                    수정
-                  </button>
-                  <button type="button" className="hc-admin-btn hc-admin-btn--danger" onClick={() => handleDelete(p)}>
-                    삭제
-                  </button>
-                </div>
-              </li>
+              <AdminRow
+                key={p.id}
+                highlight={editingId === p.id}
+                badge={<span className={`hc-adm-badge hc-adm-badge--${st.tone}`}>{st.label}</span>}
+                title={p.title}
+                meta={`순서 ${p.sortOrder} · ${periodOf(p)}`}
+                actions={
+                  <>
+                    <button type="button" className="hc-adm-btn hc-adm-btn--sm" onClick={() => startEdit(p)}>
+                      수정
+                    </button>
+                    <button type="button" className="hc-adm-btn hc-adm-btn--sm hc-adm-btn--danger" onClick={() => handleDelete(p)}>
+                      삭제
+                    </button>
+                  </>
+                }
+              />
             );
           })}
-        </ul>
-      )}
-    </section>
+        </AdminList>
+      </AdminSection>
+    </>
   );
 }

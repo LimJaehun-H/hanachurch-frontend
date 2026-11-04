@@ -3,6 +3,7 @@ import { API_BASE_URL } from "../config.js";
 import { SITE_IMAGE_GROUPS } from "../config.js";
 import { authFetch } from "../utils/auth.js";
 import { compressImage } from "../utils/imageCompress.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus } from "./AdminUI.jsx";
 
 export default function AdminSiteImagePanel({ token, onAuthExpired }) {
   const [selectedKey, setSelectedKey] = useState(SITE_IMAGE_GROUPS[0].key);
@@ -90,78 +91,90 @@ export default function AdminSiteImagePanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-admin-panel">
-      <h2 className="hc-admin-panel-title">사이트 이미지 관리</h2>
-
-      <div className="hc-admin-siteimage-picker">
-        <select
-          className="hc-admin-siteimage-select"
-          value={selectedKey}
-          onChange={(e) => setSelectedKey(e.target.value)}
-        >
-          {Object.entries(groupedBySection).map(([section, items]) => (
-            <optgroup key={section} label={section}>
-              {items.map((g) => (
-                <option key={g.key} value={g.key}>
-                  {g.label}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-
-        {selectedGroup?.page && (
-          <button type="button" className="hc-admin-siteimage-preview-btn" onClick={handlePreview}>
-            이 사진이 쓰이는 페이지 보기 ↗
-          </button>
-        )}
-      </div>
-
-      <div className="hc-admin-siteimage-current">
-        {images.length === 0 && <p className="hc-empty">등록된 사진이 없습니다.</p>}
-        {images.map((img, i) => (
-          <div key={img.id} className="hc-admin-siteimage-thumb">
-            <img src={`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(img.fileUrl)}`} alt="" />
-            {selectedGroup.type === "gallery" && (
-              <>
-                <div className="hc-admin-siteimage-move">
-                  <button
-                    type="button"
-                    disabled={i === 0}
-                    onClick={() => handleMove(img.id, "up")}
-                  >
-                    ◀
-                  </button>
-                  <button
-                    type="button"
-                    disabled={i === images.length - 1}
-                    onClick={() => handleMove(img.id, "down")}
-                  >
-                    ▶
-                  </button>
-                </div>
-                <button type="button" onClick={() => handleDelete(img.id)}>
-                  삭제
+    <>
+      <AdminSection title="사진 위치 고르기">
+        <AdminFieldTable>
+          <AdminField label="위치">
+            <div className="hc-adm-inline">
+              <select
+                className="hc-adm-input hc-adm-select"
+                value={selectedKey}
+                onChange={(e) => setSelectedKey(e.target.value)}
+              >
+                {Object.entries(groupedBySection).map(([section, items]) => (
+                  <optgroup key={section} label={section}>
+                    {items.map((g) => (
+                      <option key={g.key} value={g.key}>
+                        {g.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              {selectedGroup?.page && (
+                <button type="button" className="hc-adm-btn" onClick={handlePreview}>
+                  쓰이는 페이지 보기 ↗
                 </button>
-              </>
-            )}
-            {selectedGroup.deletable && (
-              <button type="button" onClick={() => handleDelete(img.id)}>
-                삭제
-              </button>
-            )}
+              )}
+            </div>
+          </AdminField>
+        </AdminFieldTable>
+      </AdminSection>
+
+      <AdminSection
+        title="현재 사진"
+        count={images.length}
+        desc={selectedGroup.type === "gallery" ? "◀ ▶ 버튼으로 보이는 순서를 바꿀 수 있습니다." : null}
+      >
+        {images.length === 0 && <p className="hc-adm-empty">등록된 사진이 없습니다.</p>}
+        {images.length > 0 && (
+          <div className="hc-adm-thumbs">
+            {images.map((img, i) => (
+              <div key={img.id} className="hc-adm-thumb">
+                <img src={`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(img.fileUrl)}`} alt="" />
+                {(selectedGroup.type === "gallery" || selectedGroup.deletable) && (
+                  <div className="hc-adm-thumb-actions">
+                    {selectedGroup.type === "gallery" && (
+                      <button type="button" aria-label="앞으로" disabled={i === 0} onClick={() => handleMove(img.id, "up")}>
+                        ◀
+                      </button>
+                    )}
+                    <button type="button" className="hc-adm-thumb-delete" onClick={() => handleDelete(img.id)}>
+                      삭제
+                    </button>
+                    {selectedGroup.type === "gallery" && (
+                      <button
+                        type="button"
+                        aria-label="뒤로"
+                        disabled={i === images.length - 1}
+                        onClick={() => handleMove(img.id, "down")}
+                      >
+                        ▶
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
+      </AdminSection>
 
-      <form className="hc-admin-form" onSubmit={handleUpload}>
-        <input type="file" ref={fileRef} accept="image/*" />
-        <button type="submit" className="hc-admin-btn">
-          {selectedGroup.type === "single" ? "교체" : "추가"}
-        </button>
-      </form>
-
-      {status && <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>}
-    </section>
+      <AdminSection title={selectedGroup.type === "single" ? "사진 교체" : "사진 추가"}>
+        <form onSubmit={handleUpload}>
+          <AdminFieldTable>
+            <AdminField label="사진 파일" required hint="큰 사진은 자동으로 용량을 줄여서 올립니다.">
+              <input className="hc-adm-file" type="file" ref={fileRef} accept="image/*" />
+            </AdminField>
+          </AdminFieldTable>
+          <AdminFormActions>
+            <button type="submit" className="hc-adm-btn hc-adm-btn--primary">
+              {selectedGroup.type === "single" ? "교체" : "추가"}
+            </button>
+          </AdminFormActions>
+          <AdminStatus status={status} />
+        </form>
+      </AdminSection>
+    </>
   );
 }

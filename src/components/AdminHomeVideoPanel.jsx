@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
+import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus } from "./AdminUI.jsx";
 
 export default function AdminHomeVideoPanel({ token, onAuthExpired }) {
   const [video, setVideo] = useState(undefined); // undefined: 불러오는 중, null: 없음
@@ -53,48 +54,39 @@ export default function AdminHomeVideoPanel({ token, onAuthExpired }) {
   };
 
   return (
-    <section className="hc-admin-panel">
-      <h2 className="hc-admin-panel-title">홈화면 영상 관리</h2>
-      <p className="hc-admin-panel-hint">
-        홈 화면 맨 위에 재생되는 배경 영상을 바꿀 수 있어요. 새 영상을 올리면 기존 영상은 자동으로 교체됩니다.
-      </p>
-
-      {video === undefined && <p className="hc-loading">불러오는 중…</p>}
-
-      {video !== undefined && (
-        <div className="hc-admin-homevideo-current">
-          <span className="hc-admin-panel-hint">현재 등록된 영상</span>
-          {video ? (
+    <>
+      <AdminSection title="현재 영상">
+        {video === undefined && <p className="hc-adm-empty">불러오는 중…</p>}
+        {video === null && <p className="hc-adm-empty">등록된 영상이 없습니다. (기본 이미지로 표시됩니다)</p>}
+        {video && (
+          <div className="hc-adm-media">
             <video
               key={video.id}
-              className="hc-admin-homevideo-preview"
+              className="hc-adm-video"
               src={`${API_BASE_URL}/uploads/homevideo/${video.fileUrl}`}
               controls
               muted
             />
-          ) : (
-            <p className="hc-empty">등록된 영상이 없습니다. (기본 이미지로 표시됩니다)</p>
-          )}
-        </div>
-      )}
-
-      <form className="hc-admin-form" onSubmit={handleUpload}>
-        <input type="file" ref={fileRef} accept="video/*" />
-        <button type="submit" className="hc-admin-btn">영상 교체</button>
-        {video && (
-          <button
-            type="button"
-            className="hc-admin-btn hc-admin-btn--danger"
-            onClick={handleReset}
-          >
-            영상 삭제
-          </button>
+            <button type="button" className="hc-adm-btn hc-adm-btn--sm hc-adm-btn--danger" onClick={handleReset}>
+              영상 삭제
+            </button>
+          </div>
         )}
-      </form>
+      </AdminSection>
 
-      {status && (
-        <p className={`hc-admin-status ${status.ok ? "ok" : "err"}`}>{status.msg}</p>
-      )}
-    </section>
+      <AdminSection title="영상 바꾸기" desc="새 영상을 올리면 기존 영상은 자동으로 교체됩니다.">
+        <form onSubmit={handleUpload}>
+          <AdminFieldTable>
+            <AdminField label="영상 파일" required hint="용량이 크면 홈 화면이 늦게 뜹니다. 720p 정도로 줄인 영상을 권장합니다.">
+              <input className="hc-adm-file" type="file" ref={fileRef} accept="video/*" />
+            </AdminField>
+          </AdminFieldTable>
+          <AdminFormActions>
+            <button type="submit" className="hc-adm-btn hc-adm-btn--primary">영상 교체</button>
+          </AdminFormActions>
+          <AdminStatus status={status} />
+        </form>
+      </AdminSection>
+    </>
   );
 }
