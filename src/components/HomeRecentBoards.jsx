@@ -14,7 +14,7 @@ export default function HomeRecentBoards() {
       .then((data) => setBulletins(data.slice(0, 4)))
       .catch(() => setBulletins([]));
 
-    fetch(`${API_BASE_URL}/api/sermons?category=SUNDAY`)
+    fetch(`${API_BASE_URL}/api/sermons?category=DAWN`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => setSermons(data.slice(0, 5)))
       .catch(() => setSermons([]));
@@ -51,7 +51,7 @@ export default function HomeRecentBoards() {
         </div>
 
         <div className="hc-recent-col">
-          <h3 className="hc-recent-col-title">주일예배</h3>
+          <h3 className="hc-recent-col-title">새벽예배</h3>
 
           {sermons === null && <p className="hc-loading">불러오는 중…</p>}
           {sermons && sermons.length === 0 && (
