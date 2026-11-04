@@ -1,3 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "hanachurch-frontend.vercel.app" }],
+      "destination": "https://www.hanachurch.co.kr/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
