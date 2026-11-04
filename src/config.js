@@ -289,5 +289,8 @@ export const HOME_POPUP = {
   message: "새 홈페이지를 시범 운영하고 있습니다.\n이용하시면서 불편한 점이나 오류가 있으면 알려주세요.\n보내주신 의견은 더 편리한 홈페이지를 만드는 데 활용됩니다.",
   buttonText: "오류 제보하기",
   link: "",
+  // 문의 연락처 (휴대폰에서 누르면 바로 전화 연결). 비워 두면 표시 안 함
+  contactLabel: "문의",
+  contactPhone: "010-3942-3697",
   hideDays: 7,
 };

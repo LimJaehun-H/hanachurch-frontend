@@ -53,7 +53,7 @@ export default function HomePopup() {
 
   if (!open) return null;
 
-  const { title, message, buttonText, link } = HOME_POPUP;
+  const { title, message, buttonText, link, contactLabel, contactPhone } = HOME_POPUP;
   const isExternal = /^https?:\/\//.test(link || "");
 
   return (
@@ -71,6 +71,13 @@ export default function HomePopup() {
 
         <h2 id="hc-popup-title" className="hc-popup-title">{title}</h2>
         <p className="hc-popup-message">{message}</p>
+
+        {contactPhone && (
+          <p className="hc-popup-contact">
+            {contactLabel}{" "}
+            <a href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}>{contactPhone}</a>
+          </p>
+        )}
 
         {link &&
           (isExternal ? (

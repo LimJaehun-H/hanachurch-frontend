@@ -3498,6 +3498,17 @@ button.hc-nav-parent {
   white-space: pre-line;
   word-break: keep-all;
 }
+.hc-popup-contact {
+  margin: -8px 0 22px;
+  font-size: 15px;
+  color: var(--ink);
+}
+.hc-popup-contact a {
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .hc-popup-action {
   display: block;
   padding: 14px;
