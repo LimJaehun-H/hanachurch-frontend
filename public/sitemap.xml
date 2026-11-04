@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.hanachurch.co.kr/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/worship</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/worship/sunday</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/worship/dawn</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/notice</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/bulletin</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/album</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/location</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/offering</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+</urlset>

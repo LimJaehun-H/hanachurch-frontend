@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /mypage
+Disallow: /login
+Disallow: /signup
+Disallow: /offering/success
+Disallow: /offering/fail
+
+Sitemap: https://www.hanachurch.co.kr/sitemap.xml
