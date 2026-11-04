@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { authFetch } from "../utils/auth.js";
 import { API_BASE_URL } from "../config.js";
+import { isPdf, pdfToImages } from "../utils/pdfToImages.js";
 import { AdminSection, AdminField, AdminFieldTable, AdminFormActions, AdminStatus, AdminList, AdminRow } from "./AdminUI.jsx";
 
 const MAX_IMAGES = 2;
@@ -121,22 +122,49 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
   // 미리보기용 object URL 정리
   useEffect(() => () => images.forEach((img) => URL.revokeObjectURL(img.url)), [images]);
 
-  const handleFilesChange = (e) => {
+  const [converting, setConverting] = useState(false);
+
+  // 사진은 그대로, PDF는 쪽마다 JPG로 바꿔서 추가 (빈 자리만큼만, 앞쪽부터)
+  const handleFilesChange = async (e) => {
     const files = Array.from(e.target.files || []);
     e.target.value = ""; // 같은 파일 다시 선택 가능하게
     setStatus(null);
 
-    const invalid = files.find((f) => !ALLOWED_TYPES.includes(f.type));
+    const invalid = files.find((f) => !isPdf(f) && !ALLOWED_TYPES.includes(f.type));
     if (invalid) {
-      setStatus({ ok: false, msg: `JPG, PNG만 가능합니다: ${invalid.name}` });
+      setStatus({ ok: false, msg: `JPG, PNG, PDF만 가능합니다: ${invalid.name}` });
       return;
     }
-    const next = [...images, ...files.map((file) => ({ file, url: URL.createObjectURL(file) }))];
-    if (next.length > MAX_IMAGES) {
+
+    const picked = [];
+    const notes = [];
+    if (files.some(isPdf)) setConverting(true);
+    try {
+      for (const file of files) {
+        if (!isPdf(file)) {
+          picked.push(file);
+          continue;
+        }
+        const pages = await pdfToImages(file);
+        const room = MAX_IMAGES - images.length - picked.length;
+        if (pages.length > room) {
+          notes.push(`${file.name}은 ${pages.length}쪽이라 앞의 ${Math.max(room, 0)}쪽만 넣었습니다.`);
+        }
+        picked.push(...pages.slice(0, Math.max(room, 0)));
+      }
+    } catch {
+      setStatus({ ok: false, msg: "PDF를 사진으로 바꾸지 못했습니다. 주보를 사진(JPG, PNG)으로 저장해서 올려주세요." });
+      return;
+    } finally {
+      setConverting(false);
+    }
+
+    if (images.length + picked.length > MAX_IMAGES) {
       setStatus({ ok: false, msg: `이미지는 최대 ${MAX_IMAGES}장까지 선택할 수 있습니다.` });
       return;
     }
-    setImages(next);
+    setImages((prev) => [...prev, ...picked.map((file) => ({ file, url: URL.createObjectURL(file) }))]);
+    if (notes.length) setStatus({ ok: true, msg: notes.join(" ") });
   };
 
   const removeImage = (index) => {
@@ -236,7 +264,7 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
   return (
     <>
       <p className="hc-adm-notice">
-        사진은 최대 2장까지 고를 수 있고, 문자 규격(JPG, 200KB 이하)에 맞게 자동으로 줄여집니다.
+        사진(JPG, PNG)이나 PDF를 최대 2장까지 넣을 수 있습니다. PDF는 쪽마다 사진으로 자동 변환되고, 문자 규격(JPG, 200KB 이하)에 맞게 자동으로 줄여집니다.
       </p>
 
       {/* 1. 이미지 */}
@@ -254,9 +282,16 @@ export default function AdminBulletinSmsPanel({ token, onAuthExpired }) {
             </div>
           ))}
           {images.length < MAX_IMAGES && (
-            <label className="hc-sms-add">
-              <input type="file" accept=".jpg,.jpeg,.png" multiple onChange={handleFilesChange} hidden />
-              + 사진 선택
+            <label className={`hc-sms-add ${converting ? "hc-sms-add--busy" : ""}`}>
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf,application/pdf"
+                multiple
+                onChange={handleFilesChange}
+                disabled={converting}
+                hidden
+              />
+              {converting ? "PDF 변환 중..." : "+ 사진 또는 PDF 선택"}
             </label>
           )}
         </div>

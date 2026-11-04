@@ -803,3 +803,6 @@
 @media (max-width: 760px) {
   .hc-adm { --adm-head: 86px; }
 }
+
+/* 주보 문자: PDF 변환 중 */
+.hc-adm .hc-sms-add--busy { cursor: progress; color: var(--adm-ink); border-style: solid; }
