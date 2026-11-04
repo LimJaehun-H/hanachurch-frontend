@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { SITE_IMAGE_GROUPS } from "../config.js";
 import { authFetch } from "../utils/auth.js";
+import { compressImage } from "../utils/imageCompress.js";
 
 export default function AdminSiteImagePanel({ token, onAuthExpired }) {
   const [selectedKey, setSelectedKey] = useState(SITE_IMAGE_GROUPS[0].key);
@@ -31,8 +32,9 @@ export default function AdminSiteImagePanel({ token, onAuthExpired }) {
       return;
     }
 
+    setStatus({ ok: true, msg: "사진 용량을 줄이는 중..." });
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", await compressImage(file));
 
     const method = selectedGroup.type === "single" ? "PUT" : "POST";
 

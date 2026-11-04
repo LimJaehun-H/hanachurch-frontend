@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
+import { compressImages } from "../utils/imageCompress.js";
 
 export default function AdminBulletinPanel({ token, onAuthExpired }) {
   const [bulletins, setBulletins] = useState(null);
@@ -26,8 +27,10 @@ export default function AdminBulletinPanel({ token, onAuthExpired }) {
       return;
     }
 
+    setStatus({ ok: true, msg: "사진 용량을 줄이는 중..." });
     const formData = new FormData();
-    Array.from(files).forEach((file) => formData.append("files", file));
+    // PDF는 compressImage가 원본 그대로 돌려줌
+    (await compressImages(files)).forEach((file) => formData.append("files", file));
     formData.append("title", title);
     formData.append("serviceDate", serviceDate);
 

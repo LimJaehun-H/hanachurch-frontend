@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../config.js";
+import { compressImage } from "../utils/imageCompress.js";
 
 export default function RichContentEditor({ value, onChange, token, resetKey }) {
   const editorRef = useRef(null);
@@ -38,7 +39,7 @@ export default function RichContentEditor({ value, onChange, token, resetKey }) 
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", await compressImage(file));
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/notices/images`, {

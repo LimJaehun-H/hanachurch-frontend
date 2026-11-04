@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../config.js";
 import { authFetch } from "../utils/auth.js";
+import { compressImages } from "../utils/imageCompress.js";
 
 export default function AdminAlbumPanel({ token, onAuthExpired }) {
   const [albums, setAlbums] = useState(null);
@@ -25,9 +26,10 @@ export default function AdminAlbumPanel({ token, onAuthExpired }) {
       return;
     }
 
+    setStatus({ ok: true, msg: "사진 용량을 줄이는 중..." });
     const formData = new FormData();
     formData.append("title", title);
-    Array.from(files).forEach((file) => formData.append("files", file));
+    (await compressImages(files)).forEach((file) => formData.append("files", file));
 
     try {
       const res = await authFetch(token, "/api/albums", { method: "POST", body: formData });
