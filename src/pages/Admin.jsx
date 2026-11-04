@@ -8,6 +8,7 @@ import AdminHomeVideoPanel from "../components/AdminHomeVideoPanel.jsx";
 import AdminSiteImagePanel from "../components/AdminSiteImagePanel.jsx";
 import AdminPasswordPanel from "../components/AdminPasswordPanel.jsx";
 import AdminBulletinSmsPanel from "../components/AdminBulletinSmsPanel.jsx";
+import AdminHomePopupPanel from "../components/AdminHomePopupPanel.jsx";
 import { API_BASE_URL } from "../config.js";
 
 const TABS = [
@@ -18,6 +19,7 @@ const TABS = [
   { key: "album", label: "앨범 관리" },
   { key: "sermon", label: "말씀 관리" },
   { key: "homevideo", label: "홈화면 영상 관리" },
+  { key: "homepopup", label: "홈화면 팝업 관리" },
   { key: "siteimage", label: "사이트 이미지 관리" },
 ];
 
@@ -123,6 +125,7 @@ export default function Admin() {
               {activeTab === "album" && <AdminAlbumPanel {...panelProps} />}
               {activeTab === "sermon" && <AdminSermonPanel {...panelProps} />}
               {activeTab === "homevideo" && <AdminHomeVideoPanel {...panelProps} />}
+              {activeTab === "homepopup" && <AdminHomePopupPanel {...panelProps} />}
               {activeTab === "siteimage" && <AdminSiteImagePanel {...panelProps} />}
             </div>
           </main>

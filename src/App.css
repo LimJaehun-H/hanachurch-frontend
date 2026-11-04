@@ -3498,17 +3498,6 @@ button.hc-nav-parent {
   white-space: pre-line;
   word-break: keep-all;
 }
-.hc-popup-contact {
-  margin: -8px 0 22px;
-  font-size: 15px;
-  color: var(--ink);
-}
-.hc-popup-contact a {
-  font-weight: 700;
-  color: var(--ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 .hc-popup-action {
   display: block;
   padding: 14px;
@@ -3549,4 +3538,77 @@ button.hc-nav-parent {
   color: var(--ink);
   font-size: 14px;
   cursor: pointer;
+}
+
+/* ===== 관리자: 홈화면 팝업 관리 (AdminHomePopupPanel.jsx) ===== */
+.hc-admin-popup-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hc-admin-popup-field {
+  display: flex;
+  flex: 1;
+  min-width: 160px;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.hc-admin-popup-field--narrow {
+  flex: 0 0 90px;
+  min-width: 90px;
+}
+.hc-admin-popup-field input {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  color: var(--ink);
+}
+.hc-admin-popup-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+.hc-admin-btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+}
+.hc-admin-btn--ghost:hover {
+  background: var(--paper-tint);
+}
+.hc-admin-popup-actions .hc-admin-btn:first-child:not(.hc-admin-btn--ghost) {
+  padding: 10px 22px;
+}
+.hc-admin-popup-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-width: 0;
+}
+.hc-admin-popup-info strong {
+  word-break: keep-all;
+}
+.hc-admin-popup-meta {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.hc-admin-popup-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.hc-admin-popup-badge--on { background: #E5F2EA; color: var(--success); }
+.hc-admin-popup-badge--wait { background: #FFF4DB; color: #8A5A00; }
+.hc-admin-popup-badge--off { background: var(--paper-tint); color: var(--ink-soft); }
+.hc-admin-popup-hint {
+  margin-top: 12px;
 }
