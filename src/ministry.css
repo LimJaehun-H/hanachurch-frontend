@@ -341,3 +341,199 @@
   .hc-ministry-detail { padding: 40px 20px 80px; }
   .hc-ministry-detail-title { font-size: 28px; }
 }
+
+/* ===== 사역 소개 (사역박람회 자료) ===== */
+.hc-ministry-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--mc);
+  color: #FFFFFF;
+}
+.hc-ministry-list-leaf-link { color: var(--mc) !important; font-weight: 600 !important; text-decoration: underline; text-underline-offset: 2px; }
+
+.hc-ministry-profiles { margin-top: 80px; text-align: center; }
+.hc-ministry-profiles-eyebrow {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #2D6A3E;
+}
+.hc-ministry-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+.hc-ministry-profile-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 22px 20px;
+  border-radius: 18px;
+  background: #FFFFFF;
+  border: 1px solid #ECECEC;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.hc-ministry-profile-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--mc);
+}
+.hc-ministry-profile-card:hover {
+  transform: translateY(-3px);
+  border-color: transparent;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+}
+.hc-ministry-profile-icon { margin-bottom: 8px; }
+.hc-ministry-profile-dept { font-size: 12.5px; font-weight: 600; color: #8A8A8A; }
+.hc-ministry-profile-name { font-size: 19px; font-weight: 800; color: #191919; }
+.hc-ministry-profile-tagline { font-size: 14px; line-height: 1.5; color: #555; word-break: keep-all; flex: 1; }
+.hc-ministry-profile-more { margin-top: 8px; font-size: 13.5px; font-weight: 700; color: var(--mc); }
+
+/* 소개 페이지 */
+.hc-mp-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 18px 0 8px;
+  padding-bottom: 24px;
+  border-bottom: 3px solid var(--mc);
+}
+.hc-mp-title { margin: 0; font-size: 34px; font-weight: 800; color: var(--ink); line-height: 1.25; word-break: keep-all; }
+.hc-mp-tagline { margin: 6px 0 0; font-size: 17px; color: var(--mc); font-weight: 600; word-break: keep-all; }
+.hc-mp-section { margin-top: 40px; }
+.hc-mp-h2 { margin: 0 0 14px; font-size: 20px; font-weight: 800; color: #191919; }
+.hc-mp-about p { margin: 0 0 10px; font-size: 17px; line-height: 1.8; color: #333; word-break: keep-all; }
+.hc-mp-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 40px;
+}
+.hc-mp-box {
+  padding: 24px 24px 18px;
+  border-radius: 16px;
+  background: #F7F8F6;
+  border: 1px solid #ECEFEA;
+}
+.hc-mp-box--need {
+  background: color-mix(in srgb, var(--mc) 8%, #FFFFFF);
+  border-color: color-mix(in srgb, var(--mc) 25%, #FFFFFF);
+}
+.hc-mp-checks { list-style: none; margin: 0; padding: 0; }
+.hc-mp-checks li {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: #333;
+  word-break: keep-all;
+}
+.hc-mp-checks svg { flex-shrink: 0; margin-top: 3px; color: var(--mc); }
+.hc-mp-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+.hc-mp-steps li {
+  position: relative;
+  counter-increment: step;
+  padding: 14px 0 14px 50px;
+  border-bottom: 1px solid #EFEFEF;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #333;
+  word-break: keep-all;
+}
+.hc-mp-steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 36px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--mc);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 28px;
+  text-align: center;
+}
+.hc-mp-when { margin: 12px 0 0; font-size: 15px; color: #555; }
+.hc-mp-quotes {
+  margin-top: 44px;
+  padding: 32px 30px 18px;
+  border-radius: 20px;
+  background: var(--mc);
+  color: #FFFFFF;
+}
+.hc-mp-quotes-label { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; opacity: 0.8; }
+.hc-mp-quotes blockquote {
+  position: relative;
+  margin: 0 0 16px;
+  padding-left: 30px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+.hc-mp-quotes blockquote::before {
+  content: "“";
+  position: absolute;
+  left: 0;
+  top: -10px;
+  font-size: 44px;
+  line-height: 1;
+  opacity: 0.55;
+  font-family: Georgia, serif;
+}
+.hc-mp-join {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding: 24px 26px;
+  border-radius: 16px;
+  border: 1.5px dashed color-mix(in srgb, var(--mc) 45%, #FFFFFF);
+}
+.hc-mp-join-title { margin: 0 0 4px; font-size: 18px; font-weight: 800; }
+.hc-mp-join-text { margin: 0; font-size: 14.5px; color: #555; word-break: keep-all; }
+.hc-mp-join-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #191919;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .hc-ministry-profiles { margin-top: 60px; }
+  .hc-ministry-profile-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hc-ministry-profile-card { padding: 18px 14px 16px; border-radius: 14px; }
+  .hc-ministry-profile-name { font-size: 16px; }
+  .hc-ministry-profile-tagline { font-size: 13px; }
+  .hc-mp-head { gap: 14px; }
+  .hc-mp-title { font-size: 26px; }
+  .hc-mp-tagline { font-size: 15px; }
+  .hc-mp-pair { grid-template-columns: 1fr; }
+  .hc-mp-about p { font-size: 16px; }
+  .hc-mp-quotes { padding: 26px 20px 12px; }
+  .hc-mp-quotes blockquote { font-size: 16.5px; }
+  .hc-mp-join-btn { width: 100%; justify-content: center; }
+}
