@@ -48,24 +48,33 @@
 .hc-mg-link { stroke-linecap: round; }
 
 .hc-mg-node { cursor: pointer; outline: none; }
-.hc-mg-circle {
-  transition: transform 0.2s ease, filter 0.2s ease;
-  filter: drop-shadow(0 4px 10px rgba(30, 40, 30, 0.14));
+.hc-mg-card {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.2s ease;
 }
-.hc-mg-node:hover .hc-mg-circle,
-.hc-mg-node:focus-visible .hc-mg-circle { transform: scale(1.07); }
-.hc-mg-node--selected .hc-mg-circle {
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 0 #fff) drop-shadow(0 6px 18px rgba(30, 40, 30, 0.3));
+.hc-mg-rect {
+  filter: drop-shadow(0 4px 10px rgba(30, 40, 30, 0.12));
+  transition: filter 0.2s ease;
+}
+.hc-mg-node--d0 .hc-mg-rect { filter: drop-shadow(0 8px 20px rgba(45, 106, 62, 0.35)); }
+.hc-mg-node:hover .hc-mg-card,
+.hc-mg-node:focus-visible .hc-mg-card { transform: translateY(-2px) scale(1.05); }
+.hc-mg-node:hover .hc-mg-rect { filter: drop-shadow(0 8px 18px rgba(30, 40, 30, 0.2)); }
+.hc-mg-node--selected .hc-mg-card { transform: scale(1.08); }
+.hc-mg-node--selected .hc-mg-rect {
   stroke: #191919;
-  stroke-width: 3px;
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 10px 22px rgba(30, 40, 30, 0.28));
 }
 .hc-mg-label {
-  text-anchor: middle;
+  text-anchor: start;
   pointer-events: none;
   font-family: 'Pretendard', sans-serif;
   letter-spacing: -0.02em;
 }
+.hc-mg-card image, .hc-mg-card path, .hc-mg-card circle { pointer-events: none; }
+.hc-mg-card .hc-mg-rect { pointer-events: all; }
 .hc-mg-badge circle { fill: #191919; stroke: #FFFFFF; stroke-width: 2; }
 .hc-mg-badge text {
   fill: #FFFFFF;
@@ -79,6 +88,7 @@
 /* 노드가 둥실둥실 떠 있는 효과 */
 .hc-mg-bob { animation: hc-mg-bob 6s ease-in-out infinite; }
 .hc-mg-node--d0 .hc-mg-bob { animation: none; }
+.hc-mg-badge { pointer-events: none; }
 @keyframes hc-mg-bob {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(0, -4px); }

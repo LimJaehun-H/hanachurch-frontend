@@ -6,18 +6,56 @@ import { drag as d3drag } from "d3-drag";
 import "d3-transition";
 import { CHURCH_ROOT, MINISTRY_INDEX, colorOf } from "../data/ministries.js";
 
-// 교회부서 노드 화면
-// - 처음엔 하나교회 + 큰 부서만 보이고, 노드를 누르면 하위 부서가 펼쳐짐
+// 교회부서 노드 화면 (아이콘 카드형)
+// - 처음엔 하나교회 + 큰 부서만 보이고, 카드를 누르면 하위 부서가 펼쳐짐
 // - 손가락/마우스로 끌어서 이동, 두 손가락(또는 Ctrl+휠, +/- 버튼)으로 확대·축소
-// - 노드를 끌면 연결된 노드들이 실처럼 따라옴 (d3-force 물리 시뮬레이션)
+// - 카드를 끌면 연결된 카드들이 실처럼 따라옴 (d3-force 물리 시뮬레이션)
 
-const RADIUS = [66, 50, 38, 30]; // 단계별 원 크기
-const FONT = [21, 16, 13, 11.5]; // 단계별 글씨 크기
-const LINK_DIST = [0, 165, 112, 78]; // 부모와의 거리
-const RING = [0, 175, 320, 430]; // 가운데에서의 대략적인 거리 (방사형 배치 유지)
+const LINK_DIST = [0, 190, 140, 104]; // 부모와의 거리
+const RING = [0, 205, 375, 505]; // 가운데에서의 대략적인 거리 (방사형 배치 유지)
+
+// 단계별 카드 규격
+const SPEC = [
+  { fs: 19, weight: 800, maxW: 120, minH: 66, padX: 14, icon: 21, gap: 10, radius: 20 },
+  { fs: 16, weight: 700, maxW: 104, minH: 50, padX: 10, icon: 16, gap: 8, radius: 16 },
+  { fs: 14, weight: 600, maxW: 98, minH: 44, padX: 9, icon: 13, gap: 7, radius: 13 },
+  { fs: 12.5, weight: 600, maxW: 92, minH: 34, padX: 11, icon: 4, gap: 7, radius: 17 },
+];
+
+// 큰 부서 아이콘 (24×24 선 그림)
+const ICONS = {
+  root: null, // 가운데는 교회 로고
+  finance: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 9l2 6 2-5 2 5 2-6M7.5 12h9",
+  "admin-planning": "M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M8.5 11h7M8.5 15h5",
+  worship: "M12 3v18M7 8.5h10",
+  education: "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5v-15M9 7.5h7",
+  social: "M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z",
+  mission: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c3.2 3.6 3.2 14.4 0 18M12 3c-3.2 3.6-3.2 14.4 0 18",
+  facility: "M3 11.5 12 4l9 7.5M5.5 10v10.5h13V10M10 20.5v-6h4v6",
+};
+// 중간 단계 중 이름으로 알아볼 수 있는 것은 전용 아이콘
+const SUB_ICONS = [
+  [/찬양|음악/, "M9 18V6l11-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM20 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],
+  [/청소/, "M14 3l7 7M4 20l7-7M12 9l3 3-6 6-4 1 1-4z"],
+  [/주방|급식/, "M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"],
+  [/도서관|교육/, "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5v-15"],
+  [/전도|선교/, "M3 11l18-8-8 18-2-8z"],
+  [/사진|기록|홍보|미디어/, "M4 7h3l2-3h6l2 3h3v13H4zM12 10a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"],
+  [/창고/, "M3 8l9-5 9 5v12H3zM3 8h18M9 20v-7h6v7"],
+  [/에너지|전기/, "M13 2 4 14h7l-1 8 9-12h-7z"],
+];
 
 const depthOf = (id) => MINISTRY_INDEX[id].depth;
-const radiusOf = (id) => RADIUS[Math.min(depthOf(id), 3)];
+const specOf = (id) => SPEC[Math.min(depthOf(id), 3)];
+
+function iconPath(id) {
+  const info = MINISTRY_INDEX[id];
+  if (info.depth === 2) {
+    const hit = SUB_ICONS.find(([re]) => re.test(info.node.name));
+    if (hit) return hit[1];
+  }
+  return ICONS[info.branch] || ICONS.worship;
+}
 
 // 색 섞기 (t=1이면 흰색)
 function mix(hex, t) {
@@ -31,41 +69,59 @@ function darken(hex, t) {
   return `rgb(${ch.join(",")})`;
 }
 
-function styleOf(id) {
-  const d = depthOf(id);
-  const c = colorOf(id);
-  if (d <= 1) return { fill: c, stroke: "none", text: "#FFFFFF" };
-  if (d === 2) return { fill: mix(c, 0.82), stroke: c, text: darken(c, 0.35) };
-  return { fill: "#FFFFFF", stroke: mix(c, 0.35), text: darken(c, 0.3) };
-}
-
-// 원 안에 들어가게 글자를 줄바꿈 (한글은 글자 폭 ≈ 글씨 크기)
-function wrapLabel(name, fontSize, maxWidth) {
-  const charW = (ch) => (/[ㄱ-힝]/.test(ch) ? fontSize * 0.98 : fontSize * 0.56);
-  const width = (s) => [...s].reduce((w, ch) => w + charW(ch), 0);
+// 카드 너비에 맞게 글자를 줄바꿈 (한글은 글자 폭 ≈ 글씨 크기)
+const charW = (ch, fs) => (/[ㄱ-힝]/.test(ch) ? fs * 0.98 : fs * 0.56);
+const textW = (s, fs) => [...s].reduce((w, ch) => w + charW(ch, fs), 0);
+function wrapLabel(name, fs, maxWidth) {
   const lines = [];
   let line = "";
-  const pushWord = (word) => {
+  name.split(" ").forEach((word) => {
     const candidate = line ? `${line} ${word}` : word;
-    if (width(candidate) <= maxWidth) {
+    if (textW(candidate, fs) <= maxWidth) {
       line = candidate;
       return;
     }
     if (line) lines.push(line);
     line = "";
-    // 한 단어가 너무 길면 글자 단위로 자름
     let chunk = "";
     for (const ch of word) {
-      if (width(chunk + ch) > maxWidth && chunk) {
+      if (textW(chunk + ch, fs) > maxWidth && chunk) {
         lines.push(chunk);
         chunk = ch;
       } else chunk += ch;
     }
     line = chunk;
-  };
-  name.split(" ").forEach(pushWord);
+  });
   if (line) lines.push(line);
   return lines;
+}
+
+// 카드 크기·내용 계산 (한 번만)
+const CARD = new Map();
+function cardOf(id) {
+  if (CARD.has(id)) return CARD.get(id);
+  const sp = specOf(id);
+  const lines = wrapLabel(MINISTRY_INDEX[id].node.name, sp.fs, sp.maxW);
+  const lh = sp.fs * 1.22;
+  const tw = Math.max(...lines.map((l) => textW(l, sp.fs)));
+  const iconBox = sp.icon * 2;
+  const w = Math.round(sp.padX * 2 + iconBox + sp.gap + tw + 4);
+  const h = Math.round(Math.max(sp.minH, lines.length * lh + 18));
+  const card = { w, h, lines, lh, sp, iconBox };
+  CARD.set(id, card);
+  return card;
+}
+const collideOf = (id) => {
+  const { w, h } = cardOf(id);
+  return Math.max(w * 0.44, h * 0.62) + 8;
+};
+
+function styleOf(id) {
+  const d = depthOf(id);
+  const c = colorOf(id);
+  if (d <= 1) return { fill: c, stroke: "none", text: "#FFFFFF", iconBg: "rgba(255,255,255,0.22)", icon: "#FFFFFF" };
+  if (d === 2) return { fill: mix(c, 0.9), stroke: mix(c, 0.45), text: darken(c, 0.38), iconBg: mix(c, 0.72), icon: darken(c, 0.2) };
+  return { fill: "#FFFFFF", stroke: mix(c, 0.6), text: darken(c, 0.35), iconBg: c, icon: c };
 }
 
 function visibleIds(expanded) {
@@ -84,6 +140,88 @@ function descendantsOf(id, expanded) {
     if (expanded.has(node.id)) (node.children || []).forEach(walk);
   })(MINISTRY_INDEX[id].node);
   return out;
+}
+
+// 부모→자식 곡선 (살짝 휘어 덩굴처럼)
+function curve(l) {
+  const { x: sx, y: sy } = l.source;
+  const { x: tx, y: ty } = l.target;
+  const dx = tx - sx;
+  const dy = ty - sy;
+  const mx = (sx + tx) / 2 - dy * 0.14;
+  const my = (sy + ty) / 2 + dx * 0.14;
+  return `M${sx},${sy}Q${mx},${my} ${tx},${ty}`;
+}
+
+function drawCard(sel) {
+  sel.each(function (d) {
+    const g = select(this);
+    const card = cardOf(d.id);
+    const { w, h, lines, lh, sp, iconBox } = card;
+    const st = styleOf(d.id);
+    const depth = depthOf(d.id);
+
+    g.append("rect")
+      .attr("class", "hc-mg-rect")
+      .attr("x", -w / 2)
+      .attr("y", -h / 2)
+      .attr("width", w)
+      .attr("height", h)
+      .attr("rx", Math.min(sp.radius, h / 2))
+      .attr("fill", st.fill)
+      .attr("stroke", st.stroke)
+      .attr("stroke-width", depth >= 2 ? 1.5 : 0);
+
+    const iconCx = -w / 2 + sp.padX + iconBox / 2;
+    if (depth === 0) {
+      g.append("circle").attr("cx", iconCx).attr("cy", 0).attr("r", sp.icon).attr("fill", "#FFFFFF");
+      g.append("image")
+        .attr("href", "/icon-512.png")
+        .attr("x", iconCx - sp.icon * 0.78)
+        .attr("y", -sp.icon * 0.78)
+        .attr("width", sp.icon * 1.56)
+        .attr("height", sp.icon * 1.56);
+    } else if (depth === 3) {
+      g.append("circle").attr("cx", iconCx).attr("cy", 0).attr("r", sp.icon).attr("fill", st.icon);
+    } else {
+      g.append("circle").attr("cx", iconCx).attr("cy", 0).attr("r", sp.icon).attr("fill", st.iconBg);
+      const s = (sp.icon * 1.25) / 24;
+      g.append("path")
+        .attr("d", iconPath(d.id))
+        .attr("transform", `translate(${iconCx - 12 * s},${-12 * s}) scale(${s})`)
+        .attr("fill", "none")
+        .attr("stroke", st.icon)
+        .attr("stroke-width", 2.2)
+        .attr("stroke-linecap", "round")
+        .attr("stroke-linejoin", "round");
+    }
+
+    const textX = -w / 2 + sp.padX + iconBox + sp.gap;
+    const text = g
+      .append("text")
+      .attr("class", "hc-mg-label")
+      .attr("fill", st.text)
+      .attr("font-size", sp.fs)
+      .attr("font-weight", sp.weight);
+    lines.forEach((ln, i) =>
+      text
+        .append("tspan")
+        .attr("x", textX)
+        .attr("y", (i - (lines.length - 1) / 2) * lh)
+        .attr("dy", "0.35em")
+        .text(ln)
+    );
+
+    // 하위 부서 개수 배지 (오른쪽 위)
+    if ((MINISTRY_INDEX[d.id].node.children || []).length && d.id !== "root") {
+      const b = g
+        .append("g")
+        .attr("class", "hc-mg-badge")
+        .attr("transform", `translate(${w / 2 - 3},${-h / 2 + 3})`);
+      b.append("circle").attr("r", 10.5);
+      b.append("text").attr("dy", "0.35em");
+    }
+  });
 }
 
 const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }, ref) {
@@ -112,8 +250,8 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
 
     const sim = forceSimulation()
       .force("link", forceLink().id((d) => d.id).distance((l) => LINK_DIST[depthOf(l.target.id)]).strength(0.9))
-      .force("charge", forceManyBody().strength((d) => (d.id === "root" ? -900 : -260 - (3 - depthOf(d.id)) * 90)))
-      .force("collide", forceCollide().radius((d) => radiusOf(d.id) + 7).strength(1))
+      .force("charge", forceManyBody().strength((d) => (d.id === "root" ? -1000 : -300 - (3 - depthOf(d.id)) * 110)))
+      .force("collide", forceCollide().radius((d) => collideOf(d.id)).strength(1))
       .force("radial", forceRadial((d) => RING[depthOf(d.id)], 0, 0).strength(0.06))
       .alphaDecay(0.035);
     state.sim = sim;
@@ -153,17 +291,17 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       if (!pts.length) return;
       let [x0, y0, x1, y1] = [Infinity, Infinity, -Infinity, -Infinity];
       pts.forEach((p) => {
-        const r = radiusOf(p.id);
-        x0 = Math.min(x0, p.x - r);
-        y0 = Math.min(y0, p.y - r);
-        x1 = Math.max(x1, p.x + r);
-        y1 = Math.max(y1, p.y + r);
+        const { w: cw, h: ch } = cardOf(p.id);
+        x0 = Math.min(x0, p.x - cw / 2);
+        y0 = Math.min(y0, p.y - ch / 2);
+        x1 = Math.max(x1, p.x + cw / 2);
+        y1 = Math.max(y1, p.y + ch / 2);
       });
       const { w } = state.size;
       const top = 60; // 위쪽 버튼 줄
       const bottom = cardOpenRef.current ? (w < 760 ? 215 : 195) : 24;
       const h = state.size.h - top - bottom;
-      const pad = 16;
+      const pad = 14;
       const k = Math.min(1.5, (w - pad * 2) / (x1 - x0), (h - pad * 2) / (y1 - y0));
       const t = zoomIdentity
         .translate(w / 2, top + h / 2)
@@ -181,7 +319,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     const render = () => {
       const ids = visibleIds(state.expanded);
       const idSet = new Set(ids);
-      // 새로 보이는 노드는 부모 위치에서 시작해 퍼져 나감
+      // 새로 보이는 카드는 부모 위치에서 시작해 퍼져 나감
       ids.forEach((id) => {
         if (!state.nodes.has(id)) {
           const parent = MINISTRY_INDEX[id].parent;
@@ -201,12 +339,13 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
         .map((id) => ({ id, source: MINISTRY_INDEX[id].parent.id, target: id }));
 
       const link = linkLayer
-        .selectAll("line")
+        .selectAll("path")
         .data(links, (l) => l.id)
-        .join("line")
+        .join("path")
         .attr("class", "hc-mg-link")
-        .attr("stroke", (l) => mix(colorOf(l.id), depthOf(l.id) === 1 ? 0.35 : 0.45))
-        .attr("stroke-width", (l) => [0, 9, 6, 4][depthOf(l.id)]);
+        .attr("fill", "none")
+        .attr("stroke", (l) => mix(colorOf(l.id), depthOf(l.id) === 1 ? 0.3 : 0.5))
+        .attr("stroke-width", (l) => [0, 6, 4, 2.5][depthOf(l.id)]);
 
       const node = nodeLayer
         .selectAll("g.hc-mg-node")
@@ -218,51 +357,13 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
             .attr("tabindex", 0)
             .attr("role", "button")
             .attr("aria-label", (d) => MINISTRY_INDEX[d.id].node.name);
-          const bob = g
-            .append("g")
+          g.append("g")
             .attr("class", "hc-mg-bob")
             .style("animation-delay", () => `${(-Math.random() * 6).toFixed(2)}s`)
-            .style("animation-duration", () => `${(5 + Math.random() * 3).toFixed(2)}s`);
-          bob
-            .append("circle")
-            .attr("class", "hc-mg-circle")
-            .attr("r", (d) => radiusOf(d.id))
-            .attr("fill", (d) => styleOf(d.id).fill)
-            .attr("stroke", (d) => styleOf(d.id).stroke)
-            .attr("stroke-width", (d) => (depthOf(d.id) >= 2 ? 2 : 0));
-          bob.each(function (d) {
-            const depth = Math.min(depthOf(d.id), 3);
-            const fs = FONT[depth];
-            const lines = wrapLabel(MINISTRY_INDEX[d.id].node.name, fs, radiusOf(d.id) * 1.72);
-            const lh = fs * 1.18;
-            const text = select(this)
-              .append("text")
-              .attr("class", "hc-mg-label")
-              .attr("fill", styleOf(d.id).text)
-              .attr("font-size", fs)
-              .attr("font-weight", depth <= 1 ? 700 : 600);
-            lines.forEach((ln, i) =>
-              text
-                .append("tspan")
-                .attr("x", 0)
-                .attr("y", (i - (lines.length - 1) / 2) * lh)
-                .attr("dy", "0.35em")
-                .text(ln)
-            );
-          });
-          // 접혀 있는 하위 부서 개수 배지
-          bob
-            .filter((d) => (MINISTRY_INDEX[d.id].node.children || []).length > 0 && d.id !== "root")
+            .style("animation-duration", () => `${(5 + Math.random() * 3).toFixed(2)}s`)
             .append("g")
-            .attr("class", "hc-mg-badge")
-            .attr("transform", (d) => {
-              const r = radiusOf(d.id);
-              return `translate(${r * 0.72},${-r * 0.72})`;
-            })
-            .call((b) => {
-              b.append("circle").attr("r", 11);
-              b.append("text").attr("dy", "0.35em");
-            });
+            .attr("class", "hc-mg-card")
+            .call(drawCard);
           g.call(dragger);
           g.on("click", (event, d) => handleTap(d.id));
           g.on("keydown", (event, d) => {
@@ -271,7 +372,6 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
               handleTap(d.id);
             }
           });
-          // 펼쳐질 때 살짝 커지며 나타남
           g.attr("opacity", 0).transition().duration(reduceMotion ? 0 : 450).attr("opacity", 1);
           return g;
         });
@@ -281,7 +381,6 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
         const open = state.expanded.has(d.id);
         select(this).classed("hc-mg-badge--open", open);
         select(this).select("text").text(open ? "−" : `+${count}`);
-        select(this).select("circle").attr("r", open ? 10 : count >= 10 ? 13 : 11);
       });
 
       sim.nodes(nodes);
@@ -289,11 +388,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       sim.alpha(0.7).restart();
 
       sim.on("tick", () => {
-        link
-          .attr("x1", (l) => l.source.x)
-          .attr("y1", (l) => l.source.y)
-          .attr("x2", (l) => l.target.x)
-          .attr("y2", (l) => l.target.y);
+        link.attr("d", curve);
         node.attr("transform", (d) => `translate(${d.x},${d.y})`);
       });
     };
@@ -338,7 +433,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     };
   }, []);
 
-  // 선택된 노드 강조
+  // 선택된 카드 강조
   useEffect(() => {
     select(svgRef.current)
       .selectAll("g.hc-mg-node")
