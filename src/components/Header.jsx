@@ -189,6 +189,7 @@ export default function Header({ variant = "solid" }) {
               <Link to="/worship">예배안내</Link>
               <Link to="/location">오시는 길</Link>
               <Link to="/about">교회소개</Link>
+              <Link to="/ministry">교회부서</Link>
             </div>
           </div>
 

@@ -8,6 +8,7 @@
   <url><loc>https://www.hanachurch.co.kr/notice</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.hanachurch.co.kr/bulletin</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.hanachurch.co.kr/album</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.hanachurch.co.kr/ministry</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.hanachurch.co.kr/location</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.hanachurch.co.kr/offering</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://www.hanachurch.co.kr/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>

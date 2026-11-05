@@ -220,6 +220,7 @@ export const NAV_GROUPS = [
       { label: "예배안내", to: "/worship" },
       { label: "오시는 길", to: "/location" },
       { label: "교회소개", to: "/about" },
+      { label: "교회부서", to: "/ministry" },
     ],
   },
   {
@@ -255,6 +256,7 @@ export const SITE_IMAGE_GROUPS = [
   // 교회소개
   { key: "about_hero", label: "교회소개 배너", type: "single", section: "교회소개", page: "/about" },
   { key: "about_content_bg", label: "교회소개 본문 고정 배경", type: "single", section: "교회소개", page: "/about" },
+  { key: "ministry_hero", label: "교회부서 배너", type: "single", section: "교회소개", page: "/ministry" },
 
   // 예배안내
   { key: "worship_hero", label: "예배안내 배너", type: "single", section: "예배안내", page: "/worship" },
