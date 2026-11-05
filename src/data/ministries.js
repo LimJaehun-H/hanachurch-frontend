@@ -1,5 +1,3 @@
-import { MINISTRY_PROFILES } from "./ministryProfiles.js";
-
 // 교회부서 구조 (교회 조직도 그림에서 옮겨 적음)
 // - id: 주소에 쓰이는 영문 이름 (/ministry/:id). 한 번 정하면 바꾸지 않는 게 좋음
 // - name: 화면에 보이는 이름
@@ -20,7 +18,7 @@ export const CHURCH_ROOT = {
       id: "admin-planning",
       name: "행정 및 기획팀",
       children: [
-        { id: "planning", name: "행사 및 양육 기획팀" },
+        { id: "planning", name: "기획팀" },
         { id: "office", name: "사무행정" },
       ],
     },
@@ -52,8 +50,6 @@ export const CHURCH_ROOT = {
             { id: "setup-friday", name: "금요심야예배 세팅" }, // 확인 필요
             { id: "setup-pulpit", name: "교회력 강단보 교체 담당" }, // 확인 필요
             { id: "setup-dawn", name: "새벽예배 세팅" },
-            { id: "flower", name: "꽃꽂이팀" }, // 사역박람회 자료에서 추가 (위치 확인 필요)
-            { id: "decoration", name: "교회 장식팀" }, // 사역박람회 자료에서 추가 (위치 확인 필요)
           ],
         },
         { id: "newcomer", name: "새신자 등록 및 관리" },
@@ -81,11 +77,7 @@ export const CHURCH_ROOT = {
             { id: "teens", name: "청소년부" },
           ],
         },
-        {
-          id: "promotion",
-          name: "홍보팀",
-          children: [{ id: "instagram", name: "인스타그램팀" }], // 사역박람회 자료에서 추가 (위치 확인 필요)
-        },
+        { id: "promotion", name: "홍보팀" },
       ],
     },
     {
@@ -143,7 +135,7 @@ export const CHURCH_ROOT = {
           id: "energy",
           name: "시설 및 에너지 관리",
           children: [
-            { id: "electric", name: "전기 관리팀" },
+            { id: "electric", name: "전기관리" },
             { id: "sunday-electric", name: "주일 전체 전기 확인" },
             { id: "sunday-heating", name: "주일 전체 난방 확인" },
           ],
@@ -154,17 +146,16 @@ export const CHURCH_ROOT = {
           children: [
             { id: "weekly-cleaning", name: "주간 청소 1,2" },
             { id: "outdoor-cleaning", name: "외부청소" },
-            { id: "stairs-cleaning", name: "전층 계단 청소팀" },
+            { id: "stairs-cleaning", name: "전층 계단 청소" },
           ],
         },
         {
           id: "storage",
-          name: "창고 관리팀",
+          name: "창고 관리",
           children: [
             { id: "storage-b1", name: "지하 1층 창고 정리" },
             { id: "storage-1f", name: "1층 창고 관리" },
-            { id: "storage-3f", name: "3층 창고관리팀" }, // 사역박람회 자료에서 추가
-            { id: "youth-room", name: "청년부 공간 관리팀" }, // 그림의 "남녀 청년부실 관리"를 사역박람회 이름으로
+            { id: "youth-room", name: "남녀 청년부실 관리" }, // 확인 필요
           ],
         },
         { id: "media", name: "미디어 장비 관리" },
@@ -200,9 +191,8 @@ export function colorOf(id) {
   return BRANCH_COLORS[info.branch] || ROOT_COLOR;
 }
 
-// 소개 페이지가 있는 부서: 큰 부서와 그 바로 아래 단계, 그리고 사역 소개 자료가 있는 팀
+// 소개 페이지가 있는 부서: 큰 부서와 그 바로 아래 단계까지 (맨 끝 팀은 조직도 카드로만 안내)
 export function hasPage(id) {
   const info = MINISTRY_INDEX[id];
-  if (!info || info.depth === 0) return false;
-  return info.depth <= 2 || Boolean(MINISTRY_PROFILES[id]);
+  return Boolean(info) && info.depth >= 1 && info.depth <= 2;
 }

@@ -5,7 +5,6 @@ import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
 import { drag as d3drag } from "d3-drag";
 import "d3-transition";
 import { CHURCH_ROOT, MINISTRY_INDEX, colorOf } from "../data/ministries.js";
-import { iconPath } from "../data/ministryIcons.js";
 
 // 교회부서 노드 화면 (아이콘 카드형)
 // - 처음엔 하나교회 + 큰 부서만 보이고, 카드를 누르면 하위 부서가 펼쳐짐
@@ -23,8 +22,40 @@ const SPEC = [
   { fs: 12.5, weight: 600, maxW: 92, minH: 34, padX: 11, icon: 4, gap: 7, radius: 17 },
 ];
 
+// 큰 부서 아이콘 (24×24 선 그림)
+const ICONS = {
+  root: null, // 가운데는 교회 로고
+  finance: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 9l2 6 2-5 2 5 2-6M7.5 12h9",
+  "admin-planning": "M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M8.5 11h7M8.5 15h5",
+  worship: "M12 3v18M7 8.5h10",
+  education: "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5v-15M9 7.5h7",
+  social: "M12 20.5s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.5c0 5.8-7.5 10.4-7.5 10.4z",
+  mission: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c3.2 3.6 3.2 14.4 0 18M12 3c-3.2 3.6-3.2 14.4 0 18",
+  facility: "M3 11.5 12 4l9 7.5M5.5 10v10.5h13V10M10 20.5v-6h4v6",
+};
+// 중간 단계 중 이름으로 알아볼 수 있는 것은 전용 아이콘
+const SUB_ICONS = [
+  [/찬양|음악/, "M9 18V6l11-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM20 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"],
+  [/청소/, "M14 3l7 7M4 20l7-7M12 9l3 3-6 6-4 1 1-4z"],
+  [/주방|급식/, "M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"],
+  [/도서관|교육/, "M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5v-15"],
+  [/전도|선교/, "M3 11l18-8-8 18-2-8z"],
+  [/사진|기록|홍보|미디어/, "M4 7h3l2-3h6l2 3h3v13H4zM12 10a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"],
+  [/창고/, "M3 8l9-5 9 5v12H3zM3 8h18M9 20v-7h6v7"],
+  [/에너지|전기/, "M13 2 4 14h7l-1 8 9-12h-7z"],
+];
+
 const depthOf = (id) => MINISTRY_INDEX[id].depth;
 const specOf = (id) => SPEC[Math.min(depthOf(id), 3)];
+
+function iconPath(id) {
+  const info = MINISTRY_INDEX[id];
+  if (info.depth === 2) {
+    const hit = SUB_ICONS.find(([re]) => re.test(info.node.name));
+    if (hit) return hit[1];
+  }
+  return ICONS[info.branch] || ICONS.worship;
+}
 
 // 색 섞기 (t=1이면 흰색)
 function mix(hex, t) {
