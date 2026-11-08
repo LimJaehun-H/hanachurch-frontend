@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
@@ -10,6 +10,18 @@ import "../ministry.css";
 export default function Ministry() {
   const graphRef = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
+  const navigate = useNavigate();
+
+  // 맨 끝 팀(하위 부서 없음)에 소개 페이지가 있으면 카드 없이 바로 이동
+  const handleSelect = (id) => {
+    const info = MINISTRY_INDEX[id];
+    const isLeaf = !(info?.node.children || []).length;
+    if (isLeaf && hasPage(id)) {
+      navigate(`/ministry/${id}`);
+      return;
+    }
+    setSelectedId(id);
+  };
   const selected = selectedId && selectedId !== "root" ? MINISTRY_INDEX[selectedId] : null;
 
   return (
@@ -31,7 +43,7 @@ export default function Ministry() {
         </div>
 
         <section className="hc-ministry-stage">
-          <MinistryGraph ref={graphRef} selectedId={selectedId} onSelect={setSelectedId} />
+          <MinistryGraph ref={graphRef} selectedId={selectedId} onSelect={handleSelect} />
 
           <div className="hc-ministry-tools" role="toolbar" aria-label="조직도 조작">
             <button type="button" onClick={() => graphRef.current?.zoomBy(1.3)} aria-label="확대">＋</button>
