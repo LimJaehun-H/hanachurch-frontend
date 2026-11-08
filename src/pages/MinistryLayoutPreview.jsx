@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import "../ministry-preview.css";
 
-// 부서 소개 레이아웃 시안 A/B 비교용 (임시 페이지, /ministry-preview)
+// 부서 소개 페이지 예시 (디자인 A, 목사님 확인용 임시 페이지, /ministry-preview)
 // 내용: 사역박람회 PDF 1쪽 "주방봉사팀" (이름·한 줄 소개·하는 일·사역 방식·기쁨만 사용)
 // 사진은 아직 없어서 자리만 표시함
 
@@ -72,7 +72,7 @@ function LayoutA({ d }) {
         </section>
 
         <section className="mla-row">
-          <h2>사역 방식</h2>
+          <h2>이렇게 섬겨요</h2>
           <ol className="mla-method">
             {d.method.map((t, i) => (
               <li key={t}>
@@ -90,7 +90,7 @@ function LayoutA({ d }) {
       </figure>
 
       <section className="mla-joy">
-        <h2>이 사역의 기쁨</h2>
+        <h2>섬김의 기쁨</h2>
         <blockquote>{d.joy[0]}</blockquote>
         {d.joy.slice(1).map((t) => (
           <p key={t}>{t}</p>
@@ -100,95 +100,22 @@ function LayoutA({ d }) {
   );
 }
 
-/* ---------- B. 잡지 지면형 ---------- */
-function LayoutB({ d }) {
-  const [first, ...rest] = d.about;
-  return (
-    <article className="mlb">
-      <header className="mlb-mast">
-        <div className="mlb-mast-line">
-          <span>하나교회 사역 소개</span>
-          <span>{d.dept}</span>
-        </div>
-        <h1>{d.name}</h1>
-        <p className="mlb-deck">{d.tagline}</p>
-      </header>
-
-      <div className="mlb-grid">
-        <figure className="mlb-lead-photo">
-          <Photo ratio="4 / 3" label={d.photos[0].caption} />
-          <figcaption>
-            <strong>{d.photos[0].caption}.</strong> {d.group}
-          </figcaption>
-        </figure>
-
-        <div className="mlb-body">
-          <p className="mlb-dropcap">{first}</p>
-          {rest.map((t) => (
-            <p key={t}>{t}</p>
-          ))}
-        </div>
-
-        <aside className="mlb-side">
-          <h2>사역 방식</h2>
-          <ul>
-            {d.method.map((t) => (
-              <li key={t}>{t}</li>
-            ))}
-          </ul>
-        </aside>
-
-        <blockquote className="mlb-pull">
-          <p>{d.joy[0]}</p>
-        </blockquote>
-
-        <figure className="mlb-small-photo">
-          <Photo ratio="1 / 1" label={d.photos[1].caption} />
-          <figcaption>{d.photos[1].caption}</figcaption>
-        </figure>
-
-        <div className="mlb-end">
-          {d.joy.slice(1).map((t) => (
-            <p key={t}>{t}</p>
-          ))}
-          <p className="mlb-sign">■</p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-const VARIANTS = [
-  { key: "A", label: "A 사진 중심", Comp: LayoutA },
-  { key: "B", label: "B 잡지 지면", Comp: LayoutB },
-];
-
 export default function MinistryLayoutPreview() {
-  const [variant, setVariant] = useState("A");
-  const { Comp } = VARIANTS.find((v) => v.key === variant);
+  // 검색엔진에 안 잡히게 (목사님 확인용 예시 페이지)
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+    return () => meta.remove();
+  }, []);
 
   return (
     <div className="hc-page mlp" style={{ "--mc": DEPT.color }}>
       <Header variant="solid" />
-
-      <nav className="mlp-switch" aria-label="레이아웃 시안">
-        {VARIANTS.map((v) => (
-          <button
-            key={v.key}
-            type="button"
-            aria-pressed={variant === v.key}
-            onClick={() => {
-              setVariant(v.key);
-              window.scrollTo({ top: 0 });
-            }}
-          >
-            {v.label}
-          </button>
-        ))}
-      </nav>
-
+      <p className="mlp-note">부서 소개 페이지 예시 · 사진은 실제 활동 사진이 들어갈 자리입니다</p>
       <main className="mlp-main">
-        <Comp d={DEPT} />
+        <LayoutA d={DEPT} />
         <Link to="/ministry" className="mlp-back">조직도로 돌아가기</Link>
       </main>
       <Footer />

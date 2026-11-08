@@ -3,12 +3,16 @@ import { Link, useParams } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
-import { MINISTRY_INDEX, colorOf, hasPage } from "../data/ministries.js";
+import { MINISTRY_INDEX, colorOf, hasPage, EXAMPLE_PAGES } from "../data/ministries.js";
+import MinistryLayoutPreview from "./MinistryLayoutPreview.jsx";
 import "../ministry.css";
 
 export default function MinistryDetail() {
   const { id } = useParams();
   const info = MINISTRY_INDEX[id];
+
+  // 주방 봉사: 새 디자인(A) 예시 페이지
+  if (EXAMPLE_PAGES.has(id)) return <MinistryLayoutPreview />;
 
   if (!info || !hasPage(id)) {
     return (

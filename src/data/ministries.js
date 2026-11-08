@@ -192,7 +192,11 @@ export function colorOf(id) {
 }
 
 // 소개 페이지가 있는 부서: 큰 부서와 그 바로 아래 단계까지 (맨 끝 팀은 조직도 카드로만 안내)
+// 새 디자인(A) 예시 페이지가 있는 팀 (목사님 확인용, 나중에 백엔드 데이터로 대체)
+export const EXAMPLE_PAGES = new Set(["kitchen-serve"]);
+
 export function hasPage(id) {
   const info = MINISTRY_INDEX[id];
+  if (EXAMPLE_PAGES.has(id)) return true;
   return Boolean(info) && info.depth >= 1 && info.depth <= 2;
 }

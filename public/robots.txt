@@ -6,5 +6,6 @@ Disallow: /login
 Disallow: /signup
 Disallow: /offering/success
 Disallow: /offering/fail
+Disallow: /ministry-preview
 
 Sitemap: https://www.hanachurch.co.kr/sitemap.xml

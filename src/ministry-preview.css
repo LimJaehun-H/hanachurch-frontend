@@ -15,29 +15,15 @@
   color: var(--ink);
 }
 
-/* 시안 전환 (비교용 도구라 최대한 조용하게) */
-.mlp-switch {
-  position: sticky;
-  top: var(--mlp-head);
-  z-index: 50;
-  margin-top: var(--mlp-head);
-  display: flex;
-  justify-content: center;
-  gap: 0;
-  background: var(--paper);
+/* 예시 안내 띠 */
+.mlp-note {
+  margin: var(--mlp-head) 0 0;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--rule);
-}
-.mlp-switch button {
-  padding: 12px 18px;
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: none;
-  font: inherit;
-  font-size: 13.5px;
+  font-size: 12.5px;
+  text-align: center;
   color: var(--ink-3);
-  cursor: pointer;
 }
-.mlp-switch button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--ink); font-weight: 700; }
 
 .mlp-main { padding-bottom: 96px; }
 .mlp-back {
@@ -188,110 +174,6 @@ figcaption {
   word-break: keep-all;
 }
 
-/* ================= B. 잡지 지면 ================= */
-.mlb { max-width: 1120px; margin: 0 auto; padding: 40px 32px 0; }
-.mlb-mast { text-align: center; padding-bottom: 36px; }
-.mlb-mast-line {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-top: 3px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: var(--ink-2);
-}
-.mlb-mast h1 {
-  margin: 44px 0 0;
-  font-family: var(--serif);
-  font-size: 88px;
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-.mlb-deck {
-  max-width: 28em;
-  margin: 20px auto 0;
-  font-family: var(--serif);
-  font-size: 20px;
-  line-height: 1.6;
-  color: var(--ink-2);
-  word-break: keep-all;
-}
-.mlb-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: 28px;
-  row-gap: 40px;
-  padding-top: 40px;
-  border-top: 1px solid var(--rule);
-}
-.mlb-lead-photo { grid-column: 1 / span 7; }
-.mlb-lead-photo figcaption strong { color: var(--ink); font-weight: 700; }
-.mlb-body { grid-column: 8 / span 5; }
-.mlb-body p {
-  margin: 0 0 14px;
-  font-size: 16.5px;
-  line-height: 1.9;
-  color: var(--ink-2);
-  word-break: keep-all;
-}
-.mlb-dropcap { color: var(--ink) !important; }
-.mlb-dropcap::first-letter {
-  float: left;
-  margin: 6px 10px 0 0;
-  font-family: var(--serif);
-  font-size: 64px;
-  font-weight: 900;
-  line-height: 0.85;
-  color: var(--mc);
-}
-.mlb-side {
-  grid-column: 1 / span 4;
-  padding-top: 14px;
-  border-top: 3px solid var(--ink);
-}
-.mlb-side h2 { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
-.mlb-side ul { list-style: none; margin: 0; padding: 0; }
-.mlb-side li {
-  padding: 9px 0;
-  border-bottom: 1px dotted var(--ink-3);
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--ink);
-  word-break: keep-all;
-}
-.mlb-pull {
-  grid-column: 5 / span 8;
-  align-self: center;
-  margin: 0;
-  padding: 26px 0;
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-}
-.mlb-pull p {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.03em;
-  word-break: keep-all;
-}
-.mlb-pull p::before { content: "“"; color: var(--mc); }
-.mlb-pull p::after { content: "”"; color: var(--mc); }
-.mlb-small-photo { grid-column: 1 / span 4; }
-.mlb-end { grid-column: 6 / span 6; align-self: end; }
-.mlb-end p {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 19px;
-  line-height: 1.7;
-  color: var(--ink-2);
-  word-break: keep-all;
-}
-.mlb-end .mlb-sign { margin-top: 12px; font-size: 12px; color: var(--mc); }
-
 /* ================= 태블릿·폰 ================= */
 @media (max-width: 860px) {
   .mlp { --mlp-head: 89px; }
@@ -317,15 +199,4 @@ figcaption {
   .mla-inset { width: auto; margin: 44px 20px 0 64px; }
   .mla-joy { margin: 52px 20px 0; row-gap: 12px; }
   .mla-joy blockquote { font-size: 25px; padding-top: 18px; }
-
-  /* B */
-  .mlb { padding: 24px 20px 0; }
-  .mlb-mast h1 { font-size: 54px; margin-top: 32px; }
-  .mlb-deck { font-size: 17px; }
-  .mlb-grid { grid-template-columns: 1fr; row-gap: 32px; padding-top: 28px; }
-  .mlb-grid > * { grid-column: 1 / -1 !important; }
-  .mlb-body p { font-size: 16px; }
-  .mlb-pull p { font-size: 26px; }
-  .mlb-small-photo { width: 62%; }
-  .mlb-end p { font-size: 17px; }
 }
