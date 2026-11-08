@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;800&display=swap');
+
+/* ===== 부서 소개 레이아웃 시안 (pages/MinistryLayoutPreview.jsx) ===== */
+.mlp {
+  --mlp-head: 116px; /* PC 헤더 (위쪽 로그인 줄 포함) */
+  --mc-soft: color-mix(in srgb, var(--mc) 10%, #FFFFFF);
+  --mc-mid: color-mix(in srgb, var(--mc) 30%, #FFFFFF);
+  --mc-deep: color-mix(in srgb, var(--mc) 70%, #000000);
+  background: #FFFFFF;
+}
+
+/* 시안 고르는 줄 */
+.mlp-switch {
+  position: sticky;
+  top: var(--mlp-head);
+  z-index: 50;
+  margin-top: var(--mlp-head);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #EEE;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow-x: auto;
+}
+.mlp-switch-label { font-size: 12px; font-weight: 700; color: #999; margin-right: 4px; flex-shrink: 0; }
+.mlp-switch button {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #DDD;
+  background: #FFF;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+}
+.mlp-switch .mlp-switch-on { background: #191919; border-color: #191919; color: #FFF; }
+
+.mlp-main { padding-bottom: 80px; }
+.mlp-back {
+  display: block;
+  max-width: 880px;
+  margin: 48px auto 0;
+  padding: 0 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none;
+}
+
+/* 사진 자리 */
+.mlp-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  color: var(--mc-deep);
+  font-size: 13px;
+  font-weight: 700;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 14px, rgba(255, 255, 255, 0.35) 14px 28px),
+    linear-gradient(135deg, var(--mc-mid), var(--mc-soft));
+}
+.mlp-photo--2 {
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 14px, rgba(255, 255, 255, 0.35) 14px 28px),
+    linear-gradient(135deg, var(--mc-soft), var(--mc-mid));
+}
+
+/* ========== A. 사진 크게 위에 ========== */
+.mlp-a-hero { position: relative; }
+.mlp-a-hero-photo { aspect-ratio: 21 / 9; min-height: 300px; }
+.mlp-a-hero::after {
+  content: "";
+  position: absolute;
+  inset: 40% 0 0 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+.mlp-a-hero-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+  color: #FFF;
+}
+.mlp-a-path {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--mc);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.mlp-a-hero-text h1 { margin: 0; font-size: 42px; font-weight: 800; letter-spacing: -0.02em; }
+.mlp-a-tagline { margin: 8px 0 0; font-size: 18px; font-weight: 500; opacity: 0.95; word-break: keep-all; }
+.mlp-a-body { max-width: 880px; margin: 0 auto; padding: 48px 24px 0; }
+.mlp-a-body section + section, .mlp-a-photo2 + section { margin-top: 44px; }
+.mlp-a-h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  font-size: 21px;
+  font-weight: 800;
+}
+.mlp-a-h2::before { content: ""; width: 6px; height: 22px; border-radius: 3px; background: var(--mc); }
+.mlp-a-about { margin: 0 0 10px; font-size: 17.5px; line-height: 1.85; color: #333; word-break: keep-all; }
+.mlp-a-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.mlp-a-steps li {
+  counter-increment: s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid #EFEFEF;
+  font-size: 16.5px;
+  color: #333;
+  word-break: keep-all;
+}
+.mlp-a-steps li::before {
+  content: counter(s);
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--mc);
+  color: var(--mc);
+  font-weight: 800;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mlp-a-photo2 { margin-top: 44px; border-radius: 18px; overflow: hidden; aspect-ratio: 16 / 9; }
+.mlp-a-joy {
+  padding: 36px 32px 24px;
+  border-radius: 20px;
+  background: var(--mc);
+  color: #FFF;
+}
+.mlp-a-joy-label { margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; opacity: 0.85; }
+.mlp-a-joy blockquote {
+  position: relative;
+  margin: 0 0 16px;
+  padding-left: 32px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+.mlp-a-joy blockquote::before {
+  content: "“";
+  position: absolute;
+  left: 0;
+  top: -12px;
+  font-family: Georgia, serif;
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+/* ========== B. 잡지 스타일 ========== */
+.mlp-b { max-width: 1040px; margin: 0 auto; padding: 56px 24px 0; }
+.mlp-b-head { padding-bottom: 36px; border-bottom: 1px solid #191919; }
+.mlp-b-eyebrow { margin: 0; font-size: 13px; color: #888; letter-spacing: 0.02em; }
+.mlp-b-eyebrow span {
+  margin-right: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--mc);
+}
+.mlp-b-head h1 {
+  margin: 14px 0 0;
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.mlp-b-tagline {
+  margin: 14px 0 0;
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 22px;
+  font-style: italic;
+  color: #555;
+  word-break: keep-all;
+}
+.mlp-b-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 56px 0;
+  border-bottom: 1px solid #E6E6E6;
+}
+.mlp-b-row--rev { grid-template-columns: 1fr 1.1fr; }
+.mlp-b-row--rev .mlp-b-photo { order: 2; }
+.mlp-b-photo { aspect-ratio: 4 / 5; }
+.mlp-b-num { margin: 0 0 8px; font-size: 13px; font-weight: 800; letter-spacing: 0.12em; color: var(--mc); }
+.mlp-b-text h2 { margin: 0 0 18px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.mlp-b-text p { margin: 0 0 12px; font-size: 16.5px; line-height: 1.85; color: #444; word-break: keep-all; }
+.mlp-b-text .mlp-b-lead {
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 20px;
+  line-height: 1.7;
+  color: #191919;
+}
+.mlp-b-list { list-style: none; margin: 0; padding: 0; }
+.mlp-b-list li {
+  padding: 13px 0;
+  border-top: 1px solid #EEE;
+  font-size: 16.5px;
+  color: #333;
+  word-break: keep-all;
+}
+.mlp-b-list li:last-child { border-bottom: 1px solid #EEE; }
+.mlp-b-quote { padding: 72px 0 24px; text-align: center; }
+.mlp-b-quote blockquote {
+  margin: 12px auto 0;
+  max-width: 760px;
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+.mlp-b-quote blockquote::before,
+.mlp-b-quote blockquote::after { color: var(--mc); }
+.mlp-b-quote blockquote::before { content: "“"; }
+.mlp-b-quote blockquote::after { content: "”"; }
+.mlp-b-quote-sub { margin: 20px auto 0; max-width: 600px; font-size: 16.5px; color: #666; word-break: keep-all; }
+
+/* ========== C. 카드 스타일 ========== */
+.mlp-c { max-width: 960px; margin: 0 auto; padding: 32px 20px 0; }
+.mlp-c-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--mc-soft);
+}
+.mlp-c-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--mc);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--mc) 40%, transparent);
+}
+.mlp-c-path { margin: 0; font-size: 12.5px; font-weight: 600; color: var(--mc-deep); }
+.mlp-c-head h1 { margin: 2px 0 0; font-size: 30px; font-weight: 800; }
+.mlp-c-tagline { margin: 4px 0 0; font-size: 15.5px; color: #555; word-break: keep-all; }
+.mlp-c-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.mlp-c-photos .mlp-photo { border-radius: 18px; }
+.mlp-c-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.mlp-c-card {
+  padding: 24px;
+  border-radius: 20px;
+  background: #FFF;
+  border: 1px solid #ECECEC;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+.mlp-c-card--wide { grid-column: 1 / -1; }
+.mlp-c-card h2 { margin: 0 0 12px; }
+.mlp-c-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--mc-soft);
+  color: var(--mc-deep);
+  font-size: 13px;
+  font-weight: 800;
+}
+.mlp-c-badge--light { background: rgba(255, 255, 255, 0.22); color: #FFF; }
+.mlp-c-card p { margin: 0 0 8px; font-size: 16px; line-height: 1.75; color: #333; word-break: keep-all; }
+.mlp-c-checks { list-style: none; margin: 0; padding: 0; }
+.mlp-c-checks li {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: #333;
+  word-break: keep-all;
+}
+.mlp-c-checks svg { flex-shrink: 0; margin-top: 2px; color: var(--mc); }
+.mlp-c-card--joy { background: var(--mc); border-color: var(--mc); color: #FFF; }
+.mlp-c-card--joy blockquote {
+  margin: 0 0 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+/* ========== 폰 ========== */
+@media (max-width: 860px) {
+  .mlp { --mlp-head: 89px; }
+}
+@media (max-width: 760px) {
+  .mlp { --mlp-head: 85px; }
+  .mlp-a-hero-photo { aspect-ratio: 4 / 5; min-height: 0; }
+  .mlp-a-hero-text { padding: 0 20px 26px; }
+  .mlp-a-hero-text h1 { font-size: 32px; }
+  .mlp-a-tagline { font-size: 15.5px; }
+  .mlp-a-body { padding: 36px 20px 0; }
+  .mlp-a-about { font-size: 16px; }
+  .mlp-a-steps li { font-size: 15.5px; }
+  .mlp-a-joy { padding: 28px 22px 16px; }
+  .mlp-a-joy blockquote { font-size: 17px; }
+
+  .mlp-b { padding: 40px 20px 0; }
+  .mlp-b-head h1 { font-size: 44px; }
+  .mlp-b-tagline { font-size: 18px; }
+  .mlp-b-row, .mlp-b-row--rev { grid-template-columns: 1fr; gap: 24px; padding: 40px 0; }
+  .mlp-b-row--rev .mlp-b-photo { order: 0; }
+  .mlp-b-photo { aspect-ratio: 4 / 3; }
+  .mlp-b-text h2 { font-size: 22px; }
+  .mlp-b-text .mlp-b-lead { font-size: 18px; }
+  .mlp-b-quote { padding: 52px 0 16px; }
+  .mlp-b-quote blockquote { font-size: 25px; }
+
+  .mlp-c { padding: 20px 16px 0; }
+  .mlp-c-head { padding: 22px 18px; gap: 14px; border-radius: 20px; }
+  .mlp-c-icon { width: 54px; height: 54px; border-radius: 16px; }
+  .mlp-c-head h1 { font-size: 25px; }
+  .mlp-c-grid { grid-template-columns: 1fr; }
+  .mlp-c-card { padding: 20px; }
+}

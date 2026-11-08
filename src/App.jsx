@@ -30,6 +30,8 @@ import Privacy from "./pages/Privacy.jsx";
 // 교회부서는 조직도 라이브러리(d3)가 들어가서, 들어갈 때만 불러옴
 const Ministry = lazy(() => import("./pages/Ministry.jsx"));
 const MinistryDetail = lazy(() => import("./pages/MinistryDetail.jsx"));
+// 부서 소개 레이아웃 시안 비교 (임시)
+const MinistryLayoutPreview = lazy(() => import("./pages/MinistryLayoutPreview.jsx"));
 
 export default function App() {
   return (
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/ministry" element={<Suspense fallback={null}><Ministry /></Suspense>} />
           <Route path="/ministry/:id" element={<Suspense fallback={null}><MinistryDetail /></Suspense>} />
+          <Route path="/ministry-preview" element={<Suspense fallback={null}><MinistryLayoutPreview /></Suspense>} />
           <Route path="/worship/sunday" element={<WorshipSunday />} />
           <Route path="/worship/dawn" element={<WorshipDawn />} />
           <Route path="/album/:id" element={<AlbumDetail />} />
