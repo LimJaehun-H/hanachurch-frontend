@@ -541,8 +541,11 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
           fitLater(() => visibleIds(state.expanded));
         } else {
           state.expanded.add(id);
-          // 부를 펼치면 그 아래 묶음까지 한 번에 다 펼침
+          // 부를 펼치면 다른 부는 접고(화면 여유), 그 아래 묶음까지 한 번에 다 펼침
           if (T.index[id].depth === 1) {
+            T.root.children.forEach((other) => {
+              if (other.id !== id) descendantsOf(other.id, state.expanded).forEach((x) => state.expanded.delete(x));
+            });
             (function openAll(node) {
               (node.children || []).forEach((c) => {
                 if ((c.children || []).length) {
