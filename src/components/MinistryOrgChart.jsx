@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 // 가지형 조직도: 하나교회 → 부(가로로 나란히) → 팀(세로로 가지) → 묶음 안의 팀(한 단계 더 들여쓰기)
@@ -6,12 +6,18 @@ import { Link } from "react-router-dom";
 
 export default function MinistryOrgChart({ tree }) {
   const scrollRef = useRef(null);
+  const [overflow, setOverflow] = useState(false); // 조직도가 화면보다 넓을 때만 안내
   const { root, colorOf, hasPage } = tree;
 
   // 처음엔 하나교회가 가운데 오게
   useEffect(() => {
     const el = scrollRef.current;
-    if (el) el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+    if (!el) return;
+    el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+    const check = () => setOverflow(el.scrollWidth > el.clientWidth + 2);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   const Name = ({ node, className }) =>
@@ -41,7 +47,7 @@ export default function MinistryOrgChart({ tree }) {
 
   return (
     <div className="oc-wrap">
-      <p className="oc-hint">← 옆으로 밀어서 전체 보기 →</p>
+      {overflow && <p className="oc-hint">← 옆으로 밀어서 전체 보기 →</p>}
       <div className="oc-scroll" ref={scrollRef}>
         <div className="oc">
           <div className="oc-root">

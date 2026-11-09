@@ -426,7 +426,7 @@
 }
 .oc-col {
   position: relative;
-  width: var(--oc-col);
+  min-width: var(--oc-col);
   padding-top: 22px;
 }
 /* 부들을 잇는 가로줄 */
@@ -451,6 +451,7 @@
 }
 .oc-dept {
   display: block;
+  white-space: nowrap;
   padding: 10px 8px;
   border-radius: 12px;
   background: var(--mc);
@@ -493,7 +494,6 @@
 }
 .oc-team {
   display: inline-block;
-  max-width: 100%;
   box-sizing: border-box;
   padding: 7px 10px;
   border-radius: 9px;
@@ -504,7 +504,7 @@
   line-height: 1.35;
   color: #333333;
   text-decoration: none;
-  word-break: keep-all;
+  white-space: nowrap;
 }
 .oc-team--group {
   background: color-mix(in srgb, var(--mc) 12%, #FFFFFF);
@@ -517,14 +517,10 @@
 }
 .oc-link::after { content: " →"; }
 .oc-hint {
-  display: none;
   margin: 0 0 6px;
   font-size: 12.5px;
   color: #8A8A8A;
   text-align: center;
-}
-@media (max-width: 1180px) {
-  .oc-hint { display: block; }
 }
 
 /* 부 아래 목록으로 줄 선 팀들은 둥실거리지 않게 (가지런히) */

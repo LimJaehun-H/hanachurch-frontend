@@ -104,7 +104,9 @@ const CARD = new Map();
 function cardOf(id) {
   if (CARD.has(id)) return CARD.get(id);
   const sp = specOf(id);
-  const lines = wrapLabel(T.index[id].node.name, sp.fs, sp.maxW);
+  // 부·묶음·팀·활동 이름은 줄바꿈 없이 한 줄로 (하나교회만 기존 규칙)
+  const name = T.index[id].node.name;
+  const lines = T.index[id].depth === 0 ? wrapLabel(name, sp.fs, sp.maxW) : [name];
   const lh = sp.fs * 1.22;
   const tw = Math.max(...lines.map((l) => textW(l, sp.fs)));
   const iconBox = sp.icon * 2;
