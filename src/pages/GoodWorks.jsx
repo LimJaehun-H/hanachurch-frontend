@@ -64,7 +64,6 @@ export default function GoodWorks() {
               <button type="button" onClick={() => graphRef.current?.fitAll()}>전체</button>
             </div>
             <div className="hc-ministry-tools hc-ministry-tools--left">
-              <button type="button" onClick={() => graphRef.current?.expandAll()}>모두 펼치기</button>
               <button type="button" onClick={() => { graphRef.current?.collapseAll(); setSelectedId(null); }}>접기</button>
             </div>
             <p className="hc-ministry-hint">PC에서는 Ctrl(⌘) + 휠로 확대·축소</p>
