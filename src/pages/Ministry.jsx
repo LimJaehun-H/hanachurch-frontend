@@ -8,7 +8,7 @@ import MinistryOrgChart from "../components/MinistryOrgChart.jsx";
 import { useMinistryTree } from "../data/ministryApi.js";
 import "../ministry.css";
 
-// 교회부서: 조직도(기본) / 부서 맵 탭
+// 교회부서: Good Works(조직도, 기본) / 부서 맵 탭
 // 데이터는 백엔드 /api/ministries/tree (못 불러오면 src/data/goodWorks.js)
 export default function Ministry() {
   const tree = useMinistryTree(); // 불러오는 동안 null
@@ -56,7 +56,7 @@ export default function Ministry() {
 
         <div className="gw-tabs" role="tablist" aria-label="보기 방식">
           <button type="button" role="tab" aria-selected={view === "chart"} onClick={() => setView("chart")}>
-            조직도
+            Good Works
           </button>
           <button type="button" role="tab" aria-selected={view === "map"} onClick={() => setView("map")}>
             부서 맵
@@ -74,7 +74,7 @@ export default function Ministry() {
             <p className="hc-ministry-loading">부서를 불러오는 중…</p>
           )}
 
-          <div className="hc-ministry-tools" role="toolbar" aria-label="조직도 조작">
+          <div className="hc-ministry-tools" role="toolbar" aria-label="부서 맵 조작">
             <button type="button" onClick={() => graphRef.current?.zoomBy(1.3)} aria-label="확대">＋</button>
             <button type="button" onClick={() => graphRef.current?.zoomBy(1 / 1.3)} aria-label="축소">－</button>
             <button type="button" onClick={() => graphRef.current?.fitAll()}>전체</button>
