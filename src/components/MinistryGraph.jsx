@@ -146,7 +146,21 @@ function descendantsOf(id, expanded) {
 }
 
 // 부모→자식 곡선 (살짝 휘어 덩굴처럼)
+// 부 아래 목록: 부모 카드 왼쪽 아래에서 내려와 오른쪽으로 꺾여 팀 카드에 닿는 ㄴ자 선
+const LIST_INDENT = 18; // 한 단계 들여쓰기
+const LIST_GAP = 8; // 팀 카드 사이 간격
+function elbow(l) {
+  const p = l.source;
+  const c = l.target;
+  const pc = cardOf(p.id);
+  const cc = cardOf(c.id);
+  const x = p.x - pc.w / 2 + LIST_INDENT / 2 + 6;
+  const y0 = p.y + pc.h / 2;
+  return `M${x},${y0}V${c.y}H${c.x - cc.w / 2}`;
+}
+
 function curve(l) {
+  if (depthOf(l.id) >= 2) return elbow(l);
   const { x: sx, y: sy } = l.source;
   const { x: tx, y: ty } = l.target;
   const dx = tx - sx;
@@ -253,11 +267,98 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
     };
     st.current = state;
 
+    // 펼친 부 아래 팀들이 놓일 자리 (부 카드 아래로 세로 목록, 묶음을 펼치면 한 칸 들여서 이어짐)
+    const listTargets = () => {
+      const targets = new Map();
+      const boxes = []; // 펼친 부 + 목록이 차지하는 영역 (다른 부가 겹치지 않게)
+      T.root.children.forEach((dept) => {
+        const d = state.nodes.get(dept.id);
+        if (!d || !state.expanded.has(dept.id)) return;
+        const dc = cardOf(dept.id);
+        const left = d.x - dc.w / 2 + LIST_INDENT;
+        let y = d.y + dc.h / 2 + 14;
+        let right = d.x + dc.w / 2;
+        (function walk(children, level) {
+          children.forEach((c) => {
+            const cc = cardOf(c.id);
+            const x = left + (level - 1) * LIST_INDENT + cc.w / 2;
+            targets.set(c.id, { x, y: y + cc.h / 2 });
+            right = Math.max(right, x + cc.w / 2);
+            y += cc.h + LIST_GAP;
+            if (state.expanded.has(c.id)) walk(c.children || [], level + 1);
+          });
+        })(dept.children || [], 1);
+        boxes.push({ id: dept.id, x0: d.x - dc.w / 2 - 10, x1: right + 10, y0: d.y - dc.h / 2 - 10, y1: y + 6 });
+      });
+      return { targets, boxes };
+    };
+
+    const listForce = () => {
+      let nodes = [];
+      const overlap = (a, b) => [
+        Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0),
+        Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0),
+      ];
+      const force = () => {
+        const { targets, boxes } = listTargets();
+        // 펼친 목록이 하나교회나 다른 부의 목록과 겹치면, 그 부를 옆으로 비켜 세움
+        const root = state.nodes.get("root");
+        if (root) {
+          const rc = cardOf("root");
+          const rb = { x0: root.x - rc.w / 2 - 12, x1: root.x + rc.w / 2 + 12, y0: root.y - rc.h / 2 - 12, y1: root.y + rc.h / 2 + 12 };
+          boxes.forEach((b) => {
+            const [ox, oy] = overlap(b, rb);
+            const owner = state.nodes.get(b.id);
+            if (ox > 0 && oy > 0 && owner) owner.vx += (owner.x < root.x ? -1 : 1) * ox * 0.25;
+          });
+        }
+        for (let i = 0; i < boxes.length; i++) {
+          for (let j = i + 1; j < boxes.length; j++) {
+            const [ox, oy] = overlap(boxes[i], boxes[j]);
+            if (ox <= 0 || oy <= 0) continue;
+            const a = state.nodes.get(boxes[i].id);
+            const b2 = state.nodes.get(boxes[j].id);
+            const dir = a.x <= b2.x ? 1 : -1;
+            a.vx -= dir * ox * 0.12;
+            b2.vx += dir * ox * 0.12;
+          }
+        }
+        nodes.forEach((n) => {
+          const t = targets.get(n.id);
+          if (t) {
+            // 팀: 목록 자리로 부드럽게 따라감 (부를 끌면 목록도 같이 따라옴)
+            n.x += (t.x - n.x) * 0.35;
+            n.y += (t.y - n.y) * 0.35;
+            n.vx = 0;
+            n.vy = 0;
+            return;
+          }
+          // 부·하나교회: 다른 부의 목록 영역과 겹치면 밖으로 밀어냄
+          if (depthOf(n.id) > 1) return;
+          const nc = cardOf(n.id);
+          boxes.forEach((b) => {
+            if (b.id === n.id) return;
+            const ox = Math.min(n.x + nc.w / 2, b.x1) - Math.max(n.x - nc.w / 2, b.x0);
+            const oy = Math.min(n.y + nc.h / 2, b.y1) - Math.max(n.y - nc.h / 2, b.y0);
+            if (ox > 0 && oy > 0) {
+              if (n.id === "root") return;
+              if (ox < oy) n.vx += (n.x < (b.x0 + b.x1) / 2 ? -ox : ox) * 0.2;
+              else n.vy += (n.y < (b.y0 + b.y1) / 2 ? -oy : oy) * 0.2;
+            }
+          });
+        });
+      };
+      force.initialize = (ns) => { nodes = ns; };
+      return force;
+    };
+
+    const inList = (d) => depthOf(d.id) >= 2;
     const sim = forceSimulation()
-      .force("link", forceLink().id((d) => d.id).distance((l) => LINK_DIST[depthOf(l.target.id)]).strength(0.9))
-      .force("charge", forceManyBody().strength((d) => (d.id === "root" ? -1000 : -300 - (3 - depthOf(d.id)) * 110)))
-      .force("collide", forceCollide().radius((d) => collideOf(d.id)).strength(1))
-      .force("radial", forceRadial((d) => RING[depthOf(d.id)], 0, 0).strength(0.06))
+      .force("link", forceLink().id((d) => d.id).distance((l) => LINK_DIST[depthOf(l.target.id)]).strength((l) => (depthOf(l.target.id) === 1 ? 0.9 : 0)))
+      .force("charge", forceManyBody().strength((d) => (inList(d) ? 0 : d.id === "root" ? -1000 : -300 - (3 - depthOf(d.id)) * 110)))
+      .force("collide", forceCollide().radius((d) => (inList(d) ? 0 : collideOf(d.id))).strength(1))
+      .force("radial", forceRadial((d) => RING[depthOf(d.id)], 0, 0).strength((d) => (inList(d) ? 0 : 0.06)))
+      .force("list", listForce())
       .alphaDecay(0.035);
     state.sim = sim;
 

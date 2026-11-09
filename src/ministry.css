@@ -526,3 +526,7 @@
 @media (max-width: 1180px) {
   .oc-hint { display: block; }
 }
+
+/* 부 아래 목록으로 줄 선 팀들은 둥실거리지 않게 (가지런히) */
+.hc-mg-node--d2 .hc-mg-bob,
+.hc-mg-node--d3 .hc-mg-bob { animation: none; }
