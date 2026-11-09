@@ -63,7 +63,11 @@ export const GOOD_WORKS_ROOT = {
             { id: "bible-reading", name: "성경읽기" }, // 확인 필요
           ],
         },
-        { id: "instagram", name: "인스타그램팀" },
+        {
+          id: "promotion",
+          name: "홍보",
+          children: [{ id: "instagram", name: "인스타그램팀" }],
+        },
       ],
     },
     {
@@ -90,10 +94,14 @@ export const GOOD_WORKS_ROOT = {
           name: "주방",
           children: [
             { id: "kitchen-serve", name: "주방봉사팀" },
-            { id: "kitchen-dish", name: "설거지 및 주방정리" }, // = 주방설거지팀
+            { id: "kitchen-dish", name: "주방정리" }, // = 주방설거지팀, 설거지 및 주방정리
           ],
         },
-        { id: "photo", name: "사진촬영팀" },
+        {
+          id: "record",
+          name: "기록",
+          children: [{ id: "photo", name: "사진촬영팀" }],
+        },
       ],
     },
     {
@@ -147,8 +155,11 @@ export const GOOD_WORKS_ROOT = {
     { id: "finance", name: "재무부" },
     {
       id: "admin-planning",
-      name: "행정 및 기획팀",
-      children: [{ id: "planning", name: "행사 및 양육 기획팀" }],
+      name: "행정 및 기획",
+      children: [
+        { id: "planning", name: "기획팀" }, // 팸플릿: 행사 및 양육 기획팀
+        { id: "office", name: "행정팀" },
+      ],
     },
   ],
 };
