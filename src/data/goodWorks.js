@@ -29,17 +29,7 @@ export const GOOD_WORKS_ROOT = {
             { id: "guide", name: "안내팀" },
             { id: "communion", name: "성찬팀" },
             { id: "newcomer", name: "새가족 등록 및 관리" },
-            { id: "newcomer-room", name: "새가족실 정리팀" }, // 확인 필요
             { id: "intercession", name: "중보기도팀" }, // 확인 필요
-          ],
-        },
-        {
-          id: "worship-space",
-          name: "예배 환경",
-          children: [
-            { id: "pulpit", name: "강단보 관리팀" }, // = 예배실 관리
-            { id: "flower", name: "꽃꽂이팀" }, // 확인 필요
-            { id: "decoration", name: "교회 장식팀" }, // 확인 필요
           ],
         },
         {
@@ -135,6 +125,10 @@ export const GOOD_WORKS_ROOT = {
           ],
         },
         { id: "youth-room", name: "청년부 공간 관리팀" },
+        { id: "newcomer-room", name: "새가족실 정리팀" }, // 예배부에서 옮김
+        { id: "pulpit", name: "강단보 관리팀" }, // = 예배실 관리, 예배부(예배 환경)에서 옮김
+        { id: "flower", name: "꽃꽂이팀" }, // 예배부(예배 환경)에서 옮김
+        { id: "decoration", name: "교회 장식팀" }, // 예배부(예배 환경)에서 옮김
         { id: "parking", name: "주차관리팀" }, // 확인 필요
       ],
     },
