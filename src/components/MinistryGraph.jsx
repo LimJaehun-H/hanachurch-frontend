@@ -432,7 +432,8 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
         }
       });
 
-    const fitTo = (ids, duration = 650) => {
+    // fixedK가 있으면 그 배율로 고정하고 위치만 맞춤 (PC에서 부마다 같은 크기로 보이게)
+    const fitTo = (ids, duration = 650, fixedK = null) => {
       const pts = ids.map((id) => state.nodes.get(id)).filter(Boolean);
       if (!pts.length) return;
       let [x0, y0, x1, y1] = [Infinity, Infinity, -Infinity, -Infinity];
@@ -448,7 +449,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
       const bottom = 24;
       const h = state.size.h - top - bottom;
       const pad = 14;
-      const k = Math.min(2, (w - pad * 2) / (x1 - x0), (h - pad * 2) / (y1 - y0));
+      const k = fixedK ?? Math.min(2, (w - pad * 2) / (x1 - x0), (h - pad * 2) / (y1 - y0));
       const t = zoomIdentity
         .translate(w / 2, top + h / 2)
         .scale(k)
@@ -456,9 +457,38 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
       svg.transition().duration(reduceMotion ? 0 : duration).call(zoomer.transform, t);
     };
     state.fitTo = fitTo;
-    const fitLater = (ids, delay = 700) => {
+    const fitLater = (ids, delay = 700, fixedK = null) => {
       clearTimeout(state.fitTimer);
-      state.fitTimer = setTimeout(() => fitTo(ids()), delay);
+      state.fitTimer = setTimeout(() => fitTo(ids(), 650, typeof fixedK === "function" ? fixedK() : fixedK), delay);
+    };
+
+    // PC 기준 배율: 부를 하나씩 다 펼쳐 봤을 때 화면에 들어가는 배율 중 가장 작은 값
+    // (항목이 가장 많은 부 기준으로 고정해서, 어느 부를 펼쳐도 같은 크기로 보이게)
+    const pcScale = () => {
+      const blockAll = (n) => {
+        const kids = n.children || [];
+        const own = cardOf(n.id).h;
+        if (!kids.length) return own;
+        return Math.max(own, kids.reduce((sum, k) => sum + blockAll(k), 0) + LIST_GAP * (kids.length - 1));
+      };
+      const reach = (n) => {
+        const kids = n.children || [];
+        if (!kids.length) return 0;
+        const colW = Math.max(...kids.map((k) => cardOf(k.id).w));
+        return SPINE_GAP + TICK + colW + Math.max(0, ...kids.map(reach));
+      };
+      const { w } = state.size;
+      const h = state.size.h - 60 - 24; // 위쪽 버튼 줄, 아래 여백
+      const pad = 14;
+      let k = 2;
+      T.root.children.forEach((dept) => {
+        if (!(dept.children || []).length) return;
+        const dc = cardOf(dept.id);
+        const sw = dc.w + reach(dept);
+        const sh = Math.max(dc.h, blockAll(dept));
+        k = Math.min(k, (w - pad * 2) / sw, (h - pad * 2) / sh);
+      });
+      return k;
     };
     state.fitLater = fitLater;
 
@@ -566,10 +596,15 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
           }
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
-          // 폰: 하나교회는 빼고 펼친 부(또는 묶음)와 그 아래 팀들만 화면에 꽉 차게
-          // PC: 하나교회와 다른 부까지 보이는 전체를 한 화면에 (하위가 자리를 다 잡은 뒤에)
           const isPhone = state.size.w < 760;
-          fitLater(() => (isPhone ? descendantsOf(id, state.expanded) : visibleIds(state.expanded)), 1100);
+          if (isPhone || T.index[id].depth === 0) {
+            // 폰: 펼친 부와 그 팀만 꽉 차게 / 하나교회를 펼칠 때는 부들 전체
+            fitLater(() => (T.index[id].depth === 0 ? visibleIds(state.expanded) : descendantsOf(id, state.expanded)), 1100);
+          } else {
+            // PC: 가장 큰 부 기준의 고정 배율로, 펼친 부 쪽으로 화면을 옮김
+            const deptId = T.index[id].path[1].id;
+            fitLater(() => descendantsOf(deptId, state.expanded), 1100, pcScale);
+          }
         }
       }
       onSelectRef.current?.(id);
