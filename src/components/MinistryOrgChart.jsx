@@ -50,7 +50,10 @@ function Dept({ dept, hasPage }) {
           {direct.length > 0 && <Teams teams={direct} hasPage={hasPage} />}
           {groups.map((g) => (
             <div key={g.id} className="org-group">
-              <h3 className="org-group-name">{g.name}</h3>
+              <h3 className="org-group-name">
+                {g.name}
+                <span className="org-group-count">{g.children.length}</span>
+              </h3>
               <Teams teams={g.children} hasPage={hasPage} />
             </div>
           ))}

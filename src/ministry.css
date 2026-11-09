@@ -642,17 +642,67 @@ a.hc-ministry-list-leaf, a.hc-ministry-list-name { color: var(--mc) !important; 
 }
 a.org-dept:hover small { background: rgba(255, 255, 255, 0.36); }
 .org-body { padding: 12px 10px 14px; }
-.org-group + .org-group,
-.org-teams + .org-group { margin-top: 14px; }
+/* 묶음: 연한 색 상자 (부 → 묶음 → 팀 세 단계가 갈리게) */
+.org-teams + .org-group { margin-top: 10px; }
+.org-group {
+  padding: 10px 8px 9px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--mc) 8%, #FFFFFF);
+  border: 1px solid color-mix(in srgb, var(--mc) 16%, #FFFFFF);
+}
+.org-group + .org-group { margin-top: 10px; }
 .org-group-name {
-  margin: 0 0 6px;
-  padding-left: 8px;
-  border-left: 3px solid var(--mc);
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0 2px;
+  font-size: 14px;
   font-weight: 800;
   line-height: 1.3;
-  color: color-mix(in srgb, var(--mc) 80%, #000000);
+  color: color-mix(in srgb, var(--mc) 82%, #000000);
   word-break: keep-all;
+}
+.org-group-name::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--mc);
+}
+.org-group-count {
+  margin-left: auto;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mc) 16%, #FFFFFF);
+  font-size: 11px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--mc) 75%, #000000);
+}
+/* 묶음 안의 팀: 가지 줄로 이어짐 */
+.org-group .org-teams {
+  position: relative;
+  margin-left: 5px;
+  padding-left: 12px;
+}
+.org-group .org-teams li { position: relative; }
+.org-group .org-teams li::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: -5px;
+  bottom: 0;
+  border-left: 2px solid color-mix(in srgb, var(--mc) 30%, #FFFFFF);
+}
+.org-group .org-teams li:last-child::before { bottom: auto; height: calc(5px + 50%); }
+.org-group .org-teams li::after {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 9px;
+  border-top: 2px solid color-mix(in srgb, var(--mc) 30%, #FFFFFF);
 }
 .org-teams {
   display: flex;
@@ -718,4 +768,8 @@ a.org-team:hover {
   /* 팀은 한 줄에 여러 개 (옆으로 이어서 감쌈) */
   .org-teams { flex-direction: row; flex-wrap: wrap; gap: 6px; }
   .org-team { padding: 6px 11px; font-size: 14px; }
+  .org-group { padding: 11px 10px 10px; }
+  .org-group .org-teams { margin-left: 0; padding-left: 0; }
+  .org-group .org-teams li::before,
+  .org-group .org-teams li::after { display: none; }
 }
