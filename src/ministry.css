@@ -547,172 +547,196 @@ a.hc-ministry-list-leaf, a.hc-ministry-list-name { color: var(--mc) !important; 
 /* ===== 보기 전환 탭 (조직도 / 부서 맵) ===== */
 .gw-tabs + .hc-ministry-stage { margin-top: 24px; }
 
-/* ===== 가로 조직도 (components/MinistryOrgChart.jsx) =====
-   하나교회 → 부 → 묶음 → 팀이 왼쪽에서 오른쪽으로 칸과 선으로 이어짐
-   부: 색이 꽉 찬 칸 / 묶음: 부 색 테두리 칸 / 팀: 흰 칸 */
+/* ===== 위아래 조직도 (components/MinistryOrgChart.jsx) =====
+   하나교회 → 부 → 묶음 → 팀을 칸과 가는 선으로 이음 (장식은 덜고 색은 부 칸에만)
+   부: 색 칸 / 묶음: 연한 색 바탕 / 팀: 글자 */
 .org {
-  --org-line: #CFCBC3;
-  --ht-gap: 14px; /* 칸과 세로줄 사이 가로 간격 (선 길이) */
-  --w-dept: 128px;
-  --w-group: 168px;
-  --w-team: 236px;
-  display: flex;
-  justify-content: center;
+  --org-line: #DCD7CF;
+  --org-gap: 14px;
+  --org-indent: 16px; /* 한 단계 들여쓰기 */
+  --org-stub: 17px;   /* 가지가 칸에 닿는 높이 (한 줄 칸의 가운데) */
   margin-top: 36px;
 }
-.ht-row {
+.org-root {
   display: flex;
   align-items: center;
-}
-.ht-kids {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0 0 0 var(--ht-gap);
-  list-style: none;
-}
-/* 윗 칸 → 세로줄 */
-.ht-kids::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: var(--ht-gap);
-  border-top: 2px solid var(--org-line);
-}
-.ht-kids > li {
-  position: relative;
-  padding: 4px 0 4px var(--ht-gap);
-}
-/* 형제들을 잇는 세로줄 */
-.ht-kids > li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  border-left: 2px solid var(--org-line);
-}
-.ht-kids > li:first-child::before { top: 50%; }
-.ht-kids > li:last-child::before { bottom: 50%; }
-/* 세로줄 → 각 칸 */
-.ht-kids > li::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: var(--ht-gap);
-  border-top: 2px solid var(--org-line);
-}
-/* 부끼리는 넓게, 묶음끼리는 조금 넓게 */
-.ht-kids--depts > li { padding-top: 12px; padding-bottom: 12px; }
-.ht-row--dept > .ht-kids > li { padding-top: 6px; padding-bottom: 6px; }
-
-.ht-box {
-  flex: none;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 38px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 1.35;
-  text-decoration: none;
-  word-break: keep-all;
-}
-.ht-box--root {
-  gap: 10px;
-  padding: 12px 18px 12px 12px;
-  border-radius: 16px;
+  gap: 9px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 8px 18px 8px 8px;
+  border-radius: 999px;
   background: #2D6A3E;
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
-  white-space: nowrap;
-  box-shadow: 0 6px 16px rgba(45, 106, 62, 0.25);
+  letter-spacing: -0.01em;
 }
-.ht-box--root img {
-  width: 32px;
-  height: 32px;
-  padding: 3px;
+.org-root img {
+  width: 28px;
+  height: 28px;
+  padding: 2px;
   border-radius: 50%;
   background: #FFFFFF;
 }
-.ht-box--dept {
-  width: var(--w-dept);
-  justify-content: center;
-  min-height: 46px;
-  border-radius: 12px;
-  background: var(--mc);
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 800;
-  text-align: center;
-  box-shadow: 0 3px 10px color-mix(in srgb, var(--mc) 30%, transparent);
+.org-trunk {
+  width: 0;
+  height: 22px;
+  margin: 0 auto;
+  border-left: 1px solid var(--org-line);
 }
-.ht-box--dept small {
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  font-size: 11px;
-  font-weight: 700;
+.org-depts {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--org-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-a.ht-box--dept:hover small { background: rgba(255, 255, 255, 0.36); }
-.ht-box--group {
-  width: var(--w-group);
-  border: 2px solid var(--mc);
-  background: color-mix(in srgb, var(--mc) 10%, #FFFFFF);
-  color: color-mix(in srgb, var(--mc) 85%, #000000);
-  font-weight: 800;
+.org-col {
+  position: relative;
+  padding-top: 20px;
 }
-.ht-box--team {
-  width: var(--w-team);
-  border: 1px solid #DDD8D0;
-  background: #FFFFFF;
-  color: #2A2A2A;
-  font-weight: 600;
+/* 부들을 잇는 가로줄 + 각 부로 내려오는 줄 */
+.org-col::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(var(--org-gap) / -2);
+  right: calc(var(--org-gap) / -2);
+  border-top: 1px solid var(--org-line);
 }
-a.ht-box--team:hover {
-  border-color: var(--mc);
-  background: color-mix(in srgb, var(--mc) 7%, #FFFFFF);
-}
-.ht-box--plain {
-  border-style: dashed;
-  color: #8A8680;
+.org-col:first-child::before { left: 50%; }
+.org-col:last-child::before { right: 50%; }
+.org-col::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 20px;
+  border-left: 1px solid var(--org-line);
 }
 
-/* 폰·태블릿: 하나교회는 맨 위, 부마다 가로 나무를 차례로 */
-@media (max-width: 1023px) {
-  .org { display: block; margin-top: 28px; }
-  .ht-row--root { flex-direction: column; align-items: stretch; }
-  .ht-box--root { align-self: center; margin-bottom: 8px; }
-  .ht-kids--depts { padding-left: 0; }
-  .ht-kids--depts::before,
-  .ht-kids--depts > li::before,
-  .ht-kids--depts > li::after { display: none; }
-  .ht-kids--depts > li {
-    padding: 14px 0 0;
-    margin-top: 14px;
-    border-top: 1px solid #ECE8E1;
-  }
+/* 부 */
+.org-dept {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 42px;
+  padding: 9px 8px;
+  border-radius: 10px;
+  background: var(--mc);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-decoration: none;
+  word-break: keep-all;
+  transition: filter 0.15s;
 }
-@media (max-width: 760px) {
-  .org {
-    --ht-gap: 10px;
-    --w-dept: 74px;
-    --w-group: 96px;
-    --w-team: auto;
+a.org-dept:hover { filter: brightness(1.08); }
+.org-dept-arrow {
+  font-style: normal;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+/* 가지: 위 칸 아래에서 세로줄이 내려오고, 각 칸으로 가로줄이 뻗음 */
+.org-tree {
+  margin: 0;
+  padding: 0 0 0 calc(var(--org-indent) + 2px);
+  list-style: none;
+}
+.org-tree > li {
+  position: relative;
+  padding-top: 6px;
+}
+.org-tree > li::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--org-indent) * -1 + 4px);
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--org-line);
+}
+.org-tree > li:last-child::before { bottom: auto; height: calc(6px + var(--org-stub)); }
+.org-tree > li::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--org-indent) * -1 + 4px);
+  top: calc(6px + var(--org-stub));
+  width: calc(var(--org-indent) - 6px);
+  border-top: 1px solid var(--org-line);
+}
+/* 묶음 아래 팀은 촘촘히, 묶음끼리는 여유 있게 */
+.org-tree .org-tree > li { padding-top: 0; }
+.org-tree .org-tree > li:last-child::before { height: var(--org-stub); }
+.org-tree .org-tree > li::after { top: var(--org-stub); }
+.org-col > .org-tree > li + li { padding-top: 14px; }
+.org-col > .org-tree > li + li:last-child::before { height: calc(14px + var(--org-stub)); }
+.org-col > .org-tree > li + li::after { top: calc(14px + var(--org-stub)); }
+
+.org-node {
+  display: block;
+  box-sizing: border-box;
+  padding: 7px 8px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 20px;
+  text-decoration: none;
+  word-break: keep-all;
+}
+/* 묶음 */
+.org-node--group {
+  background: color-mix(in srgb, var(--mc) 10%, #FFFFFF);
+  color: color-mix(in srgb, var(--mc) 85%, #000000);
+  font-weight: 700;
+}
+/* 팀 */
+.org-node--team {
+  padding-left: 4px;
+  color: #3A3A3A;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+a.org-node--team:hover {
+  color: var(--mc);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.org-node--plain { color: #A39E97; }
+
+/* 폰·태블릿: 왼쪽 세로줄에서 부가 차례로, 그 아래로 같은 가지 */
+@media (max-width: 1023px) {
+  .org-root { margin: 0; }
+  .org-trunk { margin: 0 0 0 22px; height: 16px; }
+  .org-depts {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding-left: 36px;
   }
-  .ht-box { padding: 7px 9px; font-size: 13px; min-height: 34px; }
-  .ht-box--dept { flex-direction: column; gap: 3px; padding: 8px 4px; font-size: 14px; }
-  .ht-box--dept small { font-size: 10px; }
-  .ht-box--group { font-size: 13px; }
-  /* 팀 칸은 남은 폭을 채움 */
-  .ht-row { min-width: 0; }
-  .ht-kids { flex: 1; min-width: 0; }
-  .ht-box--team { flex: 1 1 auto; width: auto; min-width: 0; }
-  .ht-row--team { min-width: 0; }
+  .org-col { padding-top: 0; }
+  .org-col::before {
+    top: 0;
+    bottom: -22px;
+    left: -14px;
+    right: auto;
+    border-top: none;
+    border-left: 1px solid var(--org-line);
+  }
+  .org-col:first-child::before { left: -14px; }
+  .org-col:last-child::before { right: auto; bottom: auto; height: 21px; }
+  .org-col::after {
+    top: 21px;
+    left: -14px;
+    width: 14px;
+    height: 0;
+    border-left: none;
+    border-top: 1px solid var(--org-line);
+  }
+  .org-dept { width: max-content; max-width: 100%; justify-content: flex-start; padding: 9px 16px; }
+  .org { --org-indent: 18px; }
+  .org-tree { padding-left: calc(var(--org-indent) + 4px); }
+  .org-node { display: inline-block; max-width: 100%; font-size: 14.5px; }
 }
