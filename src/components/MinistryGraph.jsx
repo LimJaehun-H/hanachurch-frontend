@@ -146,30 +146,21 @@ function descendantsOf(id, expanded) {
 }
 
 // 부모→자식 곡선 (살짝 휘어 덩굴처럼)
-// 부를 펼치면: 부 카드 바깥쪽(하나교회 반대편)에 세로 기둥이 서고, 기둥에서 팀들이 가지처럼 뻗음
-const LIST_INDENT = 18; // 묶음 안 팀의 한 단계 들여쓰기
+// 부를 펼치면: 부 카드 바깥쪽(하나교회 반대편)에 세로 기둥이 서고, 기둥에서 하위가 가지처럼 뻗음.
+// 묶음을 펼쳐도 같은 방식으로 한 단계 더 바깥쪽으로 뻗어 나감 (가로형 나무)
 const LIST_GAP = 8; // 팀 카드 사이 간격
 const SPINE_GAP = 36; // 부 카드와 기둥 사이
 const TICK = 16; // 기둥에서 팀 카드까지
-const SPINES = new Map(); // 부 id → { x: 기둥 x, dir: 1(오른쪽)|-1(왼쪽) }
+const SPINES = new Map(); // 펼친 노드 id → { x: 그 아래 팀들을 잇는 기둥 x, dir: 1(오른쪽)|-1(왼쪽) }
 function elbow(l) {
+  const p = l.source;
   const c = l.target;
-  const cc = cardOf(c.id);
-  const dept = T.index[c.id].path[1];
-  const sp = SPINES.get(dept.id);
+  const sp = SPINES.get(p.id);
   if (!sp) return "";
   const { dir } = sp;
-  const inner = c.x - dir * (cc.w / 2); // 팀 카드의 기둥 쪽 끝
-  if (depthOf(c.id) === 2) {
-    const p = l.source;
-    const pc = cardOf(p.id);
-    return `M${p.x + dir * (pc.w / 2)},${p.y}H${sp.x}V${c.y}H${inner}`;
-  }
-  // 묶음 안 팀: 묶음 카드 아래에서 내려오는 작은 기둥
-  const g = l.source;
-  const gc = cardOf(g.id);
-  const sub = sp.x + dir * (TICK + LIST_INDENT / 2);
-  return `M${sub},${g.y + gc.h / 2}V${c.y}H${inner}`;
+  const pc = cardOf(p.id);
+  const cc = cardOf(c.id);
+  return `M${p.x + dir * (pc.w / 2)},${p.y}H${sp.x}V${c.y}H${c.x - dir * (cc.w / 2)}`;
 }
 
 function curve(l) {
@@ -280,46 +271,55 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
     };
     st.current = state;
 
-    // 펼친 부 옆 기둥에 팀들이 놓일 자리 (부를 가운데 두고 위아래로, 묶음을 펼치면 한 칸 들여서 이어짐)
+    // 펼친 부 옆으로 가로형 나무 배치: 단계마다 기둥을 하나씩 두고 바깥쪽으로 뻗음
     const listTargets = () => {
       const targets = new Map();
-      const boxes = []; // 펼친 부 + 목록이 차지하는 영역 (다른 부가 겹치지 않게)
+      const boxes = []; // 펼친 부 + 하위 전체가 차지하는 영역 (다른 부가 겹치지 않게)
       const root = state.nodes.get("root");
       SPINES.clear();
+      const kidsOf = (n) => (state.expanded.has(n.id) ? n.children || [] : []);
+      // 한 노드가 세로로 차지하는 높이 = 자기 카드와 펼친 하위 묶음 중 큰 쪽
+      const blockH = (n) => {
+        const kids = kidsOf(n);
+        const own = cardOf(n.id).h;
+        if (!kids.length) return own;
+        const sub = kids.reduce((sum, k) => sum + blockH(k), 0) + LIST_GAP * (kids.length - 1);
+        return Math.max(own, sub);
+      };
       T.root.children.forEach((dept) => {
         const d = state.nodes.get(dept.id);
-        if (!d || !state.expanded.has(dept.id)) return;
-        const dc = cardOf(dept.id);
+        if (!d || !kidsOf(dept).length) return;
         const dir = !root || d.x >= root.x ? 1 : -1;
-        const spineX = d.x + dir * (dc.w / 2 + SPINE_GAP);
-        SPINES.set(dept.id, { x: spineX, dir });
-        // 보이는 팀들을 위에서 아래 순서로
-        const items = [];
-        (function walk(children, level) {
-          children.forEach((c) => {
-            items.push({ c, level });
-            if (state.expanded.has(c.id)) walk(c.children || [], level + 1);
+        let bx0 = d.x - cardOf(dept.id).w / 2;
+        let bx1 = d.x + cardOf(dept.id).w / 2;
+        let by0 = d.y - cardOf(dept.id).h / 2;
+        let by1 = d.y + cardOf(dept.id).h / 2;
+        // parent: 펼친 노드, px/py: 그 노드 자리, pw: 그 단계 카드 너비(기둥 위치 계산용)
+        (function place(parent, px, py, pw) {
+          const kids = kidsOf(parent);
+          if (!kids.length) return;
+          const spineX = px + dir * (pw / 2 + SPINE_GAP);
+          SPINES.set(parent.id, { x: spineX, dir });
+          const colW = Math.max(...kids.map((k) => cardOf(k.id).w)); // 같은 단계는 기둥 위치를 맞춤
+          const total = kids.reduce((sum, k) => sum + blockH(k), 0) + LIST_GAP * (kids.length - 1);
+          let y = py - total / 2;
+          kids.forEach((k) => {
+            const kc = cardOf(k.id);
+            const bh = blockH(k);
+            const cy = y + bh / 2;
+            const cx = spineX + dir * (TICK + kc.w / 2);
+            targets.set(k.id, { x: cx, y: cy });
+            bx0 = Math.min(bx0, cx - kc.w / 2);
+            bx1 = Math.max(bx1, cx + kc.w / 2);
+            by0 = Math.min(by0, y);
+            by1 = Math.max(by1, y + bh);
+            // 이 묶음의 하위는 같은 단계 열의 바깥 끝을 기준으로 한 번 더 바깥쪽에
+            const colEdgeX = spineX + dir * (TICK + colW);
+            place(k, colEdgeX - dir * (colW / 2), cy, colW);
+            y += bh + LIST_GAP;
           });
-        })(dept.children || [], 1);
-        const total = items.reduce((sum, it) => sum + cardOf(it.c.id).h, 0) + LIST_GAP * Math.max(items.length - 1, 0);
-        let y = d.y - total / 2;
-        let outer = spineX;
-        items.forEach(({ c, level }) => {
-          const cc = cardOf(c.id);
-          const edge = spineX + dir * (TICK + (level - 1) * LIST_INDENT);
-          const x = edge + dir * (cc.w / 2);
-          targets.set(c.id, { x, y: y + cc.h / 2 });
-          outer = dir > 0 ? Math.max(outer, x + cc.w / 2) : Math.min(outer, x - cc.w / 2);
-          y += cc.h + LIST_GAP;
-        });
-        const near = d.x - dir * (dc.w / 2);
-        boxes.push({
-          id: dept.id,
-          x0: Math.min(near, outer) - 10,
-          x1: Math.max(near, outer) + 10,
-          y0: Math.min(d.y - dc.h / 2, d.y - total / 2) - 10,
-          y1: Math.max(d.y + dc.h / 2, d.y + total / 2) + 10,
-        });
+        })(dept, d.x, d.y, cardOf(dept.id).w);
+        boxes.push({ id: dept.id, x0: bx0 - 10, x1: bx1 + 10, y0: by0 - 10, y1: by1 + 10 });
       });
       return { targets, boxes };
     };
@@ -555,7 +555,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
           const parentId = T.index[id].parent?.id;
-          fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)]);
+          fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)], 1100); // 하위가 자리를 다 잡은 뒤에 맞춤
         }
       }
       onSelectRef.current?.(id);
