@@ -26,7 +26,7 @@ export default function Ministry() {
             <span className="hc-location-divider-line" />
           </div>
           <p className="hc-ministry-lead">
-            부서를 누르면 하위 부서가 펼쳐집니다. 끌어서 둘러보고, 두 손가락으로 확대해 보세요.
+            하나교회를 누르면 부서가, 부서를 누르면 하위 팀이 펼쳐집니다. 끌어서 둘러보고, 두 손가락으로 확대해 보세요.
           </p>
         </div>
 
