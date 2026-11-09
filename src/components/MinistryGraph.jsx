@@ -230,8 +230,6 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
   const st = useRef(null); // d3 상태 (렌더 사이에 유지)
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
-  const cardOpenRef = useRef(false); // 아래 카드가 떠 있으면 그만큼 비우고 화면을 맞춤
-  cardOpenRef.current = Boolean(selectedId && selectedId !== "root");
 
   useEffect(() => {
     const svg = select(svgRef.current);
@@ -299,7 +297,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       });
       const { w } = state.size;
       const top = 60; // 위쪽 버튼 줄
-      const bottom = cardOpenRef.current ? (w < 760 ? 215 : 195) : 24;
+      const bottom = 24;
       const h = state.size.h - top - bottom;
       const pad = 14;
       const k = Math.min(1.5, (w - pad * 2) / (x1 - x0), (h - pad * 2) / (y1 - y0));

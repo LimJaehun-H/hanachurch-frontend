@@ -10,7 +10,6 @@ import "../ministry.css";
 export default function Ministry() {
   const graphRef = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
-  const selected = selectedId && selectedId !== "root" ? MINISTRY_INDEX[selectedId] : null;
 
   return (
     <div className="hc-page">
@@ -43,29 +42,6 @@ export default function Ministry() {
             <button type="button" onClick={() => { graphRef.current?.collapseAll(); setSelectedId(null); }}>접기</button>
           </div>
           <p className="hc-ministry-hint">PC에서는 Ctrl(⌘) + 휠로 확대·축소</p>
-
-          {selected && (
-            <div className="hc-ministry-card" style={{ "--mc": colorOf(selected.node.id) }}>
-              <button type="button" className="hc-ministry-card-x" onClick={() => setSelectedId(null)} aria-label="닫기">
-                ×
-              </button>
-              <p className="hc-ministry-card-path">
-                {selected.path.slice(1, -1).map((p) => p.name).join(" › ") || "하나교회"}
-              </p>
-              <h2 className="hc-ministry-card-name">{selected.node.name}</h2>
-              <p className="hc-ministry-card-desc">
-                {selected.node.desc ||
-                  ((selected.node.children || []).length
-                    ? `하위 부서 ${selected.node.children.length}개: ${selected.node.children.map((c) => c.name).join(", ")}`
-                    : "소개 글을 준비하고 있습니다.")}
-              </p>
-              {hasPage(selected.node.id) && (
-                <Link to={`/ministry/${selected.node.id}`} className="hc-ministry-card-link">
-                  부서 소개 보기 →
-                </Link>
-              )}
-            </div>
-          )}
         </section>
 
         {/* 노드 화면을 쓰기 어려운 분과 검색엔진을 위한 목록 */}
