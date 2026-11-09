@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // 위아래 조직도: 하나교회 → 부 → 묶음 → 팀, 모든 단계를 칸과 선으로 이음
 // PC: 부 7개가 가로로 나란히, 각 부 아래로 묶음·팀이 가지처럼 내려감
 // 폰·태블릿: 왼쪽 세로줄에서 부가 차례로 이어지고, 그 아래로 같은 가지 (옆으로 밀 필요 없음)
-// 소개 페이지가 있는 이름만 링크 (백엔드 hasPage)
+// 링크는 맨 끝 팀 중 소개 페이지가 있는 것만 (백엔드 hasPage), 부·묶음은 이름만
 
 export default function MinistryOrgChart({ tree }) {
   const { root, colorOf, hasPage } = tree;
@@ -19,16 +19,8 @@ export default function MinistryOrgChart({ tree }) {
       <ul className="org-depts">
         {root.children.map((dept) => (
           <li key={dept.id} className="org-col" style={{ "--mc": colorOf(dept.id) }}>
-            {hasPage(dept.id) ? (
-              <Link to={`/ministry/${dept.id}`} className="org-dept">
-                <span>{dept.name}</span>
-                <i className="org-dept-arrow" aria-hidden="true">›</i>
-              </Link>
-            ) : (
-              <div className="org-dept">
-                <span>{dept.name}</span>
-              </div>
-            )}
+            {/* 부는 링크 없이 이름만 (소개 페이지는 맨 끝 팀만) */}
+            <div className="org-dept">{dept.name}</div>
             <Branch nodes={dept.children} hasPage={hasPage} />
           </li>
         ))}
@@ -47,7 +39,7 @@ function Branch({ nodes, hasPage }) {
         const cls = `org-node ${isGroup ? "org-node--group" : "org-node--team"}`;
         return (
           <li key={n.id}>
-            {hasPage(n.id) ? (
+            {!isGroup && hasPage(n.id) ? (
               <Link to={`/ministry/${n.id}`} className={`${cls} org-node--link`}>
                 {n.name}
               </Link>

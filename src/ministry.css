@@ -633,13 +633,6 @@ a.hc-ministry-list-leaf, a.hc-ministry-list-name { color: var(--mc) !important; 
   text-align: center;
   text-decoration: none;
   word-break: keep-all;
-  transition: filter 0.15s;
-}
-a.org-dept:hover { filter: brightness(1.08); }
-.org-dept-arrow {
-  font-style: normal;
-  font-weight: 400;
-  opacity: 0.7;
 }
 
 /* 가지: 위 칸 아래에서 세로줄이 내려오고, 각 칸으로 가로줄이 뻗음 */
