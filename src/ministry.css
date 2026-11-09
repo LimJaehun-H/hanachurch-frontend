@@ -531,3 +531,15 @@
 .hc-ministry-list-dept li .hc-ministry-list-name { color: #222; font-weight: 600; }
 .hc-ministry-list-leaf { color: inherit; }
 a.hc-ministry-list-leaf, a.hc-ministry-list-name { color: var(--mc) !important; text-decoration: underline; text-underline-offset: 2px; }
+
+/* 부서 데이터 불러오는 중 */
+.hc-ministry-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  height: 100%;
+  margin: 0;
+  font-size: 14px;
+  color: #8C877F;
+}

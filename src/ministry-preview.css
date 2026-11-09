@@ -174,6 +174,46 @@ figcaption {
   word-break: keep-all;
 }
 
+/* ===== 실제 소개 페이지 (pages/MinistryDetail.jsx) ===== */
+.mlp-main--page { padding-top: var(--mlp-head); min-height: 60vh; }
+.mla-state {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 96px 32px 0;
+  font-size: 15px;
+  color: var(--ink-3);
+}
+.mla-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #E6E0D6;
+  object-fit: cover;
+}
+.mla-hero .mla-img { max-height: 560px; aspect-ratio: 16 / 9; }
+.mla-inset .mla-img { aspect-ratio: 3 / 2; }
+.mla-subs { list-style: none; margin: 0; padding: 0; }
+.mla-subs li {
+  padding: 12px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 17px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+.mla-subs li:first-child { border-top: none; padding-top: 0; }
+.mla-subs a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--mc);
+  text-underline-offset: 4px;
+}
+.mla-subs-leaves {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
 /* ================= 태블릿·폰 ================= */
 @media (max-width: 860px) {
   .mlp { --mlp-head: 89px; }
@@ -186,6 +226,9 @@ figcaption {
   .mla { padding: 0; }
   .mla-hero-ph { aspect-ratio: 4 / 5 !important; }
   .mla-hero figcaption { padding: 0 20px; }
+  .mla-hero .mla-img { aspect-ratio: 4 / 3; }
+  .mla-state { padding: 64px 20px 0; }
+  .mla-subs li { font-size: 16px; }
   .mla-head, .mla-row, .mla-joy { grid-template-columns: 1fr; }
   .mla-head { margin: 0 20px; padding: 36px 0 28px; }
   .mla-kicker { grid-row: auto; margin: 0 0 12px; }

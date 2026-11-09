@@ -2,85 +2,121 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
-import SubHero from "../components/SubHero.jsx";
-import { MINISTRY_INDEX, colorOf, hasPage, EXAMPLE_PAGES } from "../data/ministries.js";
+import { API_BASE_URL } from "../config.js";
+import { EXAMPLE_PAGES, ROOT_COLOR } from "../data/ministries.js";
+import { useMinistry, useMinistryTree } from "../data/ministryApi.js";
 import MinistryLayoutPreview from "./MinistryLayoutPreview.jsx";
-import "../ministry.css";
+import "../ministry-preview.css";
 
+// 교회부서 소개 페이지 (/ministry/:id, 디자인 A)
+// 내용은 백엔드 /api/ministries/{slug}, 하위 팀 목록과 색은 부서 나무에서 가져옴
 export default function MinistryDetail() {
   const { id } = useParams();
-  const info = MINISTRY_INDEX[id];
+  const { status, data } = useMinistry(id);
+  const tree = useMinistryTree();
 
-  // 주방 봉사: 새 디자인(A) 예시 페이지
-  if (EXAMPLE_PAGES.has(id)) return <MinistryLayoutPreview />;
+  // 서버가 아직 이 API를 모르면(배포 전) 주방봉사팀만 예시 페이지로 보여 줌
+  if (status === "error" && EXAMPLE_PAGES.has(id)) return <MinistryLayoutPreview />;
 
-  if (!info || !hasPage(id)) {
-    return (
-      <div className="hc-page">
-        <Header variant="overlay" />
-        <SubHero groupKey="ministry_hero" fallbackImageUrl={null} />
-        <main className="hc-ministry-detail">
-          <p className="hc-empty">찾는 부서가 없습니다.</p>
-          <Link to="/ministry" className="hc-ministry-back">← 교회부서로 돌아가기</Link>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  const { node, path } = info;
-  const children = node.children || [];
+  const color = tree ? tree.colorOf(id) : ROOT_COLOR;
+  const children = tree?.index[id]?.node.children || [];
 
   return (
-    <div className="hc-page">
-      <Header variant="overlay" />
-      <SubHero groupKey="ministry_hero" fallbackImageUrl={null} />
+    <div className="hc-page mlp" style={{ "--mc": color }}>
+      <Header variant="solid" />
+      <main className="mlp-main mlp-main--page">
+        {status === "loading" && <p className="mla-state">불러오는 중…</p>}
+        {status === "notfound" && <p className="mla-state">찾는 부서가 없습니다.</p>}
+        {status === "error" && <p className="mla-state">부서 소개를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</p>}
+        {status === "ok" && <Intro d={data} subs={children} hasPage={tree?.hasPage} />}
+        <Link to="/ministry" className="mlp-back">교회부서로 돌아가기</Link>
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
-      <main className="hc-ministry-detail" style={{ "--mc": colorOf(id) }}>
-        <nav className="hc-ministry-crumb" aria-label="부서 위치">
-          <Link to="/ministry">교회부서</Link>
-          {path.slice(1, -1).map((p) => (
-            <React.Fragment key={p.id}>
-              <span aria-hidden="true">›</span>
-              <Link to={`/ministry/${p.id}`}>{p.name}</Link>
-            </React.Fragment>
-          ))}
-        </nav>
+function photoSrc(url) {
+  return /^https?:\/\//.test(url) ? url : `${API_BASE_URL}${url}`;
+}
 
-        <h1 className="hc-ministry-detail-title">{node.name}</h1>
+function Photo({ photo, className = "" }) {
+  return (
+    <figure className={className}>
+      <img className="mla-img" src={photoSrc(photo.url)} alt={photo.caption || ""} loading="lazy" />
+      {photo.caption && <figcaption>{photo.caption}</figcaption>}
+    </figure>
+  );
+}
 
-        <div className="hc-ministry-detail-body">
-          {node.desc ? (
-            <p>{node.desc}</p>
-          ) : (
-            <p className="hc-ministry-detail-pending">부서 소개 글과 사진을 준비하고 있습니다.</p>
-          )}
-        </div>
+function Intro({ d, subs, hasPage }) {
+  const [hero, inset] = d.photos;
+  const [firstJoy, ...restJoy] = d.joy;
 
-        {node.photos?.length > 0 && (
-          <div className="hc-ministry-photos">
-            {node.photos.map((src) => (
-              <img key={src} src={src} alt={`${node.name} 사진`} loading="lazy" />
-            ))}
-          </div>
+  return (
+    <article className="mla">
+      {hero && <Photo photo={hero} className="mla-hero" />}
+
+      <header className="mla-head">
+        <p className="mla-kicker">{d.path.length ? d.path.join(" · ") : "하나교회"}</p>
+        <h1>{d.name}</h1>
+        {d.tagline && <p className="mla-tagline">{d.tagline}</p>}
+      </header>
+
+      <div className="mla-rows">
+        {d.about.length > 0 && (
+          <section className="mla-row">
+            <h2>하는 일</h2>
+            <div className="mla-about">
+              {d.about.map((t) => (
+                <p key={t}>{t}</p>
+              ))}
+            </div>
+          </section>
         )}
 
-        {children.length > 0 && (
-          <section className="hc-ministry-sub">
-            <h2 className="hc-ministry-sub-title">하위 부서</h2>
-            <ul className="hc-ministry-chips">
-              {children.map((c) => (
-                <li key={c.id}>
-                  {hasPage(c.id) ? <Link to={`/ministry/${c.id}`}>{c.name}</Link> : <span>{c.name}</span>}
+        {d.method.length > 0 && (
+          <section className="mla-row">
+            <h2>이렇게 섬겨요</h2>
+            <ol className="mla-method">
+              {d.method.map((t, i) => (
+                <li key={t}>
+                  <span className="mla-num">{String(i + 1).padStart(2, "0")}</span>
+                  {t}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {subs.length > 0 && (
+          <section className="mla-row">
+            <h2>함께 섬기는 팀</h2>
+            <ul className="mla-subs">
+              {subs.map((s) => (
+                <li key={s.id}>
+                  {hasPage?.(s.id) ? <Link to={`/ministry/${s.id}`}>{s.name}</Link> : <span>{s.name}</span>}
+                  {s.children?.length > 0 && (
+                    <span className="mla-subs-leaves">{s.children.map((c) => c.name).join(" · ")}</span>
+                  )}
                 </li>
               ))}
             </ul>
           </section>
         )}
+      </div>
 
-        <Link to="/ministry" className="hc-ministry-back">← 조직도로 돌아가기</Link>
-      </main>
-      <Footer />
-    </div>
+      {inset && <Photo photo={inset} className="mla-inset" />}
+
+      {firstJoy && (
+        <section className="mla-joy">
+          <h2>섬김의 기쁨</h2>
+          <blockquote>{firstJoy}</blockquote>
+          {restJoy.map((t) => (
+            <p key={t}>{t}</p>
+          ))}
+        </section>
+      )}
+    </article>
   );
 }

@@ -5,7 +5,7 @@ import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
 import MinistryGraph from "../components/MinistryGraph.jsx";
 import MinistryOrgChart from "../components/MinistryOrgChart.jsx";
-import { GOOD_WORKS_TREE } from "../data/goodWorks.js";
+import { useMinistryTree } from "../data/ministryApi.js";
 import "../ministry.css";
 
 // 부서소개 · Good Works 시안 (사역박람회 팸플릿 기준 구성, dev 확인용 /good-works)
@@ -15,7 +15,7 @@ export default function GoodWorks() {
   const [view, setView] = useState("chart");
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
-  const tree = GOOD_WORKS_TREE;
+  const tree = useMinistryTree(); // 불러오는 동안 null
 
   // 부서 맵: 맨 끝 팀에 소개 페이지가 있으면 바로 이동
   const handleSelect = (id) => {
@@ -53,7 +53,9 @@ export default function GoodWorks() {
           </button>
         </div>
 
-        {view === "chart" ? (
+        {!tree ? (
+          <p className="hc-ministry-loading">부서를 불러오는 중…</p>
+        ) : view === "chart" ? (
           <MinistryOrgChart tree={tree} />
         ) : (
           <section className="hc-ministry-stage">

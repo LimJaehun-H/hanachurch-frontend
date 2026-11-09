@@ -4,13 +4,13 @@ import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
 import MinistryGraph from "../components/MinistryGraph.jsx";
-import { GOOD_WORKS_TREE } from "../data/goodWorks.js";
+import { useMinistryTree } from "../data/ministryApi.js";
 import "../ministry.css";
 
 // 교회부서 (부서 맵 + 부서 한눈에 보기)
-// 데이터는 사역박람회 팸플릿 기준으로 정리한 Good Works 구성 (src/data/goodWorks.js)
+// 데이터는 백엔드 /api/ministries/tree (못 불러오면 src/data/goodWorks.js)
 export default function Ministry() {
-  const tree = GOOD_WORKS_TREE;
+  const tree = useMinistryTree(); // 불러오는 동안 null
   const graphRef = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
@@ -54,7 +54,11 @@ export default function Ministry() {
         </div>
 
         <section className="hc-ministry-stage">
-          <MinistryGraph ref={graphRef} tree={tree} selectedId={selectedId} onSelect={handleSelect} />
+          {tree ? (
+            <MinistryGraph ref={graphRef} tree={tree} selectedId={selectedId} onSelect={handleSelect} />
+          ) : (
+            <p className="hc-ministry-loading">부서를 불러오는 중…</p>
+          )}
 
           <div className="hc-ministry-tools" role="toolbar" aria-label="조직도 조작">
             <button type="button" onClick={() => graphRef.current?.zoomBy(1.3)} aria-label="확대">＋</button>
@@ -68,6 +72,7 @@ export default function Ministry() {
         </section>
 
         {/* 노드 화면을 쓰기 어려운 분과 검색엔진을 위한 목록 */}
+        {tree && (
         <section className="hc-ministry-list" aria-labelledby="hc-ministry-list-title">
           <h2 id="hc-ministry-list-title" className="hc-ministry-list-title">부서 한눈에 보기</h2>
           <div className="hc-ministry-list-grid">
@@ -97,6 +102,7 @@ export default function Ministry() {
             ))}
           </div>
         </section>
+        )}
       </main>
       <Footer />
     </div>
