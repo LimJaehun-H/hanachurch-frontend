@@ -543,3 +543,179 @@ a.hc-ministry-list-leaf, a.hc-ministry-list-name { color: var(--mc) !important; 
   font-size: 14px;
   color: #8C877F;
 }
+
+/* ===== 보기 전환 탭 (조직도 / 부서 맵) ===== */
+.gw-tabs + .hc-ministry-stage { margin-top: 24px; }
+
+/* ===== 위아래 조직도 (components/MinistryOrgChart.jsx) ===== */
+.org {
+  --org-line: #CFCBC3;
+  --org-gap: 12px;
+  margin-top: 32px;
+}
+.org-root {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 12px 22px 12px 14px;
+  border-radius: 16px;
+  background: #2D6A3E;
+  color: #FFFFFF;
+  font-size: 19px;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(45, 106, 62, 0.25);
+}
+.org-root img {
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  border-radius: 50%;
+  background: #FFFFFF;
+}
+.org-trunk {
+  width: 0;
+  height: 24px;
+  margin: 0 auto;
+  border-left: 2px solid var(--org-line);
+}
+.org-depts {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--org-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.org-col {
+  position: relative;
+  padding-top: 22px;
+}
+/* 부들을 잇는 가로줄 + 각 부로 내려오는 줄 */
+.org-col::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(var(--org-gap) / -2);
+  right: calc(var(--org-gap) / -2);
+  border-top: 2px solid var(--org-line);
+}
+.org-col:first-child::before { left: 50%; }
+.org-col:last-child::before { right: 50%; }
+.org-col::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 22px;
+  border-left: 2px solid var(--org-line);
+}
+
+.org-card {
+  border: 1px solid #E7E3DC;
+  border-radius: 14px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+.org-dept {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 10px 8px;
+  background: var(--mc);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  word-break: keep-all;
+}
+.org-dept small {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 11px;
+  font-weight: 700;
+}
+a.org-dept:hover small { background: rgba(255, 255, 255, 0.36); }
+.org-body { padding: 12px 10px 14px; }
+.org-group + .org-group,
+.org-teams + .org-group { margin-top: 14px; }
+.org-group-name {
+  margin: 0 0 6px;
+  padding-left: 8px;
+  border-left: 3px solid var(--mc);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--mc) 80%, #000000);
+  word-break: keep-all;
+}
+.org-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.org-team {
+  display: block;
+  padding: 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--mc) 26%, #FFFFFF);
+  border-radius: 9px;
+  background: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2A2A2A;
+  text-decoration: none;
+  word-break: keep-all;
+}
+a.org-team:hover {
+  background: color-mix(in srgb, var(--mc) 9%, #FFFFFF);
+  border-color: var(--mc);
+}
+.org-team--plain {
+  border-style: dashed;
+  border-color: #D9D6D0;
+  color: #8A8680;
+}
+
+/* 폰·태블릿: 왼쪽 세로줄에서 부 카드가 차례로 이어짐 */
+@media (max-width: 1023px) {
+  .org-root { margin: 0; }
+  .org-trunk { margin: 0 0 0 20px; height: 18px; }
+  .org-depts {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-left: 34px;
+  }
+  .org-col { padding-top: 0; }
+  .org-col::before {
+    top: 0;
+    bottom: -16px;
+    left: -14px;
+    right: auto;
+    border-top: none;
+    border-left: 2px solid var(--org-line);
+  }
+  .org-col:first-child::before { left: -14px; }
+  .org-col:last-child::before { right: auto; bottom: auto; height: 24px; }
+  .org-col::after {
+    top: 24px;
+    left: -14px;
+    width: 14px;
+    height: 0;
+    border-left: none;
+    border-top: 2px solid var(--org-line);
+  }
+  .org-dept { justify-content: flex-start; padding: 12px 16px; min-height: 0; }
+  .org-body { padding: 14px 14px 16px; }
+  /* 팀은 한 줄에 여러 개 (옆으로 이어서 감쌈) */
+  .org-teams { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .org-team { padding: 6px 11px; font-size: 14px; }
+}

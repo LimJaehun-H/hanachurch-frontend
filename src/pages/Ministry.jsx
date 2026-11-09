@@ -1,19 +1,27 @@
 import React, { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
 import MinistryGraph from "../components/MinistryGraph.jsx";
+import MinistryOrgChart from "../components/MinistryOrgChart.jsx";
 import { useMinistryTree } from "../data/ministryApi.js";
 import "../ministry.css";
 
-// 교회부서 (부서 맵 + 부서 한눈에 보기)
+// 교회부서: 조직도(기본) / 부서 맵 탭 (부서 맵 아래에는 부서 한눈에 보기 목록)
 // 데이터는 백엔드 /api/ministries/tree (못 불러오면 src/data/goodWorks.js)
 export default function Ministry() {
   const tree = useMinistryTree(); // 불러오는 동안 null
   const graphRef = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
+  // 보던 탭을 주소에 남겨서, 팀 소개에 갔다가 뒤로 와도 그대로 (?view=map)
+  const [params, setParams] = useSearchParams();
+  const view = params.get("view") === "map" ? "map" : "chart";
+  const setView = (v) => {
+    setSelectedId(null);
+    setParams(v === "map" ? { view: "map" } : {}, { replace: true });
+  };
 
   // 맨 끝 팀(하위 없음)에 소개 페이지가 있으면 바로 이동
   const handleSelect = (id) => {
@@ -49,10 +57,25 @@ export default function Ministry() {
             <span className="hc-location-divider-line" />
           </div>
           <p className="hc-ministry-lead">
-            하나교회를 누르면 부서가, 부서를 누르면 하위 팀이 펼쳐집니다. 끌어서 둘러보고, 두 손가락으로 확대해 보세요.
+            {view === "chart"
+              ? "교회를 위해 섬기는 부서와 팀입니다. 이름을 누르면 소개를 볼 수 있습니다."
+              : "하나교회를 누르면 부서가, 부서를 누르면 하위 팀이 펼쳐집니다. 끌어서 둘러보고, 두 손가락으로 확대해 보세요."}
           </p>
         </div>
 
+        <div className="gw-tabs" role="tablist" aria-label="보기 방식">
+          <button type="button" role="tab" aria-selected={view === "chart"} onClick={() => setView("chart")}>
+            조직도
+          </button>
+          <button type="button" role="tab" aria-selected={view === "map"} onClick={() => setView("map")}>
+            부서 맵
+          </button>
+        </div>
+
+        {view === "chart" ? (
+          tree ? <MinistryOrgChart tree={tree} /> : <p className="hc-ministry-loading">부서를 불러오는 중…</p>
+        ) : (
+        <>
         <section className="hc-ministry-stage">
           {tree ? (
             <MinistryGraph ref={graphRef} tree={tree} selectedId={selectedId} onSelect={handleSelect} />
@@ -102,6 +125,8 @@ export default function Ministry() {
             ))}
           </div>
         </section>
+        )}
+        </>
         )}
       </main>
       <Footer />
