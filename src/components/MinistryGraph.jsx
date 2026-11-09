@@ -213,7 +213,7 @@ function drawCard(sel) {
     );
 
     // 하위 부서 개수 배지 (오른쪽 위)
-    if ((MINISTRY_INDEX[d.id].node.children || []).length && d.id !== "root") {
+    if ((MINISTRY_INDEX[d.id].node.children || []).length) {
       const b = g
         .append("g")
         .attr("class", "hc-mg-badge")
@@ -241,7 +241,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     const state = {
-      expanded: new Set(["root"]),
+      expanded: new Set(), // 처음엔 하나교회만 보이고, 누르면 부서들이 펼쳐짐
       nodes: new Map(), // id -> 시뮬레이션 노드 (위치 유지)
       size: { w: 800, h: 600 },
       fitTimer: null,
@@ -396,7 +396,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
 
     const handleTap = (id) => {
       const hasChildren = (MINISTRY_INDEX[id].node.children || []).length > 0;
-      if (hasChildren && id !== "root") {
+      if (hasChildren) {
         if (state.expanded.has(id)) {
           // 접기: 이 가지 아래 펼친 것도 모두 접음
           descendantsOf(id, state.expanded).forEach((x) => state.expanded.delete(x));
@@ -406,8 +406,8 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
           state.expanded.add(id);
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
-          const parentId = MINISTRY_INDEX[id].parent.id;
-          fitLater(() => [parentId, ...descendantsOf(id, state.expanded)]);
+          const parentId = MINISTRY_INDEX[id].parent?.id;
+          fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)]);
         }
       }
       onSelectRef.current?.(id);
@@ -459,7 +459,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     },
     collapseAll() {
       const s = st.current;
-      s.expanded = new Set(["root"]);
+      s.expanded = new Set();
       s.render();
       s.fitLater(() => visibleIds(s.expanded));
     },
