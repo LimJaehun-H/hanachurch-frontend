@@ -406,19 +406,26 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
     svg.call(zoomer).on("dblclick.zoom", null);
     state.zoomer = zoomer;
 
+    // 누르기만 하면 배치를 건드리지 않고, 실제로 끌었을 때만 배치 계산을 다시 깨움
+    // (누를 때마다 다시 계산하면 부들이 조금씩 한 방향으로 돌아가는 문제가 있었음)
+    let dragging = null;
     const dragger = d3drag()
       .clickDistance(6)
-      .on("start", (event, d) => {
-        if (!event.active) sim.alphaTarget(0.25).restart();
-        d.fx = d.x;
-        d.fy = d.y;
+      .on("start", () => {
+        dragging = null;
       })
       .on("drag", (event, d) => {
+        if (dragging !== d.id) {
+          dragging = d.id; // 처음 움직인 순간에만 배치 계산을 깨움
+          sim.alphaTarget(0.25).restart();
+        }
         d.fx = event.x;
         d.fy = event.y;
       })
       .on("end", (event, d) => {
-        if (!event.active) sim.alphaTarget(0);
+        if (dragging !== d.id) return; // 끌지 않고 누르기만 함
+        dragging = null;
+        sim.alphaTarget(0);
         if (d.id !== "root") {
           d.fx = null;
           d.fy = null;
@@ -441,7 +448,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
       const bottom = 24;
       const h = state.size.h - top - bottom;
       const pad = 14;
-      const k = Math.min(1.5, (w - pad * 2) / (x1 - x0), (h - pad * 2) / (y1 - y0));
+      const k = Math.min(2, (w - pad * 2) / (x1 - x0), (h - pad * 2) / (y1 - y0));
       const t = zoomIdentity
         .translate(w / 2, top + h / 2)
         .scale(k)
@@ -559,8 +566,9 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
           }
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
-          const parentId = T.index[id].parent?.id;
-          fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)], 1100); // 하위가 자리를 다 잡은 뒤에 맞춤
+          // 하나교회는 빼고 펼친 부(또는 묶음)와 그 아래 팀들만 화면에 꽉 차게 (하위가 자리를 다 잡은 뒤에)
+          // 하나교회를 펼칠 때만 전체(하나교회 + 부들)를 맞춤
+          fitLater(() => descendantsOf(id, state.expanded), 1100);
         }
       }
       onSelectRef.current?.(id);
