@@ -200,3 +200,25 @@ export function hasPage(id) {
   if (EXAMPLE_PAGES.has(id)) return true;
   return Boolean(info) && info.depth >= 1 && info.depth <= 2;
 }
+
+// 다른 부서 트리(예: Good Works)도 같은 방식으로 쓰기 위한 도우미
+// root: { id, name, children }, 큰 부서 id가 BRANCH_COLORS에 있으면 그 색을 씀
+export function makeTree(root, { hasPage: pageFn } = {}) {
+  const index = {};
+  (function walk(node, parent, depth, branch, path) {
+    const myBranch = depth === 1 ? node.id : branch;
+    const myPath = [...path, node];
+    index[node.id] = { node, parent, depth, branch: myBranch, path: myPath };
+    (node.children || []).forEach((c) => walk(c, node, depth + 1, myBranch, myPath));
+  })(root, null, 0, null, []);
+  const color = (id) => {
+    const info = index[id];
+    if (!info || info.depth === 0) return ROOT_COLOR;
+    return BRANCH_COLORS[info.branch] || ROOT_COLOR;
+  };
+  return { root, index, colorOf: color, hasPage: pageFn || (() => false) };
+}
+
+// 기존 부서 맵(/ministry)용
+export const MINISTRY_TREE = { root: CHURCH_ROOT, index: MINISTRY_INDEX, colorOf, hasPage };
+

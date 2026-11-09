@@ -4,7 +4,10 @@ import { select } from "d3-selection";
 import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
 import { drag as d3drag } from "d3-drag";
 import "d3-transition";
-import { CHURCH_ROOT, MINISTRY_INDEX, colorOf } from "../data/ministries.js";
+import { MINISTRY_TREE } from "../data/ministries.js";
+
+// 지금 그리는 부서 트리 (한 화면에 조직도는 하나뿐이라 모듈 변수로 둠, 트리가 바뀌면 컴포넌트를 다시 만듦)
+let T = MINISTRY_TREE;
 
 // 교회부서 노드 화면 (아이콘 카드형)
 // - 처음엔 하나교회 + 큰 부서만 보이고, 카드를 누르면 하위 부서가 펼쳐짐
@@ -45,11 +48,11 @@ const SUB_ICONS = [
   [/에너지|전기/, "M13 2 4 14h7l-1 8 9-12h-7z"],
 ];
 
-const depthOf = (id) => MINISTRY_INDEX[id].depth;
+const depthOf = (id) => T.index[id].depth;
 const specOf = (id) => SPEC[Math.min(depthOf(id), 3)];
 
 function iconPath(id) {
-  const info = MINISTRY_INDEX[id];
+  const info = T.index[id];
   if (info.depth === 2) {
     const hit = SUB_ICONS.find(([re]) => re.test(info.node.name));
     if (hit) return hit[1];
@@ -101,7 +104,7 @@ const CARD = new Map();
 function cardOf(id) {
   if (CARD.has(id)) return CARD.get(id);
   const sp = specOf(id);
-  const lines = wrapLabel(MINISTRY_INDEX[id].node.name, sp.fs, sp.maxW);
+  const lines = wrapLabel(T.index[id].node.name, sp.fs, sp.maxW);
   const lh = sp.fs * 1.22;
   const tw = Math.max(...lines.map((l) => textW(l, sp.fs)));
   const iconBox = sp.icon * 2;
@@ -118,7 +121,7 @@ const collideOf = (id) => {
 
 function styleOf(id) {
   const d = depthOf(id);
-  const c = colorOf(id);
+  const c = T.colorOf(id);
   if (d <= 1) return { fill: c, stroke: "none", text: "#FFFFFF", iconBg: "rgba(255,255,255,0.22)", icon: "#FFFFFF" };
   if (d === 2) return { fill: mix(c, 0.9), stroke: mix(c, 0.45), text: darken(c, 0.38), iconBg: mix(c, 0.72), icon: darken(c, 0.2) };
   return { fill: "#FFFFFF", stroke: mix(c, 0.6), text: darken(c, 0.35), iconBg: c, icon: c };
@@ -129,7 +132,7 @@ function visibleIds(expanded) {
   (function walk(node) {
     ids.push(node.id);
     if (expanded.has(node.id)) (node.children || []).forEach(walk);
-  })(CHURCH_ROOT);
+  })(T.root);
   return ids;
 }
 
@@ -138,7 +141,7 @@ function descendantsOf(id, expanded) {
   (function walk(node) {
     out.push(node.id);
     if (expanded.has(node.id)) (node.children || []).forEach(walk);
-  })(MINISTRY_INDEX[id].node);
+  })(T.index[id].node);
   return out;
 }
 
@@ -213,7 +216,7 @@ function drawCard(sel) {
     );
 
     // 하위 부서 개수 배지 (오른쪽 위)
-    if ((MINISTRY_INDEX[d.id].node.children || []).length) {
+    if ((T.index[d.id].node.children || []).length) {
       const b = g
         .append("g")
         .attr("class", "hc-mg-badge")
@@ -224,7 +227,11 @@ function drawCard(sel) {
   });
 }
 
-const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }, ref) {
+const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, tree = MINISTRY_TREE }, ref) {
+  if (T !== tree) {
+    T = tree;
+    CARD.clear(); // 카드 크기 계산은 트리마다 다름
+  }
   const wrapRef = useRef(null);
   const svgRef = useRef(null);
   const st = useRef(null); // d3 상태 (렌더 사이에 유지)
@@ -320,7 +327,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       // 새로 보이는 카드는 부모 위치에서 시작해 퍼져 나감
       ids.forEach((id) => {
         if (!state.nodes.has(id)) {
-          const parent = MINISTRY_INDEX[id].parent;
+          const parent = T.index[id].parent;
           const p = parent && state.nodes.get(parent.id);
           const jitter = () => (Math.random() - 0.5) * 30;
           state.nodes.set(id, { id, x: (p?.x ?? 0) + jitter(), y: (p?.y ?? 0) + jitter() });
@@ -334,7 +341,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       const nodes = ids.map((id) => state.nodes.get(id));
       const links = ids
         .filter((id) => id !== "root")
-        .map((id) => ({ id, source: MINISTRY_INDEX[id].parent.id, target: id }));
+        .map((id) => ({ id, source: T.index[id].parent.id, target: id }));
 
       const link = linkLayer
         .selectAll("path")
@@ -342,7 +349,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
         .join("path")
         .attr("class", "hc-mg-link")
         .attr("fill", "none")
-        .attr("stroke", (l) => mix(colorOf(l.id), depthOf(l.id) === 1 ? 0.3 : 0.5))
+        .attr("stroke", (l) => mix(T.colorOf(l.id), depthOf(l.id) === 1 ? 0.3 : 0.5))
         .attr("stroke-width", (l) => [0, 6, 4, 2.5][depthOf(l.id)]);
 
       const node = nodeLayer
@@ -354,7 +361,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
             .attr("class", (d) => `hc-mg-node hc-mg-node--d${depthOf(d.id)}`)
             .attr("tabindex", 0)
             .attr("role", "button")
-            .attr("aria-label", (d) => MINISTRY_INDEX[d.id].node.name);
+            .attr("aria-label", (d) => T.index[d.id].node.name);
           g.append("g")
             .attr("class", "hc-mg-bob")
             .style("animation-delay", () => `${(-Math.random() * 6).toFixed(2)}s`)
@@ -375,7 +382,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
         });
 
       node.select(".hc-mg-badge").each(function (d) {
-        const count = (MINISTRY_INDEX[d.id].node.children || []).length;
+        const count = (T.index[d.id].node.children || []).length;
         const open = state.expanded.has(d.id);
         select(this).classed("hc-mg-badge--open", open);
         select(this).select("text").text(open ? "−" : `+${count}`);
@@ -393,7 +400,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     state.render = render;
 
     const handleTap = (id) => {
-      const hasChildren = (MINISTRY_INDEX[id].node.children || []).length > 0;
+      const hasChildren = (T.index[id].node.children || []).length > 0;
       if (hasChildren) {
         if (state.expanded.has(id)) {
           // 접기: 이 가지 아래 펼친 것도 모두 접음
@@ -404,7 +411,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
           state.expanded.add(id);
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
-          const parentId = MINISTRY_INDEX[id].parent?.id;
+          const parentId = T.index[id].parent?.id;
           fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)]);
         }
       }
@@ -449,7 +456,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     },
     expandAll() {
       const s = st.current;
-      Object.values(MINISTRY_INDEX).forEach(({ node }) => {
+      Object.values(T.index).forEach(({ node }) => {
         if ((node.children || []).length) s.expanded.add(node.id);
       });
       s.render();
