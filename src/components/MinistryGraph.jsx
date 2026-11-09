@@ -566,9 +566,10 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
           }
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
-          // 하나교회는 빼고 펼친 부(또는 묶음)와 그 아래 팀들만 화면에 꽉 차게 (하위가 자리를 다 잡은 뒤에)
-          // 하나교회를 펼칠 때만 전체(하나교회 + 부들)를 맞춤
-          fitLater(() => descendantsOf(id, state.expanded), 1100);
+          // 폰: 하나교회는 빼고 펼친 부(또는 묶음)와 그 아래 팀들만 화면에 꽉 차게
+          // PC: 하나교회와 다른 부까지 보이는 전체를 한 화면에 (하위가 자리를 다 잡은 뒤에)
+          const isPhone = state.size.w < 760;
+          fitLater(() => (isPhone ? descendantsOf(id, state.expanded) : visibleIds(state.expanded)), 1100);
         }
       }
       onSelectRef.current?.(id);
