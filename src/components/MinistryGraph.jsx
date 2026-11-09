@@ -146,17 +146,30 @@ function descendantsOf(id, expanded) {
 }
 
 // 부모→자식 곡선 (살짝 휘어 덩굴처럼)
-// 부 아래 목록: 부모 카드 왼쪽 아래에서 내려와 오른쪽으로 꺾여 팀 카드에 닿는 ㄴ자 선
-const LIST_INDENT = 18; // 한 단계 들여쓰기
+// 부를 펼치면: 부 카드 바깥쪽(하나교회 반대편)에 세로 기둥이 서고, 기둥에서 팀들이 가지처럼 뻗음
+const LIST_INDENT = 18; // 묶음 안 팀의 한 단계 들여쓰기
 const LIST_GAP = 8; // 팀 카드 사이 간격
+const SPINE_GAP = 36; // 부 카드와 기둥 사이
+const TICK = 16; // 기둥에서 팀 카드까지
+const SPINES = new Map(); // 부 id → { x: 기둥 x, dir: 1(오른쪽)|-1(왼쪽) }
 function elbow(l) {
-  const p = l.source;
   const c = l.target;
-  const pc = cardOf(p.id);
   const cc = cardOf(c.id);
-  const x = p.x - pc.w / 2 + LIST_INDENT / 2 + 6;
-  const y0 = p.y + pc.h / 2;
-  return `M${x},${y0}V${c.y}H${c.x - cc.w / 2}`;
+  const dept = T.index[c.id].path[1];
+  const sp = SPINES.get(dept.id);
+  if (!sp) return "";
+  const { dir } = sp;
+  const inner = c.x - dir * (cc.w / 2); // 팀 카드의 기둥 쪽 끝
+  if (depthOf(c.id) === 2) {
+    const p = l.source;
+    const pc = cardOf(p.id);
+    return `M${p.x + dir * (pc.w / 2)},${p.y}H${sp.x}V${c.y}H${inner}`;
+  }
+  // 묶음 안 팀: 묶음 카드 아래에서 내려오는 작은 기둥
+  const g = l.source;
+  const gc = cardOf(g.id);
+  const sub = sp.x + dir * (TICK + LIST_INDENT / 2);
+  return `M${sub},${g.y + gc.h / 2}V${c.y}H${inner}`;
 }
 
 function curve(l) {
@@ -267,28 +280,46 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
     };
     st.current = state;
 
-    // 펼친 부 아래 팀들이 놓일 자리 (부 카드 아래로 세로 목록, 묶음을 펼치면 한 칸 들여서 이어짐)
+    // 펼친 부 옆 기둥에 팀들이 놓일 자리 (부를 가운데 두고 위아래로, 묶음을 펼치면 한 칸 들여서 이어짐)
     const listTargets = () => {
       const targets = new Map();
       const boxes = []; // 펼친 부 + 목록이 차지하는 영역 (다른 부가 겹치지 않게)
+      const root = state.nodes.get("root");
+      SPINES.clear();
       T.root.children.forEach((dept) => {
         const d = state.nodes.get(dept.id);
         if (!d || !state.expanded.has(dept.id)) return;
         const dc = cardOf(dept.id);
-        const left = d.x - dc.w / 2 + LIST_INDENT;
-        let y = d.y + dc.h / 2 + 14;
-        let right = d.x + dc.w / 2;
+        const dir = !root || d.x >= root.x ? 1 : -1;
+        const spineX = d.x + dir * (dc.w / 2 + SPINE_GAP);
+        SPINES.set(dept.id, { x: spineX, dir });
+        // 보이는 팀들을 위에서 아래 순서로
+        const items = [];
         (function walk(children, level) {
           children.forEach((c) => {
-            const cc = cardOf(c.id);
-            const x = left + (level - 1) * LIST_INDENT + cc.w / 2;
-            targets.set(c.id, { x, y: y + cc.h / 2 });
-            right = Math.max(right, x + cc.w / 2);
-            y += cc.h + LIST_GAP;
+            items.push({ c, level });
             if (state.expanded.has(c.id)) walk(c.children || [], level + 1);
           });
         })(dept.children || [], 1);
-        boxes.push({ id: dept.id, x0: d.x - dc.w / 2 - 10, x1: right + 10, y0: d.y - dc.h / 2 - 10, y1: y + 6 });
+        const total = items.reduce((sum, it) => sum + cardOf(it.c.id).h, 0) + LIST_GAP * Math.max(items.length - 1, 0);
+        let y = d.y - total / 2;
+        let outer = spineX;
+        items.forEach(({ c, level }) => {
+          const cc = cardOf(c.id);
+          const edge = spineX + dir * (TICK + (level - 1) * LIST_INDENT);
+          const x = edge + dir * (cc.w / 2);
+          targets.set(c.id, { x, y: y + cc.h / 2 });
+          outer = dir > 0 ? Math.max(outer, x + cc.w / 2) : Math.min(outer, x - cc.w / 2);
+          y += cc.h + LIST_GAP;
+        });
+        const near = d.x - dir * (dc.w / 2);
+        boxes.push({
+          id: dept.id,
+          x0: Math.min(near, outer) - 10,
+          x1: Math.max(near, outer) + 10,
+          y0: Math.min(d.y - dc.h / 2, d.y - total / 2) - 10,
+          y1: Math.max(d.y + dc.h / 2, d.y + total / 2) + 10,
+        });
       });
       return { targets, boxes };
     };
@@ -327,8 +358,8 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, 
           const t = targets.get(n.id);
           if (t) {
             // 팀: 목록 자리로 부드럽게 따라감 (부를 끌면 목록도 같이 따라옴)
-            n.x += (t.x - n.x) * 0.35;
-            n.y += (t.y - n.y) * 0.35;
+            n.x += (t.x - n.x) * 0.2;
+            n.y += (t.y - n.y) * 0.2;
             n.vx = 0;
             n.vy = 0;
             return;
