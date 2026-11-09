@@ -1,15 +1,39 @@
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
 import MinistryGraph from "../components/MinistryGraph.jsx";
-import { CHURCH_ROOT, MINISTRY_INDEX, colorOf, hasPage } from "../data/ministries.js";
+import { GOOD_WORKS_TREE } from "../data/goodWorks.js";
 import "../ministry.css";
 
+// 교회부서 (부서 맵 + 부서 한눈에 보기)
+// 데이터는 사역박람회 팸플릿 기준으로 정리한 Good Works 구성 (src/data/goodWorks.js)
 export default function Ministry() {
+  const tree = GOOD_WORKS_TREE;
   const graphRef = useRef(null);
   const [selectedId, setSelectedId] = useState(null);
+  const navigate = useNavigate();
+
+  // 맨 끝 팀(하위 없음)에 소개 페이지가 있으면 바로 이동
+  const handleSelect = (id) => {
+    const info = tree.index[id];
+    const isLeaf = !(info?.node.children || []).length;
+    if (isLeaf && tree.hasPage(id)) {
+      navigate(`/ministry/${id}`);
+      return;
+    }
+    setSelectedId(id);
+  };
+
+  const Name = ({ node, className }) =>
+    tree.hasPage(node.id) ? (
+      <Link to={`/ministry/${node.id}`} className={className}>
+        {node.name}
+      </Link>
+    ) : (
+      <span className={className}>{node.name}</span>
+    );
 
   return (
     <div className="hc-page">
@@ -30,7 +54,7 @@ export default function Ministry() {
         </div>
 
         <section className="hc-ministry-stage">
-          <MinistryGraph ref={graphRef} selectedId={selectedId} onSelect={setSelectedId} />
+          <MinistryGraph ref={graphRef} tree={tree} selectedId={selectedId} onSelect={handleSelect} />
 
           <div className="hc-ministry-tools" role="toolbar" aria-label="조직도 조작">
             <button type="button" onClick={() => graphRef.current?.zoomBy(1.3)} aria-label="확대">＋</button>
@@ -38,7 +62,6 @@ export default function Ministry() {
             <button type="button" onClick={() => graphRef.current?.fitAll()}>전체</button>
           </div>
           <div className="hc-ministry-tools hc-ministry-tools--left">
-            <button type="button" onClick={() => graphRef.current?.expandAll()}>모두 펼치기</button>
             <button type="button" onClick={() => { graphRef.current?.collapseAll(); setSelectedId(null); }}>접기</button>
           </div>
           <p className="hc-ministry-hint">PC에서는 Ctrl(⌘) + 휠로 확대·축소</p>
@@ -48,23 +71,28 @@ export default function Ministry() {
         <section className="hc-ministry-list" aria-labelledby="hc-ministry-list-title">
           <h2 id="hc-ministry-list-title" className="hc-ministry-list-title">부서 한눈에 보기</h2>
           <div className="hc-ministry-list-grid">
-            {CHURCH_ROOT.children.map((dept) => (
-              <div key={dept.id} className="hc-ministry-list-dept" style={{ "--mc": colorOf(dept.id) }}>
-                <Link to={`/ministry/${dept.id}`} className="hc-ministry-list-head">
-                  {dept.name}
-                </Link>
-                <ul>
-                  {(dept.children || []).map((sub) => (
-                    <li key={sub.id}>
-                      <Link to={`/ministry/${sub.id}`}>{sub.name}</Link>
-                      {sub.children && (
-                        <span className="hc-ministry-list-leaves">
-                          {sub.children.map((leaf) => leaf.name).join(" · ")}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+            {tree.root.children.map((dept) => (
+              <div key={dept.id} className="hc-ministry-list-dept" style={{ "--mc": tree.colorOf(dept.id) }}>
+                <Name node={dept} className="hc-ministry-list-head" />
+                {(dept.children || []).length > 0 && (
+                  <ul>
+                    {dept.children.map((sub) => (
+                      <li key={sub.id}>
+                        <Name node={sub} className="hc-ministry-list-name" />
+                        {sub.children && (
+                          <span className="hc-ministry-list-leaves">
+                            {sub.children.map((leaf, i) => (
+                              <React.Fragment key={leaf.id}>
+                                {i > 0 && " · "}
+                                <Name node={leaf} className="hc-ministry-list-leaf" />
+                              </React.Fragment>
+                            ))}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>

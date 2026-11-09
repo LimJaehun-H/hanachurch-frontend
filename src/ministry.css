@@ -341,3 +341,193 @@
   .hc-ministry-detail { padding: 40px 20px 80px; }
   .hc-ministry-detail-title { font-size: 28px; }
 }
+
+/* ===== 부서소개 · Good Works 시안 (pages/GoodWorks.jsx) ===== */
+.gw-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  width: max-content;
+  margin: 32px auto 0;
+  padding: 4px;
+  border-radius: 999px;
+  background: #F1F2EF;
+}
+.gw-tabs button {
+  height: 40px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6E6B66;
+  cursor: pointer;
+}
+.gw-tabs button[aria-selected="true"] {
+  background: #FFFFFF;
+  color: #191919;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* 가지형 조직도 */
+.oc-wrap { margin-top: 28px; }
+.oc-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+.oc {
+  --oc-line: #CFCBC3;
+  --oc-col: 148px;
+  --oc-gap: 10px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 8px 16px 16px;
+}
+.oc-root {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 12px 22px 12px 14px;
+  border-radius: 16px;
+  background: #2D6A3E;
+  color: #FFFFFF;
+  font-size: 19px;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(45, 106, 62, 0.28);
+}
+.oc-root img {
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  border-radius: 50%;
+  background: #FFFFFF;
+}
+.oc-depts {
+  position: relative;
+  display: flex;
+  gap: var(--oc-gap);
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* 하나교회에서 내려오는 줄 */
+.oc-depts::before {
+  content: "";
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  height: 26px;
+  border-left: 2px solid var(--oc-line);
+}
+.oc-col {
+  position: relative;
+  min-width: var(--oc-col);
+  padding-top: 22px;
+}
+/* 부들을 잇는 가로줄 */
+.oc-col::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(var(--oc-gap) / -2);
+  right: calc(var(--oc-gap) / -2);
+  border-top: 2px solid var(--oc-line);
+}
+.oc-col:first-child::before { left: 50%; }
+.oc-col:last-child::before { right: 50%; }
+/* 가로줄에서 각 부로 내려오는 줄 */
+.oc-col::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 22px;
+  border-left: 2px solid var(--oc-line);
+}
+.oc-dept {
+  display: block;
+  white-space: nowrap;
+  padding: 10px 8px;
+  border-radius: 12px;
+  background: var(--mc);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  word-break: keep-all;
+}
+
+/* 부 아래 세로 가지 */
+.oc-list, .oc-sub {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.oc-list { margin: 6px 0 0 14px; }
+.oc-sub { margin: 2px 0 0 12px; }
+.oc-item {
+  position: relative;
+  padding: 4px 0 4px 16px;
+}
+.oc-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid color-mix(in srgb, var(--mc) 35%, #FFFFFF);
+}
+.oc-item:last-child::before { bottom: auto; height: 21px; }
+.oc-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 12px;
+  border-top: 2px solid color-mix(in srgb, var(--mc) 35%, #FFFFFF);
+}
+.oc-team {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--mc) 28%, #FFFFFF);
+  background: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #333333;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.oc-team--group {
+  background: color-mix(in srgb, var(--mc) 12%, #FFFFFF);
+  color: color-mix(in srgb, var(--mc) 75%, #000000);
+  font-weight: 800;
+}
+.oc-link {
+  border-color: var(--mc);
+  color: color-mix(in srgb, var(--mc) 80%, #000000);
+}
+.oc-link::after { content: " →"; }
+.oc-hint {
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  color: #8A8A8A;
+  text-align: center;
+}
+
+/* 부 아래 목록으로 줄 선 팀들은 둥실거리지 않게 (가지런히) */
+.hc-mg-node--d2 .hc-mg-bob,
+.hc-mg-node--d3 .hc-mg-bob { animation: none; }
+
+/* 부서 한눈에 보기: 링크가 없는 이름도 같은 모양 */
+.hc-ministry-list-dept li .hc-ministry-list-name { color: #222; font-weight: 600; }
+.hc-ministry-list-leaf { color: inherit; }
+a.hc-ministry-list-leaf, a.hc-ministry-list-name { color: var(--mc) !important; text-decoration: underline; text-underline-offset: 2px; }

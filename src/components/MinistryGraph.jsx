@@ -4,7 +4,10 @@ import { select } from "d3-selection";
 import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
 import { drag as d3drag } from "d3-drag";
 import "d3-transition";
-import { CHURCH_ROOT, MINISTRY_INDEX, colorOf } from "../data/ministries.js";
+import { MINISTRY_TREE } from "../data/ministries.js";
+
+// 지금 그리는 부서 트리 (한 화면에 조직도는 하나뿐이라 모듈 변수로 둠, 트리가 바뀌면 컴포넌트를 다시 만듦)
+let T = MINISTRY_TREE;
 
 // 교회부서 노드 화면 (아이콘 카드형)
 // - 처음엔 하나교회 + 큰 부서만 보이고, 카드를 누르면 하위 부서가 펼쳐짐
@@ -45,11 +48,11 @@ const SUB_ICONS = [
   [/에너지|전기/, "M13 2 4 14h7l-1 8 9-12h-7z"],
 ];
 
-const depthOf = (id) => MINISTRY_INDEX[id].depth;
+const depthOf = (id) => T.index[id].depth;
 const specOf = (id) => SPEC[Math.min(depthOf(id), 3)];
 
 function iconPath(id) {
-  const info = MINISTRY_INDEX[id];
+  const info = T.index[id];
   if (info.depth === 2) {
     const hit = SUB_ICONS.find(([re]) => re.test(info.node.name));
     if (hit) return hit[1];
@@ -101,7 +104,9 @@ const CARD = new Map();
 function cardOf(id) {
   if (CARD.has(id)) return CARD.get(id);
   const sp = specOf(id);
-  const lines = wrapLabel(MINISTRY_INDEX[id].node.name, sp.fs, sp.maxW);
+  // 부·묶음·팀·활동 이름은 줄바꿈 없이 한 줄로 (하나교회만 기존 규칙)
+  const name = T.index[id].node.name;
+  const lines = T.index[id].depth === 0 ? wrapLabel(name, sp.fs, sp.maxW) : [name];
   const lh = sp.fs * 1.22;
   const tw = Math.max(...lines.map((l) => textW(l, sp.fs)));
   const iconBox = sp.icon * 2;
@@ -118,7 +123,7 @@ const collideOf = (id) => {
 
 function styleOf(id) {
   const d = depthOf(id);
-  const c = colorOf(id);
+  const c = T.colorOf(id);
   if (d <= 1) return { fill: c, stroke: "none", text: "#FFFFFF", iconBg: "rgba(255,255,255,0.22)", icon: "#FFFFFF" };
   if (d === 2) return { fill: mix(c, 0.9), stroke: mix(c, 0.45), text: darken(c, 0.38), iconBg: mix(c, 0.72), icon: darken(c, 0.2) };
   return { fill: "#FFFFFF", stroke: mix(c, 0.6), text: darken(c, 0.35), iconBg: c, icon: c };
@@ -129,7 +134,7 @@ function visibleIds(expanded) {
   (function walk(node) {
     ids.push(node.id);
     if (expanded.has(node.id)) (node.children || []).forEach(walk);
-  })(CHURCH_ROOT);
+  })(T.root);
   return ids;
 }
 
@@ -138,12 +143,30 @@ function descendantsOf(id, expanded) {
   (function walk(node) {
     out.push(node.id);
     if (expanded.has(node.id)) (node.children || []).forEach(walk);
-  })(MINISTRY_INDEX[id].node);
+  })(T.index[id].node);
   return out;
 }
 
 // 부모→자식 곡선 (살짝 휘어 덩굴처럼)
+// 부를 펼치면: 부 카드 바깥쪽(하나교회 반대편)에 세로 기둥이 서고, 기둥에서 하위가 가지처럼 뻗음.
+// 묶음을 펼쳐도 같은 방식으로 한 단계 더 바깥쪽으로 뻗어 나감 (가로형 나무)
+const LIST_GAP = 8; // 팀 카드 사이 간격
+const SPINE_GAP = 36; // 부 카드와 기둥 사이
+const TICK = 16; // 기둥에서 팀 카드까지
+const SPINES = new Map(); // 펼친 노드 id → { x: 그 아래 팀들을 잇는 기둥 x, dir: 1(오른쪽)|-1(왼쪽) }
+function elbow(l) {
+  const p = l.source;
+  const c = l.target;
+  const sp = SPINES.get(p.id);
+  if (!sp) return "";
+  const { dir } = sp;
+  const pc = cardOf(p.id);
+  const cc = cardOf(c.id);
+  return `M${p.x + dir * (pc.w / 2)},${p.y}H${sp.x}V${c.y}H${c.x - dir * (cc.w / 2)}`;
+}
+
 function curve(l) {
+  if (depthOf(l.id) >= 2) return elbow(l);
   const { x: sx, y: sy } = l.source;
   const { x: tx, y: ty } = l.target;
   const dx = tx - sx;
@@ -213,7 +236,7 @@ function drawCard(sel) {
     );
 
     // 하위 부서 개수 배지 (오른쪽 위)
-    if ((MINISTRY_INDEX[d.id].node.children || []).length) {
+    if ((T.index[d.id].node.children || []).length) {
       const b = g
         .append("g")
         .attr("class", "hc-mg-badge")
@@ -224,7 +247,11 @@ function drawCard(sel) {
   });
 }
 
-const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }, ref) {
+const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect, tree = MINISTRY_TREE }, ref) {
+  if (T !== tree) {
+    T = tree;
+    CARD.clear(); // 카드 크기 계산은 트리마다 다름
+  }
   const wrapRef = useRef(null);
   const svgRef = useRef(null);
   const st = useRef(null); // d3 상태 (렌더 사이에 유지)
@@ -246,11 +273,125 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     };
     st.current = state;
 
+    // 펼친 부 옆으로 가로형 나무 배치: 단계마다 기둥을 하나씩 두고 바깥쪽으로 뻗음
+    const listTargets = () => {
+      const targets = new Map();
+      const boxes = []; // 펼친 부 + 하위 전체가 차지하는 영역 (다른 부가 겹치지 않게)
+      const root = state.nodes.get("root");
+      SPINES.clear();
+      const kidsOf = (n) => (state.expanded.has(n.id) ? n.children || [] : []);
+      // 한 노드가 세로로 차지하는 높이 = 자기 카드와 펼친 하위 묶음 중 큰 쪽
+      const blockH = (n) => {
+        const kids = kidsOf(n);
+        const own = cardOf(n.id).h;
+        if (!kids.length) return own;
+        const sub = kids.reduce((sum, k) => sum + blockH(k), 0) + LIST_GAP * (kids.length - 1);
+        return Math.max(own, sub);
+      };
+      T.root.children.forEach((dept) => {
+        const d = state.nodes.get(dept.id);
+        if (!d || !kidsOf(dept).length) return;
+        const dir = !root || d.x >= root.x ? 1 : -1;
+        let bx0 = d.x - cardOf(dept.id).w / 2;
+        let bx1 = d.x + cardOf(dept.id).w / 2;
+        let by0 = d.y - cardOf(dept.id).h / 2;
+        let by1 = d.y + cardOf(dept.id).h / 2;
+        // parent: 펼친 노드, px/py: 그 노드 자리, pw: 그 단계 카드 너비(기둥 위치 계산용)
+        (function place(parent, px, py, pw) {
+          const kids = kidsOf(parent);
+          if (!kids.length) return;
+          const spineX = px + dir * (pw / 2 + SPINE_GAP);
+          SPINES.set(parent.id, { x: spineX, dir });
+          const colW = Math.max(...kids.map((k) => cardOf(k.id).w)); // 같은 단계는 기둥 위치를 맞춤
+          const total = kids.reduce((sum, k) => sum + blockH(k), 0) + LIST_GAP * (kids.length - 1);
+          let y = py - total / 2;
+          kids.forEach((k) => {
+            const kc = cardOf(k.id);
+            const bh = blockH(k);
+            const cy = y + bh / 2;
+            const cx = spineX + dir * (TICK + kc.w / 2);
+            targets.set(k.id, { x: cx, y: cy });
+            bx0 = Math.min(bx0, cx - kc.w / 2);
+            bx1 = Math.max(bx1, cx + kc.w / 2);
+            by0 = Math.min(by0, y);
+            by1 = Math.max(by1, y + bh);
+            // 이 묶음의 하위는 같은 단계 열의 바깥 끝을 기준으로 한 번 더 바깥쪽에
+            const colEdgeX = spineX + dir * (TICK + colW);
+            place(k, colEdgeX - dir * (colW / 2), cy, colW);
+            y += bh + LIST_GAP;
+          });
+        })(dept, d.x, d.y, cardOf(dept.id).w);
+        boxes.push({ id: dept.id, x0: bx0 - 10, x1: bx1 + 10, y0: by0 - 10, y1: by1 + 10 });
+      });
+      return { targets, boxes };
+    };
+
+    const listForce = () => {
+      let nodes = [];
+      const overlap = (a, b) => [
+        Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0),
+        Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0),
+      ];
+      const force = () => {
+        const { targets, boxes } = listTargets();
+        // 펼친 목록이 하나교회나 다른 부의 목록과 겹치면, 그 부를 옆으로 비켜 세움
+        const root = state.nodes.get("root");
+        if (root) {
+          const rc = cardOf("root");
+          const rb = { x0: root.x - rc.w / 2 - 12, x1: root.x + rc.w / 2 + 12, y0: root.y - rc.h / 2 - 12, y1: root.y + rc.h / 2 + 12 };
+          boxes.forEach((b) => {
+            const [ox, oy] = overlap(b, rb);
+            const owner = state.nodes.get(b.id);
+            if (ox > 0 && oy > 0 && owner) owner.vx += (owner.x < root.x ? -1 : 1) * ox * 0.25;
+          });
+        }
+        for (let i = 0; i < boxes.length; i++) {
+          for (let j = i + 1; j < boxes.length; j++) {
+            const [ox, oy] = overlap(boxes[i], boxes[j]);
+            if (ox <= 0 || oy <= 0) continue;
+            const a = state.nodes.get(boxes[i].id);
+            const b2 = state.nodes.get(boxes[j].id);
+            const dir = a.x <= b2.x ? 1 : -1;
+            a.vx -= dir * ox * 0.12;
+            b2.vx += dir * ox * 0.12;
+          }
+        }
+        nodes.forEach((n) => {
+          const t = targets.get(n.id);
+          if (t) {
+            // 팀: 목록 자리로 부드럽게 따라감 (부를 끌면 목록도 같이 따라옴)
+            n.x += (t.x - n.x) * 0.2;
+            n.y += (t.y - n.y) * 0.2;
+            n.vx = 0;
+            n.vy = 0;
+            return;
+          }
+          // 부·하나교회: 다른 부의 목록 영역과 겹치면 밖으로 밀어냄
+          if (depthOf(n.id) > 1) return;
+          const nc = cardOf(n.id);
+          boxes.forEach((b) => {
+            if (b.id === n.id) return;
+            const ox = Math.min(n.x + nc.w / 2, b.x1) - Math.max(n.x - nc.w / 2, b.x0);
+            const oy = Math.min(n.y + nc.h / 2, b.y1) - Math.max(n.y - nc.h / 2, b.y0);
+            if (ox > 0 && oy > 0) {
+              if (n.id === "root") return;
+              if (ox < oy) n.vx += (n.x < (b.x0 + b.x1) / 2 ? -ox : ox) * 0.2;
+              else n.vy += (n.y < (b.y0 + b.y1) / 2 ? -oy : oy) * 0.2;
+            }
+          });
+        });
+      };
+      force.initialize = (ns) => { nodes = ns; };
+      return force;
+    };
+
+    const inList = (d) => depthOf(d.id) >= 2;
     const sim = forceSimulation()
-      .force("link", forceLink().id((d) => d.id).distance((l) => LINK_DIST[depthOf(l.target.id)]).strength(0.9))
-      .force("charge", forceManyBody().strength((d) => (d.id === "root" ? -1000 : -300 - (3 - depthOf(d.id)) * 110)))
-      .force("collide", forceCollide().radius((d) => collideOf(d.id)).strength(1))
-      .force("radial", forceRadial((d) => RING[depthOf(d.id)], 0, 0).strength(0.06))
+      .force("link", forceLink().id((d) => d.id).distance((l) => LINK_DIST[depthOf(l.target.id)]).strength((l) => (depthOf(l.target.id) === 1 ? 0.9 : 0)))
+      .force("charge", forceManyBody().strength((d) => (inList(d) ? 0 : d.id === "root" ? -1000 : -300 - (3 - depthOf(d.id)) * 110)))
+      .force("collide", forceCollide().radius((d) => (inList(d) ? 0 : collideOf(d.id))).strength(1))
+      .force("radial", forceRadial((d) => RING[depthOf(d.id)], 0, 0).strength((d) => (inList(d) ? 0 : 0.06)))
+      .force("list", listForce())
       .alphaDecay(0.035);
     state.sim = sim;
 
@@ -320,7 +461,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       // 새로 보이는 카드는 부모 위치에서 시작해 퍼져 나감
       ids.forEach((id) => {
         if (!state.nodes.has(id)) {
-          const parent = MINISTRY_INDEX[id].parent;
+          const parent = T.index[id].parent;
           const p = parent && state.nodes.get(parent.id);
           const jitter = () => (Math.random() - 0.5) * 30;
           state.nodes.set(id, { id, x: (p?.x ?? 0) + jitter(), y: (p?.y ?? 0) + jitter() });
@@ -334,7 +475,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
       const nodes = ids.map((id) => state.nodes.get(id));
       const links = ids
         .filter((id) => id !== "root")
-        .map((id) => ({ id, source: MINISTRY_INDEX[id].parent.id, target: id }));
+        .map((id) => ({ id, source: T.index[id].parent.id, target: id }));
 
       const link = linkLayer
         .selectAll("path")
@@ -342,7 +483,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
         .join("path")
         .attr("class", "hc-mg-link")
         .attr("fill", "none")
-        .attr("stroke", (l) => mix(colorOf(l.id), depthOf(l.id) === 1 ? 0.3 : 0.5))
+        .attr("stroke", (l) => mix(T.colorOf(l.id), depthOf(l.id) === 1 ? 0.3 : 0.5))
         .attr("stroke-width", (l) => [0, 6, 4, 2.5][depthOf(l.id)]);
 
       const node = nodeLayer
@@ -354,7 +495,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
             .attr("class", (d) => `hc-mg-node hc-mg-node--d${depthOf(d.id)}`)
             .attr("tabindex", 0)
             .attr("role", "button")
-            .attr("aria-label", (d) => MINISTRY_INDEX[d.id].node.name);
+            .attr("aria-label", (d) => T.index[d.id].node.name);
           g.append("g")
             .attr("class", "hc-mg-bob")
             .style("animation-delay", () => `${(-Math.random() * 6).toFixed(2)}s`)
@@ -375,7 +516,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
         });
 
       node.select(".hc-mg-badge").each(function (d) {
-        const count = (MINISTRY_INDEX[d.id].node.children || []).length;
+        const count = (T.index[d.id].node.children || []).length;
         const open = state.expanded.has(d.id);
         select(this).classed("hc-mg-badge--open", open);
         select(this).select("text").text(open ? "−" : `+${count}`);
@@ -393,7 +534,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     state.render = render;
 
     const handleTap = (id) => {
-      const hasChildren = (MINISTRY_INDEX[id].node.children || []).length > 0;
+      const hasChildren = (T.index[id].node.children || []).length > 0;
       if (hasChildren) {
         if (state.expanded.has(id)) {
           // 접기: 이 가지 아래 펼친 것도 모두 접음
@@ -402,10 +543,24 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
           fitLater(() => visibleIds(state.expanded));
         } else {
           state.expanded.add(id);
+          // 부를 펼치면 다른 부는 접고(화면 여유), 그 아래 묶음까지 한 번에 다 펼침
+          if (T.index[id].depth === 1) {
+            T.root.children.forEach((other) => {
+              if (other.id !== id) descendantsOf(other.id, state.expanded).forEach((x) => state.expanded.delete(x));
+            });
+            (function openAll(node) {
+              (node.children || []).forEach((c) => {
+                if ((c.children || []).length) {
+                  state.expanded.add(c.id);
+                  openAll(c);
+                }
+              });
+            })(T.index[id].node);
+          }
           render();
           // 펼친 가지와 그 부모 쪽으로 화면을 맞춤
-          const parentId = MINISTRY_INDEX[id].parent?.id;
-          fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)]);
+          const parentId = T.index[id].parent?.id;
+          fitLater(() => [...(parentId ? [parentId] : []), ...descendantsOf(id, state.expanded)], 1100); // 하위가 자리를 다 잡은 뒤에 맞춤
         }
       }
       onSelectRef.current?.(id);
@@ -449,7 +604,7 @@ const MinistryGraph = forwardRef(function MinistryGraph({ selectedId, onSelect }
     },
     expandAll() {
       const s = st.current;
-      Object.values(MINISTRY_INDEX).forEach(({ node }) => {
+      Object.values(T.index).forEach(({ node }) => {
         if ((node.children || []).length) s.expanded.add(node.id);
       });
       s.render();

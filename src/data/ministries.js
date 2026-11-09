@@ -192,7 +192,33 @@ export function colorOf(id) {
 }
 
 // 소개 페이지가 있는 부서: 큰 부서와 그 바로 아래 단계까지 (맨 끝 팀은 조직도 카드로만 안내)
+// 새 디자인(A) 예시 페이지가 있는 팀 (목사님 확인용, 나중에 백엔드 데이터로 대체)
+export const EXAMPLE_PAGES = new Set(); // 라이브에는 아직 소개 페이지 없음 (dev에서만 "kitchen-serve" 예시)
+
 export function hasPage(id) {
   const info = MINISTRY_INDEX[id];
+  if (EXAMPLE_PAGES.has(id)) return true;
   return Boolean(info) && info.depth >= 1 && info.depth <= 2;
 }
+
+// 다른 부서 트리(예: Good Works)도 같은 방식으로 쓰기 위한 도우미
+// root: { id, name, children }, 큰 부서 id가 BRANCH_COLORS에 있으면 그 색을 씀
+export function makeTree(root, { hasPage: pageFn } = {}) {
+  const index = {};
+  (function walk(node, parent, depth, branch, path) {
+    const myBranch = depth === 1 ? node.id : branch;
+    const myPath = [...path, node];
+    index[node.id] = { node, parent, depth, branch: myBranch, path: myPath };
+    (node.children || []).forEach((c) => walk(c, node, depth + 1, myBranch, myPath));
+  })(root, null, 0, null, []);
+  const color = (id) => {
+    const info = index[id];
+    if (!info || info.depth === 0) return ROOT_COLOR;
+    return BRANCH_COLORS[info.branch] || ROOT_COLOR;
+  };
+  return { root, index, colorOf: color, hasPage: pageFn || (() => false) };
+}
+
+// 기존 부서 맵(/ministry)용
+export const MINISTRY_TREE = { root: CHURCH_ROOT, index: MINISTRY_INDEX, colorOf, hasPage };
+
