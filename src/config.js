@@ -217,10 +217,10 @@ export const NAV_GROUPS = [
   {
     label: "교회소개",
     items: [
+      { label: "하나교회는", to: "/about" },
       { label: "예배안내", to: "/worship" },
-      { label: "오시는 길", to: "/location" },
-      { label: "교회소개", to: "/about" },
       { label: "교회부서", to: "/ministry" },
+      { label: "오시는 길", to: "/location" },
     ],
   },
   {

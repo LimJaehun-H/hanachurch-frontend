@@ -186,10 +186,10 @@ export default function Header({ variant = "solid" }) {
               교회소개<span className="hc-nav-caret" aria-hidden="true" />
             </button>
             <div className="hc-nav-dropdown">
+              <Link to="/about">하나교회는</Link>
               <Link to="/worship">예배안내</Link>
-              <Link to="/location">오시는 길</Link>
-              <Link to="/about">교회소개</Link>
               <Link to="/ministry">교회부서</Link>
+              <Link to="/location">오시는 길</Link>
             </div>
           </div>
 
