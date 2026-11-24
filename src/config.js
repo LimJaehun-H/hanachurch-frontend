@@ -147,11 +147,11 @@ export const WORSHIP_GALLERY_IMAGES = [];
 export const CHURCH_SCHOOL_SCHEDULE = [
   {
     group: "영유아부",
-    parts: [{ part: "", time: "주일 오전 10시 45분", location: "영유치부공과실" }],
+    parts: [{ part: "", time: "주일 오전 10시 45분", location: "4층 영유치부 예배실" }],
   },
   {
     group: "어린이부",
-    parts: [{ part: "", time: "주일 오전 10시 30분", location: "어린이공과실" }],
+    parts: [{ part: "", time: "주일 오전 10시 30분", location: "3층 어린이부 예배실" }],
   },
 ];
 
