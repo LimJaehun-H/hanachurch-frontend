@@ -654,7 +654,7 @@ button.hc-nav-parent {
 }
 .hc-header .hc-nav-item > .hc-nav-parent {
   display: inline-block;
-  font-size: 14px;
+  font-size: 19.6px; /* 14px의 140% */
   font-weight: 500;
   padding: 8px 0;
   cursor: default;
