@@ -16,9 +16,9 @@ export default function Worship() {
   const [lightbox, setLightbox] = useState(null); // { images, index } | null
   const close = () => setLightbox(null);
 
-  const [bgImageUrl, setBgImageUrl] = useState(WORSHIP_PAGE_BG_IMAGE_URL || null);
-  const [worshipGallery, setWorshipGallery] = useState(WORSHIP_GALLERY_IMAGES || []);
-  const [churchSchoolGallery, setChurchSchoolGallery] = useState(CHURCH_SCHOOL_GALLERY_IMAGES || []);
+  const [bgImageUrl, setBgImageUrl] = useState(null); // 기본 사진은 서버에 없을 때만 (깜빡임 방지)
+  const [worshipGallery, setWorshipGallery] = useState([]);
+  const [churchSchoolGallery, setChurchSchoolGallery] = useState([]);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/site-images/worship_page_bg`)
@@ -26,27 +26,33 @@ export default function Worship() {
       .then((data) => {
         if (data && data.length > 0) {
           setBgImageUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
+        } else {
+          setBgImageUrl(WORSHIP_PAGE_BG_IMAGE_URL || null);
         }
       })
-      .catch(() => {});
+      .catch(() => setBgImageUrl(WORSHIP_PAGE_BG_IMAGE_URL || null));
 
     fetch(`${API_BASE_URL}/api/site-images/worship_gallery`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
         if (data && data.length > 0) {
           setWorshipGallery(data.map((img) => `${API_BASE_URL}/uploads/site-images/${encodeURIComponent(img.fileUrl)}`));
+        } else {
+          setWorshipGallery(WORSHIP_GALLERY_IMAGES || []);
         }
       })
-      .catch(() => {});
+      .catch(() => setWorshipGallery(WORSHIP_GALLERY_IMAGES || []));
 
     fetch(`${API_BASE_URL}/api/site-images/church_school_gallery`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
         if (data && data.length > 0) {
           setChurchSchoolGallery(data.map((img) => `${API_BASE_URL}/uploads/site-images/${encodeURIComponent(img.fileUrl)}`));
+        } else {
+          setChurchSchoolGallery(CHURCH_SCHOOL_GALLERY_IMAGES || []);
         }
       })
-      .catch(() => {});
+      .catch(() => setChurchSchoolGallery(CHURCH_SCHOOL_GALLERY_IMAGES || []));
   }, []);
 
   return (

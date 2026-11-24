@@ -720,6 +720,16 @@ button.hc-nav-parent {
   background-size: cover;
   background-position: center;
 }
+/* 배너 사진: 다 받아진 뒤 부드럽게 나타남 */
+.hc-subhero-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.hc-subhero-img.is-loaded { opacity: 1; }
 .hc-subhero-overlay {
   position: absolute;
   inset: 0;

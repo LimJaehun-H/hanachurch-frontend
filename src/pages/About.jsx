@@ -6,7 +6,7 @@ import { useScrollReveal } from "../hooks/useScrollReveal.js";
 import { API_BASE_URL, ABOUT_HERO_IMAGE_URL, ABOUT_CONTENT_BG_IMAGE_URL } from "../config.js";
 
 export default function About() {
-  const [contentBgUrl, setContentBgUrl] = useState(ABOUT_CONTENT_BG_IMAGE_URL || null);
+  const [contentBgUrl, setContentBgUrl] = useState(null); // 기본 사진은 서버에 없을 때만 (깜빡임 방지)
   const [bgRef, bgVisible] = useScrollReveal(0.05);
 
   useEffect(() => {
@@ -15,9 +15,11 @@ export default function About() {
       .then((data) => {
         if (data && data.length > 0) {
           setContentBgUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
+        } else {
+          setContentBgUrl(ABOUT_CONTENT_BG_IMAGE_URL || null);
         }
       })
-      .catch(() => {});
+      .catch(() => setContentBgUrl(ABOUT_CONTENT_BG_IMAGE_URL || null));
   }, []);
 
   return (

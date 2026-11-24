@@ -9,7 +9,7 @@ import {
 
 export default function HomeParallaxBanner() {
   const [ref, visible] = useScrollReveal(0.2, true);
-  const [bgImageUrl, setBgImageUrl] = useState(HOME_BANNER_IMAGE_URL || null);
+  const [bgImageUrl, setBgImageUrl] = useState(null); // 기본 사진은 서버에 없을 때만 (깜빡임 방지)
   const [badgeUrl, setBadgeUrl] = useState(null);
 
   useEffect(() => {
@@ -18,9 +18,11 @@ export default function HomeParallaxBanner() {
       .then((data) => {
         if (data && data.length > 0) {
           setBgImageUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
+        } else {
+          setBgImageUrl(HOME_BANNER_IMAGE_URL || null);
         }
       })
-      .catch(() => {});
+      .catch(() => setBgImageUrl(HOME_BANNER_IMAGE_URL || null));
 
     fetch(`${API_BASE_URL}/api/site-images/home_banner_badge`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))

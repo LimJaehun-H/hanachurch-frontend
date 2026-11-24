@@ -6,8 +6,9 @@ export default function HomeGallery() {
   const [openIndex, setOpenIndex] = useState(null);
   const [ref, visible] = useScrollReveal(0.2, true);
 
-  // API에서 등록된 사진이 있으면 그걸 쓰고, 없으면 기존 정적 이미지로 대체
-  const [images, setImages] = useState(HOME_GALLERY_IMAGES || []);
+  // API에서 등록된 사진이 있으면 그걸 쓰고, 없거나 실패하면 기존 정적 이미지로 대체
+  // (처음부터 정적 이미지를 보여주면 진짜 사진으로 바뀌면서 깜빡여서 비워 둠)
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/site-images/home_gallery`)
@@ -15,11 +16,11 @@ export default function HomeGallery() {
       .then((data) => {
         if (data && data.length > 0) {
           setImages(data.map((img) => `${API_BASE_URL}/uploads/site-images/${encodeURIComponent(img.fileUrl)}`));
+        } else {
+          setImages(HOME_GALLERY_IMAGES || []);
         }
       })
-      .catch(() => {
-        // 실패하면 그냥 기존 정적 이미지 유지
-      });
+      .catch(() => setImages(HOME_GALLERY_IMAGES || []));
   }, []);
 
   if (!images || images.length === 0) return null;
