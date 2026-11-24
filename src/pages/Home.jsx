@@ -15,8 +15,8 @@ export default function Home() {
   const [heroImageUrl, setHeroImageUrl] = useState(HERO_IMAGE_URL || null);
   const [logoUrl, setLogoUrl] = useState(HERO_LOGO_IMAGE_URL || null);
 
-  // 처음엔 사진을 보여주고, 영상이 로딩되면 2초 뒤 영상 재생(사진은 서서히 사라짐)
-  const HERO_VIDEO_START_DELAY = 2000; // ms
+  // 처음엔 사진을 보여주고, 영상이 로딩되면 바로 영상 재생(사진은 서서히 사라짐)
+  const HERO_VIDEO_START_DELAY = 0; // ms (영상이 준비되면 바로 재생)
   const heroVideoRef = useRef(null);
   const [heroVideoStarted, setHeroVideoStarted] = useState(false);
 
@@ -45,7 +45,7 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  // 영상이 재생 가능한 상태가 되면, 2초 뒤에 재생 시작 + 사진 서서히 사라짐
+  // 영상이 재생 가능한 상태가 되면 바로 재생 시작 + 사진 서서히 사라짐
   useEffect(() => {
     const video = heroVideoRef.current;
     if (!video) return;
