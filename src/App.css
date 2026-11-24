@@ -1099,19 +1099,12 @@ button.hc-nav-parent {
   gap: 20px;
   align-items: stretch;
 }
-/* 약도는 원래 비율 그대로 칸을 꽉 채우고(여백·잘림 없음), 지도는 약도 높이에 맞춰 늘어남 */
-.hc-location-maps--split .hc-map-wrap {
-  display: flex;
-  flex-direction: column;
-}
-.hc-location-maps--split .hc-map {
-  flex: 1;
-  height: auto;
-  min-height: 360px;
-}
+/* 지도와 약도를 같은 크기 칸으로. 약도는 칸을 꽉 채우도록 확대(넘치는 가장자리는 살짝 잘림) */
+.hc-location-maps--split .hc-map { height: 420px; }
 .hc-location-sketch {
   display: block;
   margin-top: 20px;
+  height: 420px;
   border: 1px solid var(--line);
   border-radius: 6px;
   overflow: hidden;
@@ -1119,12 +1112,14 @@ button.hc-nav-parent {
 }
 .hc-location-sketch img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 @media (max-width: 760px) {
   .hc-location-maps--split { grid-template-columns: 1fr; gap: 0; }
-  .hc-location-maps--split .hc-map { flex: none; height: 360px; }
+  .hc-location-maps--split .hc-map,
+  .hc-location-sketch { height: 360px; }
 }
 
 @media (max-width: 600px) {
