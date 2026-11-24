@@ -1017,7 +1017,7 @@ button.hc-nav-parent {
 
 /* ---------- 오시는 길 페이지 ---------- */
 .hc-location-page {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 64px 32px 120px;
   text-align: center;
@@ -1090,6 +1090,38 @@ button.hc-nav-parent {
   font-size: 16px;
   font-weight: 700;
   color: var(--ink);
+}
+
+/* 지도 + 약도 (약도가 있으면 PC에서 좌우 반반, 모바일은 위아래) */
+.hc-location-maps--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+.hc-location-maps--split .hc-map-wrap { margin-top: 20px; }
+.hc-location-maps--split .hc-map { height: 420px; }
+.hc-location-sketch {
+  display: block;
+  margin-top: 20px;
+  height: 420px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #FFFFFF;
+  cursor: zoom-in;
+}
+.hc-location-sketch img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+@media (max-width: 760px) {
+  .hc-location-maps--split { grid-template-columns: 1fr; gap: 0; }
+  .hc-location-maps--split .hc-map { height: 360px; }
+  .hc-location-sketch { height: auto; }
+  .hc-location-sketch img { height: auto; }
 }
 
 @media (max-width: 600px) {

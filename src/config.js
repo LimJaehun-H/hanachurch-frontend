@@ -273,6 +273,7 @@ export const SITE_IMAGE_GROUPS = [
 
   // 오시는 길 / 온라인 헌금
   { key: "location_hero", label: "오시는길 배너", type: "single", section: "오시는 길", page: "/location" },
+  { key: "location_sketch", label: "오시는길 약도", type: "single", deletable: true, section: "오시는 길", page: "/location" },
   { key: "offering_hero", label: "온라인 헌금 배너", type: "single", section: "온라인 헌금", page: "/offering" },
 
   // 헤더 / 푸터 (전체 페이지 공통, 거의 안 바꾸는 항목이라 맨 아래로 배치)

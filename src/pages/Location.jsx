@@ -1,13 +1,26 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
-import { CHURCH_INFO, MAP_CONFIG, LOCATION_HERO_IMAGE_URL } from "../config.js";
+import { API_BASE_URL, CHURCH_INFO, MAP_CONFIG, LOCATION_HERO_IMAGE_URL } from "../config.js";
 import { useKakaoMap } from "../hooks/useKakaoMap.js";
 
 export default function Location() {
   const mapRef = useRef(null);
   const status = useKakaoMap(mapRef, MAP_CONFIG.address);
+
+  // 관리자에서 올린 약도 사진 (없으면 지도만 가로 전체로 표시)
+  const [sketchUrl, setSketchUrl] = useState(null);
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/site-images/location_sketch`)
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        if (data && data.length > 0) {
+          setSketchUrl(`${API_BASE_URL}/uploads/site-images/${encodeURIComponent(data[0].fileUrl)}`);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="hc-page">
@@ -50,13 +63,27 @@ export default function Location() {
           )}
         </div>
 
-        <div className="hc-map-wrap">
-          <div ref={mapRef} className="hc-map" />
-          {status === "loading" && <div className="hc-map-status">지도를 불러오는 중…</div>}
-          {status === "error" && (
-            <div className="hc-map-status">
-              지도를 불러오지 못했습니다. 주소 설정을 확인해주세요.
-            </div>
+        <div className={`hc-location-maps${sketchUrl ? " hc-location-maps--split" : ""}`}>
+          <div className="hc-map-wrap">
+            <div ref={mapRef} className="hc-map" />
+            {status === "loading" && <div className="hc-map-status">지도를 불러오는 중…</div>}
+            {status === "error" && (
+              <div className="hc-map-status">
+                지도를 불러오지 못했습니다. 주소 설정을 확인해주세요.
+              </div>
+            )}
+          </div>
+
+          {sketchUrl && (
+            <a
+              className="hc-location-sketch"
+              href={sketchUrl}
+              target="_blank"
+              rel="noreferrer"
+              title="약도 크게 보기"
+            >
+              <img src={sketchUrl} alt="하나교회 약도" />
+            </a>
           )}
         </div>
       </main>

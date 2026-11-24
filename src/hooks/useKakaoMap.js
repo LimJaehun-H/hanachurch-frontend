@@ -34,6 +34,7 @@ export function useKakaoMap(containerRef, address) {
 
   useEffect(() => {
     let cancelled = false;
+    let resizeObserver = null;
 
     loadKakaoScript()
       .then(() => {
@@ -58,6 +59,15 @@ export function useKakaoMap(containerRef, address) {
             new window.kakao.maps.Marker({ position: coords, map });
             mapInstance.current = map;
             setStatus("ready");
+
+            // 지도 칸 크기가 바뀌면(약도가 옆에 붙거나 화면 회전 등) 다시 맞추고 교회를 가운데로
+            if (typeof ResizeObserver !== "undefined") {
+              resizeObserver = new ResizeObserver(() => {
+                map.relayout();
+                map.setCenter(coords);
+              });
+              resizeObserver.observe(containerRef.current);
+            }
           });
         });
       })
@@ -67,6 +77,7 @@ export function useKakaoMap(containerRef, address) {
 
     return () => {
       cancelled = true;
+      if (resizeObserver) resizeObserver.disconnect();
     };
   }, [address, containerRef]);
 
