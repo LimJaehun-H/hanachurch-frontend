@@ -246,7 +246,7 @@ export const NAV_GROUPS = [
 // page: "미리보기" 버튼을 눌렀을 때 이동할 실제 페이지 경로
 export const SITE_IMAGE_GROUPS = [
   // 홈 화면
-  { key: "home_hero_image", label: "홈 배경 이미지", type: "single", section: "홈 화면", page: "/" },
+  { key: "home_hero_image", label: "홈 배경 이미지", type: "single", deletable: true, section: "홈 화면", page: "/" },
   { key: "home_logo", label: "홈 로고", type: "single", section: "홈 화면", page: "/" },
   { key: "home_banner", label: "홈 패럴랙스 배너", type: "single", section: "홈 화면", page: "/" },
   { key: "home_banner_badge", label: "홈 배너 배지/로고 이미지", type: "single", deletable: true, section: "홈 화면", page: "/" },
