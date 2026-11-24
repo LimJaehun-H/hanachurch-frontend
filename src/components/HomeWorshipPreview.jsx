@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { API_BASE_URL, WORSHIP_SCHEDULE, WORSHIP_PREVIEW_IMAGES, WORSHIP_PREVIEW_VERSE } from "../config.js";
+import { API_BASE_URL, WORSHIP_SCHEDULE, WORSHIP_PREVIEW_VERSE } from "../config.js";
 import { useScrollReveal } from "../hooks/useScrollReveal.js";
 
 export default function HomeWorshipPreview() {
-  const [photos, setPhotos] = useState((WORSHIP_PREVIEW_IMAGES || []).slice(0, 4));
+  const [photos, setPhotos] = useState([]);
   const [ref, visible] = useScrollReveal(0.2, true);
 
   useEffect(() => {
@@ -14,9 +14,7 @@ export default function HomeWorshipPreview() {
           setPhotos(data.map((img) => `${API_BASE_URL}/uploads/site-images/${encodeURIComponent(img.fileUrl)}`).slice(0, 4));
         }
       })
-      .catch(() => {
-        // 실패하면 그냥 기존 정적 이미지 유지
-      });
+      .catch(() => {});
   }, []);
 
   return (

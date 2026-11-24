@@ -716,7 +716,7 @@ button.hc-nav-parent {
   position: relative;
   width: 100%;
   height: 50vh;
-  background-color: #2B2B2B;
+  background-color: #0E0E0E;
   background-size: cover;
   background-position: center;
 }
@@ -1858,6 +1858,7 @@ button.hc-nav-parent {
 /* ---------- 홈 풀블리드 패럴랙스 배너 ---------- */
 .hc-parallax-banner {
   position: relative;
+  background-color: #0E0E0E;
   height: 100vh;
   min-height: 640px;
   background-size: cover;

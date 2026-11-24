@@ -123,12 +123,13 @@ export const MAP_CONFIG = {
   level: 3,
 };
 
-export const BULLETIN_HERO_IMAGE_URL = "images/bulletin-hero.jpg";
-export const WORSHIP_HERO_IMAGE_URL = "images/worship-hero.jpg";
-export const NOTICE_HERO_IMAGE_URL = "images/notice-hero.jpg";
-export const LOCATION_HERO_IMAGE_URL = "images/location-hero.jpg";
-export const ALBUM_HERO_IMAGE_URL = "images/album-hero.jpg";
-export const ABOUT_HERO_IMAGE_URL = "images/about-hero.jpg";
+// 기본(예시) 사진은 모두 없앴습니다. 관리자에서 올린 사진이 없거나 불러오지 못하면 그 자리는 검은 배경으로 보입니다.
+export const BULLETIN_HERO_IMAGE_URL = null;
+export const WORSHIP_HERO_IMAGE_URL = null;
+export const NOTICE_HERO_IMAGE_URL = null;
+export const LOCATION_HERO_IMAGE_URL = null;
+export const ALBUM_HERO_IMAGE_URL = null;
+export const ABOUT_HERO_IMAGE_URL = null;
 export const OFFERING_HERO_IMAGE_URL = null;
 
 // 교회소개 본문("교회소개 / 준비중입니다..." 영역) 뒤에 깔리는 고정 배경 사진
@@ -137,26 +138,12 @@ export const ABOUT_CONTENT_BG_IMAGE_URL = null;
 
 // 교회소개 페이지 상단 패럴랙스 배경 (홈 배너와 동일한 방식, 이미지만 별도)
 // 문구는 나중에 정해지면 여기 텍스트만 채우면 됩니다 (비워두면 사진+오버레이만 보임)
-export const SUNDAY_WORSHIP_HERO_IMAGE_URL = "images/sunday-worship-hero.jpg";
-export const DAWN_WORSHIP_HERO_IMAGE_URL = "images/dawn-worship-hero.jpg";
-export const HOME_GALLERY_IMAGES = [
-  "images/gallery-1.jpg",
-  "images/gallery-2.jpg",
-  "images/gallery-3.jpg",
-  "images/gallery-4.jpg",
-  "images/gallery-5.jpg",
-  "images/gallery-6.jpg",
-];
-export const WORSHIP_PAGE_BG_IMAGE_URL = "images/worship-bg.jpg";
+export const SUNDAY_WORSHIP_HERO_IMAGE_URL = null;
+export const DAWN_WORSHIP_HERO_IMAGE_URL = null;
+export const HOME_GALLERY_IMAGES = [];
+export const WORSHIP_PAGE_BG_IMAGE_URL = null;
 
-export const WORSHIP_GALLERY_IMAGES = [
-  "images/worship-1.jpg",
-  "images/worship-2.jpg",
-  "images/worship-3.jpg",
-  "images/worship-4.jpg",
-  "images/worship-5.jpg",
-  "images/worship-6.jpg",
-];
+export const WORSHIP_GALLERY_IMAGES = [];
 export const CHURCH_SCHOOL_SCHEDULE = [
   {
     group: "영유아부",
@@ -168,12 +155,7 @@ export const CHURCH_SCHOOL_SCHEDULE = [
   },
 ];
 
-export const CHURCH_SCHOOL_GALLERY_IMAGES = [
-  "images/church-school-1.jpg",
-  "images/church-school-2.jpg",
-  "images/church-school-3.jpg",
-  "images/church-school-4.jpg",
-];
+export const CHURCH_SCHOOL_GALLERY_IMAGES = [];
 
 export const HERO_LOGO_IMAGE_URL = null;
 
@@ -196,7 +178,7 @@ export const WORSHIP_PREVIEW_VERSE = "말씀 가능";
 
 // 홈 화면 "인스타그램 등 아이콘" 섹션과 "예배안내" 사이 풀블리드 배너
 // (스크롤하면 배경은 고정된 채 문구가 아래에서 올라오는 효과)
-export const HOME_BANNER_IMAGE_URL = "images/home-banner.jpg";
+export const HOME_BANNER_IMAGE_URL = null;
 // 지금은 비워두고, 나중에 문구 넣고 싶을 때 이 두 줄만 채우면 됩니다.
 export const HOME_BANNER_TITLE = "다 그리스도 예수 안에서 하나이니라";
 export const HOME_BANNER_SUBTITLE = "갈라디아서 3:28";
@@ -204,12 +186,7 @@ export const HOME_BANNER_SUBTITLE = "갈라디아서 3:28";
 
 
 // 홈 화면 "예배안내" 섹션 전용 사진 4장 (예배안내 페이지 사진과 별개, 여기 경로만 바꾸면 됩니다)
-export const WORSHIP_PREVIEW_IMAGES = [
-  "images/home-worship-1.jpg",
-  "images/home-worship-2.jpg",
-  "images/home-worship-3.jpg",
-  "images/home-worship-4.jpg",
-];
+export const WORSHIP_PREVIEW_IMAGES = [];
 
 // 상단 네비게이션 구조 (Header.jsx 드롭다운과 동일하게 유지해주세요)
 // matchPrefixes: 이 그룹/항목에 속하는 것으로 인식할 추가 경로 (상세페이지 등)

@@ -34,12 +34,11 @@ export default function HomeParallaxBanner() {
       .catch(() => {});
   }, []);
 
-  if (!bgImageUrl) return null;
-
+  // 사진이 없어도 문구는 검은 배경 위에 보여줌
   return (
     <section
       className="hc-parallax-banner"
-      style={{ backgroundImage: `url(${bgImageUrl})` }}
+      style={bgImageUrl ? { backgroundImage: `url(${bgImageUrl})` } : undefined}
       ref={ref}
     >
       <div className="hc-parallax-banner-overlay" />
