@@ -29,6 +29,7 @@ export const GOOD_WORKS_ROOT = {
             { id: "communion", name: "성찬위원" },
             { id: "newcomer", name: "새가족 등록 및 관리" },
             { id: "intercession", name: "중보기도팀" }, // 확인 필요
+            { id: "parking", name: "주차관리팀" }, // 관리부(공간 관리)에서 옮김
           ],
         },
         {
@@ -111,15 +112,15 @@ export const GOOD_WORKS_ROOT = {
           id: "facility-energy",
           name: "시설 및 에너지 관리",
           children: [
-            { id: "building", name: "교회 건물 시설관리팀" },
-            { id: "electric", name: "전기 관리팀" },
+            { id: "building", name: "교회 건물 시설관리" },
+            { id: "electric", name: "전기 관리" },
           ],
         },
         {
           id: "cleaning",
           name: "청소",
           children: [
-            { id: "stairs-cleaning", name: "전층 계단 청소팀" },
+            { id: "stairs-cleaning", name: "각부서 청소" },
             { id: "restroom-cleaning", name: "1층 화장실청소" }, // 확인 필요
           ],
         },
@@ -127,26 +128,25 @@ export const GOOD_WORKS_ROOT = {
           id: "storage-group",
           name: "창고 관리",
           children: [
-            { id: "storage", name: "창고 관리팀" },
-            { id: "storage-3f", name: "3층 창고관리팀" }, // 확인 필요
+            { id: "storage", name: "지하창고 관리" },
+            { id: "storage-3f", name: "3.4층 창고 관리팀" }, // 확인 필요
           ],
         },
         {
           id: "space-care",
           name: "공간 관리",
           children: [
-            { id: "youth-room", name: "청년부 공간 관리팀" },
-            { id: "newcomer-room", name: "새가족실 정리팀" }, // 예배부에서 옮김
-            { id: "parking", name: "주차관리팀" }, // 확인 필요
+            { id: "youth-room", name: "청년부 공간 관리" },
+            { id: "newcomer-room", name: "새가족실 정리" }, // 예배부에서 옮김
           ],
         },
         {
           id: "space-decor",
           name: "공간 꾸미기",
           children: [
-            { id: "pulpit", name: "강단보 관리팀" }, // = 예배실 관리, 예배부(예배 환경)에서 옮김
-            { id: "flower", name: "꽃꽂이팀" }, // 예배부(예배 환경)에서 옮김
-            { id: "decoration", name: "교회 장식팀" }, // 예배부(예배 환경)에서 옮김
+            { id: "pulpit", name: "강단보 관리" }, // = 예배실 관리, 예배부(예배 환경)에서 옮김
+            { id: "flower", name: "꽃꽂이" }, // 예배부(예배 환경)에서 옮김
+            { id: "decoration", name: "교회 장식" }, // 예배부(예배 환경)에서 옮김
           ],
         },
       ],
