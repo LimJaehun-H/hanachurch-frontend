@@ -39,48 +39,46 @@ export default function About() {
           }
         />
         <main className="hc-inner-content" style={{ position: "relative", zIndex: 1 }}>
-          <div className="hc-about-intro">
-            <p className="hc-about-intro-line">사랑으로 하나되는</p>
-            <p className="hc-about-intro-line">
-              <span className="hc-about-intro-emphasis">하나교회</span>입니다
-            </p>
-          </div>
+          {/* 목사님 시안: 왼쪽 위 "하나교회는" + 가로선, 세로선 왼쪽은 비우고 오른쪽에 본문(왼쪽 정렬) */}
+          <section className="hc-about-letter">
+            <h2 className="hc-about-letter-title">하나교회는</h2>
+            <div className="hc-about-letter-body">
+              <div className="hc-about-letter-aside" aria-hidden="true" />
+              <div className="hc-about-letter-text">
+                <p>“풀이 자라 나무가 되매” (마 13:31–32)</p>
 
-          <div className="hc-about-story">
-            <p className="hc-about-story-line hc-about-story-quote">
-              “풀이 자라 나무가 되매” (마 13:31–32)
-            </p>
+                <p>
+                  사람이 자기 밭에 겨자씨 한 알을 심었습니다.
+                  <br />
+                  눈에 잘 보이지도 않을 만큼 작고 연약한 씨앗이었지요.
+                  <br />
+                  그러나 하나님의 손길 아래 그 씨앗은 싹을 틔우고, 풀이 되어 자라나 마침내 나무가 되었습니다.
+                  <br />
+                  그리고 그 가지마다 새들이 날아와 깃들며, 쉼을 얻었습니다.
+                </p>
 
-            <p className="hc-about-story-line">
-              사람이 자기 밭에 겨자씨 한 알을 심었습니다.
-              <br />
-              눈에 잘 보이지도 않을 만큼 작고 연약한 씨앗이었지요.
-              <br />
-              그러나 하나님의 손길 아래 그 씨앗은 싹을 틔우고, 풀이 되어 자라나 마침내 나무가 되었습니다.
-              <br />
-              그리고 그 가지마다 새들이 날아와 깃들며, 쉼을 얻었습니다.
-            </p>
+                <p>
+                  하나교회는 바로 그 겨자씨의 길을 걷고자 합니다.
+                  <br />
+                  우리는 먼저, 한 영혼이 주님을 인격적으로 만나 구원의 기쁨을 누리기를 바랍니다.
+                  <br />
+                  그 만남이 삶의 뿌리가 되어, 믿음이 자라고 성숙하여, 세상 속에서 그리스도의 향기를 전하는 나무로 서기를 소망합니다.
+                </p>
 
-            <p className="hc-about-story-line">
-              하나교회는 바로 그 겨자씨의 길을 걷고자 합니다.
-              <br />
-              우리는 먼저, 한 영혼이 주님을 인격적으로 만나 구원의 기쁨을 누리기를 바랍니다.
-              <br />
-              그 만남이 삶의 뿌리가 되어, 믿음이 자라고 성숙하여, 세상 속에서 그리스도의 향기를 전하는 나무로 서기를 소망합니다.
-            </p>
+                <p>
+                  신앙은 멀리 있는 것이 아니라, 매일의 삶 속에서 자라나는 하루의 순종이며 하루의 사랑이라 믿습니다.
+                  <br />
+                  그래서 하나교회는 이렇게 세 방향으로 걸어갑니다.
+                </p>
 
-            <p className="hc-about-story-line">
-              신앙은 멀리 있는 것이 아니라, 매일의 삶 속에서 자라나는 하루의 순종이며 하루의 사랑이라 믿습니다.
-              <br />
-              그래서 하나교회는 이렇게 세 방향으로 걸어갑니다.
-            </p>
-
-            <p className="hc-about-story-line">
-              하나교회는 그렇게 누군가의 쉼이 되는 교회, 세상 속의 그늘이 되는 교회,
-              <br />
-              그리고 하나님의 사랑이 머무는 자리가 되기를 꿈꿉니다.
-            </p>
-          </div>
+                <p>
+                  하나교회는 그렇게 누군가의 쉼이 되는 교회, 세상 속의 그늘이 되는 교회,
+                  <br />
+                  그리고 하나님의 사랑이 머무는 자리가 되기를 꿈꿉니다.
+                </p>
+              </div>
+            </div>
+          </section>
 
           <div className="hc-about-vision">
             <p className="hc-about-vision-eyebrow">CORE VISION</p>

@@ -917,42 +917,50 @@ button.hc-nav-parent {
   .hc-about-content-bg-layer { background-attachment: scroll; }
 }
 
-.hc-about-intro {
-  margin-top: 0;
-  text-align: center;
+.hc-about-letter {
+  max-width: 1040px;
+  margin: 0 auto;
 }
-.hc-about-intro-line {
+/* 왼쪽 위 제목 + 아래로 길게 그은 가로선 */
+.hc-about-letter-title {
   font-family: 'Pretendard', sans-serif;
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1.6;
-  color: var(--ink);
-}
-.hc-about-intro-emphasis {
-  font-size: 1.7em;
+  font-size: clamp(28px, 3.4vw, 40px);
   font-weight: 800;
-}
-
-/* ---------- 교회소개 스토리(겨자씨 비유) 텍스트 ---------- */
-.hc-about-story {
-  max-width: 640px;
-  margin: 96px auto 0;
-  text-align: center;
-}
-.hc-about-story-line {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1.6;
   color: var(--ink);
-  margin-bottom: 44px;
+  text-align: left;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ink);
 }
-.hc-about-story-line:last-child {
+/* 세로선 왼쪽은 비워 두고, 오른쪽에 본문 */
+.hc-about-letter-body {
+  display: grid;
+  grid-template-columns: 22% 1fr;
+}
+.hc-about-letter-aside {
+  border-right: 1px solid var(--ink);
+}
+.hc-about-letter-text {
+  padding: 56px 0 8px 48px;
+  text-align: left;
+}
+/* 성경 구절 줄도 본문과 같은 글꼴·굵기·색으로 통일 */
+.hc-about-letter-text p {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--ink);
+  margin: 0 0 36px;
+  word-break: keep-all;
+}
+.hc-about-letter-text p:last-child {
   margin-bottom: 0;
 }
-.hc-about-story-quote {
-  font-weight: 700;
-  color: var(--ink-soft);
+@media (max-width: 760px) {
+  .hc-about-letter-body { grid-template-columns: 1fr; }
+  .hc-about-letter-aside { display: none; }
+  .hc-about-letter-text { padding: 32px 0 0; }
+  .hc-about-letter-text p { font-size: 16px; margin-bottom: 28px; }
 }
 
 /* ---------- 교회소개 핵심 비전 3가지 ---------- */
