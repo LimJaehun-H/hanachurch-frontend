@@ -6,8 +6,9 @@ import { useScrollReveal } from "../hooks/useScrollReveal.js";
 import { API_BASE_URL, ABOUT_HERO_IMAGE_URL, ABOUT_CONTENT_BG_IMAGE_URL } from "../config.js";
 
 // 십자가 선을 스크롤에 맞춰 그리기
-// --h: 좌우 팔·위 팔 (교차점이 화면 아래쪽에 들어오면서 금방 다 뻗음)
-// --v: 아래 기둥 (화면 아래쪽 75% 지점을 따라 내려가며 길어짐)
+// 처음엔 작은 십자가(좌우 같은 팔, 짧은 위 팔, 긴 아래 기둥)로 시작해서
+// --h: 좌우 팔·위 팔이 끝까지 뻗은 정도 (오른쪽 팔은 왼쪽보다 더 길게 뻗음)
+// --v: 아래 기둥이 끝까지 내려간 정도 (화면 아래쪽 75% 지점을 따라감)
 // 스크롤을 올리면 반대로 줄어듦. 움직임 줄이기 설정을 켠 사용자에게는 처음부터 다 그려서 보여 줌.
 function useCrossDraw() {
   const sectionRef = useRef(null);
@@ -86,7 +87,6 @@ export default function About() {
               1·3사분면은 비워 두고, 가로선과 세로선이 교차함 */}
           <section className="hc-about-cross" ref={crossRef}>
             <div className="hc-about-cross-q2">
-              <span className="hc-about-cross-dot" aria-hidden="true" />
               <h2 className="hc-about-cross-title">하나교회는</h2>
             </div>
             <div className="hc-about-cross-q1" aria-hidden="true" />

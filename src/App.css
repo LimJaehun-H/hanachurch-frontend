@@ -923,6 +923,10 @@ button.hc-nav-parent {
   --h: 1; /* 좌우·위 팔이 그려진 정도 (0~1, 스크롤에 따라 About.jsx가 바꿈) */
   --v: 1; /* 아래 기둥이 그려진 정도 */
   --arm: 30%;
+  /* 처음(맨 위) 십자가 크기: 좌우 팔은 같은 길이, 위 팔은 짧게, 아래 기둥은 길게 */
+  --start-arm: 110px;
+  --start-top: 64px;
+  --start-pillar: 230px;
   --cross-ink: #2B2520;
   --cross-w: 2px;
   --cross-line: rgba(20, 20, 20, 0.85);
@@ -952,55 +956,35 @@ button.hc-nav-parent {
   background: var(--cross-ink);
   border-radius: var(--cross-w);
 }
-/* 모든 팔은 교차점에서 바깥으로 자라남 (transform-origin = 교차점 쪽) */
+/* 모든 팔은 교차점에 붙어 있고, 처음 길이에서 끝 길이까지 스크롤에 따라 늘어남 */
 /* 위 팔 (짧게) */
 .hc-about-cross-q2::after {
-  top: 0;
   bottom: calc(var(--cross-w) / -2);
   right: calc(var(--cross-w) / -2);
   width: var(--cross-w);
-  transform-origin: bottom center;
-  transform: scaleY(var(--h));
+  height: calc(var(--start-top) + (100% - var(--start-top)) * var(--h));
 }
 /* 왼쪽 팔 */
 .hc-about-cross-q2::before {
-  left: 0;
   right: 0;
   bottom: calc(var(--cross-w) / -2);
+  width: calc(var(--start-arm) + (100% - var(--start-arm)) * var(--h));
   height: var(--cross-w);
-  transform-origin: right center;
-  transform: scaleX(var(--h));
 }
-/* 오른쪽 팔 (왼쪽 팔보다 길게) */
+/* 오른쪽 팔: 처음엔 왼쪽 팔과 같고, 늘어날 땐 더 길게 */
 .hc-about-cross-q1::before {
   left: 0;
   bottom: calc(var(--cross-w) / -2);
-  width: 72%;
+  width: calc(var(--start-arm) + (72% - var(--start-arm)) * var(--h));
   height: var(--cross-w);
-  transform-origin: left center;
-  transform: scaleX(var(--h));
 }
 /* 아래 기둥 (길게, 끝은 부드럽게 사라짐) */
 .hc-about-cross-q3::after {
   top: calc(var(--cross-w) / -2);
-  bottom: 0;
   right: calc(var(--cross-w) / -2);
   width: var(--cross-w);
+  height: calc(var(--start-pillar) + (100% - var(--start-pillar)) * var(--v));
   background: linear-gradient(to bottom, var(--cross-ink) 0%, var(--cross-ink) 75%, rgba(43, 37, 32, 0) 100%);
-  transform-origin: top center;
-  transform: scaleY(var(--v));
-}
-/* 교차점의 점: 처음엔 이 점만 보이다가 팔이 뻗어 나가면 사라짐 */
-.hc-about-cross-dot {
-  position: absolute;
-  right: -4px;
-  bottom: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--cross-ink);
-  opacity: calc(1 - var(--h));
-  z-index: 1;
 }
 
 .hc-about-cross-q2 {
@@ -1148,10 +1132,9 @@ button.hc-nav-parent {
     justify-content: flex-start;
     padding: 8px 0 18px;
   }
-  .hc-about-cross-q2::after,
-  .hc-about-cross-dot { display: none; }
-  /* 휴대폰: 제목 아래 가로선만, 왼쪽에서 오른쪽으로 그려짐 */
-  .hc-about-cross-q2::before { transform-origin: left center; }
+  .hc-about-cross-q2::after { display: none; }
+  /* 휴대폰: 제목 아래 가로선만 */
+  .hc-about-cross-q2::before { left: 0; width: 100%; }
   .hc-about-cross-q4 { padding: 36px 0 0; }
   .hc-about-verse { margin-bottom: 44px; padding-top: 26px; }
   .hc-about-verse::before { font-size: 72px; top: -12px; }
