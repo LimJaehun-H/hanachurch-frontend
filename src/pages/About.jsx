@@ -25,9 +25,13 @@ function useCrossDraw() {
     const update = () => {
       frame = 0;
       const vh = window.innerHeight;
+      const y = window.scrollY;
       const p = pillar.getBoundingClientRect(); // 교차점 = 기둥 칸의 맨 위
-      const h = clamp((vh * 0.9 - p.top) / (vh * 0.3));
-      const v = p.height > 0 ? clamp((vh * 0.75 - p.top) / p.height) : 0;
+      const crossY = p.top + y; // 페이지 맨 위에서 교차점까지 거리
+      // 스크롤을 하나도 안 했을 땐(맨 위) 무조건 작은 십자가.
+      // 교차점이 처음부터 화면 안에 보이면 스크롤하는 만큼, 화면 아래에 있으면 화면에 들어온 뒤부터 커짐.
+      const h = clamp((y - Math.max(0, crossY - vh * 0.9)) / (vh * 0.3));
+      const v = p.height > 0 ? clamp((y - Math.max(0, crossY - vh * 0.75)) / p.height) : 0;
       section.style.setProperty("--h", h.toFixed(4));
       section.style.setProperty("--v", v.toFixed(4));
     };

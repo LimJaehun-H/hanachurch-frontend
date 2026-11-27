@@ -925,9 +925,9 @@ button.hc-nav-parent {
   --arm: 30%;
   /* 처음(맨 위) 십자가: 제목 오른쪽 아래 모서리에 붙은 작은 낫표 같은 십자가
      좌우 팔은 같은 길이, 위 팔은 짧게, 아래 기둥은 조금 길게 */
-  --start-arm: 20px;
-  --start-top: 16px;
-  --start-pillar: 30px;
+  --start-arm: 12px;
+  --start-top: 10px;
+  --start-pillar: 22px;
   --cross-ink: #2B2520;
   --cross-w: 2px;
   --cross-line: rgba(20, 20, 20, 0.85);
