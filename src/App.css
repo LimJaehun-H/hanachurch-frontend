@@ -917,120 +917,168 @@ button.hc-nav-parent {
   .hc-about-content-bg-layer { background-attachment: scroll; }
 }
 
-.hc-about-letter {
-  max-width: 1040px;
+/* 목사님 시안: 십자 모양 (2사분면 제목, 4사분면 본문) */
+.hc-about-cross {
+  --cross-line: rgba(20, 20, 20, 0.85);
+  --accent: #B8860B;
+  max-width: 1080px;
   margin: 0 auto;
-}
-/* 왼쪽 위 제목 + 아래로 길게 그은 가로선 */
-.hc-about-letter-title {
-  font-family: 'Pretendard', sans-serif;
-  font-size: clamp(28px, 3.4vw, 40px);
-  font-weight: 800;
-  color: var(--ink);
-  text-align: left;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--ink);
-}
-/* 세로선 왼쪽은 비워 두고, 오른쪽에 본문 */
-.hc-about-letter-body {
   display: grid;
-  grid-template-columns: 22% 1fr;
+  grid-template-columns: 30% 1fr;
+  grid-template-areas:
+    "q2 q1"
+    "q3 q4";
 }
-.hc-about-letter-aside {
-  border-right: 1px solid var(--ink);
+.hc-about-cross-q2 { grid-area: q2; }
+.hc-about-cross-q1 { grid-area: q1; }
+.hc-about-cross-q3 { grid-area: q3; }
+.hc-about-cross-q4 { grid-area: q4; }
+/* 가로선: 위 두 칸 아래쪽 / 세로선: 왼쪽 두 칸 오른쪽 → 가운데서 십자로 교차 */
+.hc-about-cross-q2,
+.hc-about-cross-q1 { border-bottom: 1px solid var(--cross-line); }
+.hc-about-cross-q2,
+.hc-about-cross-q3 { border-right: 1px solid var(--cross-line); }
+
+.hc-about-cross-q2 {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 72px 36px 28px 0;
 }
-.hc-about-letter-text {
-  padding: 56px 0 8px 48px;
-  text-align: left;
-}
-/* 성경 구절 줄도 본문과 같은 글꼴·굵기·색으로 통일 */
-.hc-about-letter-text p {
+.hc-about-cross-title {
   font-family: 'Pretendard', sans-serif;
-  font-size: 19px;
-  font-weight: 500;
-  line-height: 1.9;
+  font-size: clamp(30px, 3.6vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--ink);
-  margin: 0 0 36px;
-  word-break: keep-all;
+  margin: 0;
 }
-.hc-about-letter-text p:last-child {
-  margin-bottom: 0;
-}
-@media (max-width: 760px) {
-  .hc-about-letter-body { grid-template-columns: 1fr; }
-  .hc-about-letter-aside { display: none; }
-  .hc-about-letter-text { padding: 32px 0 0; }
-  .hc-about-letter-text p { font-size: 16px; margin-bottom: 28px; }
+.hc-about-cross-q4 {
+  padding: 64px 0 24px 56px;
+  text-align: left;
 }
 
-/* ---------- 교회소개 핵심 비전 3가지 ---------- */
-.hc-about-vision {
-  max-width: 1040px;
-  margin: 120px auto 0;
-  text-align: center;
+/* 말씀: 금색 포인트 */
+.hc-about-verse {
+  position: relative;
+  margin: 0 0 56px;
+  padding: 4px 0 4px 24px;
+  border-left: 3px solid var(--accent);
 }
-.hc-about-vision-eyebrow {
+.hc-about-verse-text {
   font-family: 'Pretendard', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: #B8860B;
-  margin-bottom: 12px;
-}
-.hc-about-vision-title {
-  font-family: 'Pretendard', sans-serif;
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(24px, 2.6vw, 32px);
   font-weight: 800;
-  color: var(--ink);
-  margin-bottom: 56px;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--accent);
+  margin: 0;
 }
-.hc-about-vision-list {
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-  text-align: left;
-  max-width: 640px;
-  margin: 0 auto;
-}
-.hc-about-vision-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.hc-about-vision-label {
-  flex-shrink: 0;
+.hc-about-verse-text::before { content: "“"; }
+.hc-about-verse-text::after { content: "”"; }
+.hc-about-verse-ref {
+  display: block;
+  margin-top: 10px;
   font-family: 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ink);
-  padding: 10px 22px;
-  border: 2px solid #B8860B;
-  /* 손글씨로 그린 듯한 삐뚤빼뚤한 사각형 느낌 */
-  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-}
-.hc-about-vision-row:nth-child(2) .hc-about-vision-label {
-  border-radius: 15px 225px 15px 255px / 225px 15px 255px 15px;
-}
-.hc-about-vision-row:nth-child(3) .hc-about-vision-label {
-  border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
-}
-.hc-about-vision-dash {
-  flex-shrink: 0;
-  font-size: 20px;
+  font-style: normal;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--ink-soft);
 }
-.hc-about-vision-desc {
+
+/* 본문 */
+.hc-about-story p {
   font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.95;
+  color: #2A2826;
+  margin: 0 0 32px;
+  word-break: keep-all;
+}
+.hc-about-story p:last-child { margin-bottom: 0; }
+
+/* 핵심 비전 */
+.hc-about-core {
+  margin-top: 88px;
+}
+.hc-about-core-eyebrow {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+.hc-about-core-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 28px;
+}
+.hc-about-core-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--cross-line);
+}
+.hc-about-core-list li {
+  display: grid;
+  grid-template-columns: 56px 170px 1fr;
+  align-items: baseline;
+  gap: 0 16px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+}
+.hc-about-core-num {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.hc-about-core-label {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.hc-about-core-desc {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 17px;
   font-weight: 400;
   line-height: 1.6;
   color: var(--ink-soft);
+  word-break: keep-all;
 }
-@media (max-width: 600px) {
-  .hc-about-vision-row { gap: 12px; }
-  .hc-about-vision-label { font-size: 16px; padding: 8px 18px; }
-  .hc-about-vision-desc { font-size: 14px; width: 100%; }
+
+/* 휴대폰: 십자를 접고 제목 → 가로선 → 본문 순서로 */
+@media (max-width: 760px) {
+  .hc-about-cross {
+    grid-template-columns: 1fr;
+    grid-template-areas: "q2" "q4";
+  }
+  .hc-about-cross-q1,
+  .hc-about-cross-q3 { display: none; }
+  .hc-about-cross-q2 {
+    border-right: 0;
+    justify-content: flex-start;
+    padding: 8px 0 18px;
+  }
+  .hc-about-cross-q4 { padding: 36px 0 0; }
+  .hc-about-verse { margin-bottom: 40px; padding-left: 16px; }
+  .hc-about-story p { font-size: 16px; line-height: 1.85; margin-bottom: 26px; }
+  .hc-about-core { margin-top: 64px; }
+  .hc-about-core-list li {
+    grid-template-columns: 40px 1fr;
+    gap: 6px 10px;
+    padding: 20px 0;
+  }
+  .hc-about-core-desc { grid-column: 2; font-size: 15px; }
+  .hc-about-core-label { font-size: 17px; }
 }
 
 /* ---------- 오시는 길 페이지 ---------- */

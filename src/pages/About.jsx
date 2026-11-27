@@ -39,14 +39,22 @@ export default function About() {
           }
         />
         <main className="hc-inner-content" style={{ position: "relative", zIndex: 1 }}>
-          {/* 목사님 시안: 왼쪽 위 "하나교회는" + 가로선, 세로선 왼쪽은 비우고 오른쪽에 본문(왼쪽 정렬) */}
-          <section className="hc-about-letter">
-            <h2 className="hc-about-letter-title">하나교회는</h2>
-            <div className="hc-about-letter-body">
-              <div className="hc-about-letter-aside" aria-hidden="true" />
-              <div className="hc-about-letter-text">
-                <p>“풀이 자라 나무가 되매” (마 13:31–32)</p>
+          {/* 목사님 시안: 십자 모양 레이아웃
+              2사분면(왼쪽 위) "하나교회는" / 4사분면(오른쪽 아래) 말씀·본문·핵심 비전
+              1·3사분면은 비워 두고, 가로선과 세로선이 교차함 */}
+          <section className="hc-about-cross">
+            <div className="hc-about-cross-q2">
+              <h2 className="hc-about-cross-title">하나교회는</h2>
+            </div>
+            <div className="hc-about-cross-q1" aria-hidden="true" />
+            <div className="hc-about-cross-q3" aria-hidden="true" />
+            <div className="hc-about-cross-q4">
+              <blockquote className="hc-about-verse">
+                <p className="hc-about-verse-text">풀이 자라 나무가 되매</p>
+                <cite className="hc-about-verse-ref">마 13:31–32</cite>
+              </blockquote>
 
+              <div className="hc-about-story">
                 <p>
                   사람이 자기 밭에 겨자씨 한 알을 심었습니다.
                   <br />
@@ -77,31 +85,30 @@ export default function About() {
                   그리고 하나님의 사랑이 머무는 자리가 되기를 꿈꿉니다.
                 </p>
               </div>
+
+              <div className="hc-about-core">
+                <p className="hc-about-core-eyebrow">CORE VISION</p>
+                <h3 className="hc-about-core-title">핵심 비전</h3>
+                <ol className="hc-about-core-list">
+                  <li>
+                    <span className="hc-about-core-num">01</span>
+                    <strong className="hc-about-core-label">하나님을 향하여</strong>
+                    <span className="hc-about-core-desc">예배를 통해 주님을 인격적으로 만나는 교회</span>
+                  </li>
+                  <li>
+                    <span className="hc-about-core-num">02</span>
+                    <strong className="hc-about-core-label">성도를 향하여</strong>
+                    <span className="hc-about-core-desc">제자의 삶을 배우며 함께 성장하는 교회</span>
+                  </li>
+                  <li>
+                    <span className="hc-about-core-num">03</span>
+                    <strong className="hc-about-core-label">세상을 향하여</strong>
+                    <span className="hc-about-core-desc">섬김과 선교로 세상을 품는 교회</span>
+                  </li>
+                </ol>
+              </div>
             </div>
           </section>
-
-          <div className="hc-about-vision">
-            <p className="hc-about-vision-eyebrow">CORE VISION</p>
-            <h2 className="hc-about-vision-title">핵심 비전 3가지</h2>
-
-            <div className="hc-about-vision-list">
-              <div className="hc-about-vision-row">
-                <span className="hc-about-vision-label">하나님을 향하여</span>
-                <span className="hc-about-vision-dash">—</span>
-                <span className="hc-about-vision-desc">예배를 통해 주님을 인격적으로 만나는 교회</span>
-              </div>
-              <div className="hc-about-vision-row">
-                <span className="hc-about-vision-label">성도를 향하여</span>
-                <span className="hc-about-vision-dash">—</span>
-                <span className="hc-about-vision-desc">제자의 삶을 배우며 함께 성장하는 교회</span>
-              </div>
-              <div className="hc-about-vision-row">
-                <span className="hc-about-vision-label">세상을 향하여</span>
-                <span className="hc-about-vision-dash">—</span>
-                <span className="hc-about-vision-desc">섬김과 선교로 세상을 품는 교회</span>
-              </div>
-            </div>
-          </div>
         </main>
       </div>
       <Footer />
