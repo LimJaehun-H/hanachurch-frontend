@@ -39,8 +39,8 @@ export const CHURCH_ROOT = {
           id: "usher",
           name: "예배 의전 및 안내",
           children: [
-            { id: "guide", name: "안내팀" },
-            { id: "communion", name: "성찬팀" },
+            { id: "guide", name: "안내위원" },
+            { id: "communion", name: "성찬위원" },
           ],
         },
         {

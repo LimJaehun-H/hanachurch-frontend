@@ -19,15 +19,14 @@ export const GOOD_WORKS_ROOT = {
             { id: "praise-2-4", name: "2·4부 청소년 청년 찬양팀" },
             { id: "praise-3", name: "3부 대예배 찬양팀" }, // 확인 필요
             { id: "praise-friday", name: "금요심야기도회 찬양팀" },
-            { id: "praise-new", name: "새로 세워지는 찬양팀" }, // 확인 필요
           ],
         },
         {
           id: "worship-care",
           name: "예배 섬김",
           children: [
-            { id: "guide", name: "안내팀" },
-            { id: "communion", name: "성찬팀" },
+            { id: "guide", name: "안내위원" },
+            { id: "communion", name: "성찬위원" },
             { id: "newcomer", name: "새가족 등록 및 관리" },
             { id: "intercession", name: "중보기도팀" }, // 확인 필요
           ],
@@ -36,8 +35,8 @@ export const GOOD_WORKS_ROOT = {
           id: "worship-media-group",
           name: "예배 미디어",
           children: [
-            { id: "worship-media", name: "예배 미디어 운용 및 관리팀" }, // 확인 필요 (기존 맵에선 관리부)
-            { id: "dawn-sound", name: "새벽예배 음향담당" }, // 확인 필요
+            { id: "worship-media", name: "예배 미디어 운용 및 관리" }, // 확인 필요 (기존 맵에선 관리부)
+            { id: "dawn-sound", name: "미디어 제작" }, // 확인 필요
           ],
         },
       ],
@@ -66,7 +65,7 @@ export const GOOD_WORKS_ROOT = {
         {
           id: "promotion",
           name: "홍보",
-          children: [{ id: "instagram", name: "인스타그램팀" }],
+          children: [{ id: "instagram", name: "내외 광고물 제작" }],
         },
       ],
     },
