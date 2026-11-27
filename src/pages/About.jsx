@@ -1,11 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import SubHero from "../components/SubHero.jsx";
 import { useScrollReveal } from "../hooks/useScrollReveal.js";
 import { API_BASE_URL, ABOUT_HERO_IMAGE_URL, ABOUT_CONTENT_BG_IMAGE_URL } from "../config.js";
 
+// 십자가 선을 스크롤에 맞춰 그리기
+// --h: 좌우 팔·위 팔 (교차점이 화면 아래쪽에 들어오면서 금방 다 뻗음)
+// --v: 아래 기둥 (화면 아래쪽 75% 지점을 따라 내려가며 길어짐)
+// 스크롤을 올리면 반대로 줄어듦. 움직임 줄이기 설정을 켠 사용자에게는 처음부터 다 그려서 보여 줌.
+function useCrossDraw() {
+  const sectionRef = useRef(null);
+  const pillarRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const pillar = pillarRef.current;
+    if (!section || !pillar) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
+    const clamp = (n) => Math.min(1, Math.max(0, n));
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      const p = pillar.getBoundingClientRect(); // 교차점 = 기둥 칸의 맨 위
+      const h = clamp((vh * 0.9 - p.top) / (vh * 0.3));
+      const v = p.height > 0 ? clamp((vh * 0.75 - p.top) / p.height) : 0;
+      section.style.setProperty("--h", h.toFixed(4));
+      section.style.setProperty("--v", v.toFixed(4));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  return [sectionRef, pillarRef];
+}
+
 export default function About() {
+  const [crossRef, pillarRef] = useCrossDraw();
   const [contentBgUrl, setContentBgUrl] = useState(null); // 기본 사진은 서버에 없을 때만 (깜빡임 방지)
   const [bgRef, bgVisible] = useScrollReveal(0.05);
 
@@ -42,12 +84,13 @@ export default function About() {
           {/* 목사님 시안: 십자 모양 레이아웃
               2사분면(왼쪽 위) "하나교회는" / 4사분면(오른쪽 아래) 말씀·본문·핵심 비전
               1·3사분면은 비워 두고, 가로선과 세로선이 교차함 */}
-          <section className="hc-about-cross">
+          <section className="hc-about-cross" ref={crossRef}>
             <div className="hc-about-cross-q2">
+              <span className="hc-about-cross-dot" aria-hidden="true" />
               <h2 className="hc-about-cross-title">하나교회는</h2>
             </div>
             <div className="hc-about-cross-q1" aria-hidden="true" />
-            <div className="hc-about-cross-q3" aria-hidden="true" />
+            <div className="hc-about-cross-q3" ref={pillarRef} aria-hidden="true" />
             <div className="hc-about-cross-q4">
               <blockquote className="hc-about-verse">
                 <p className="hc-about-verse-text">풀이 자라 나무가 되매</p>
