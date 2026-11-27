@@ -917,14 +917,18 @@ button.hc-nav-parent {
   .hc-about-content-bg-layer { background-attachment: scroll; }
 }
 
-/* 목사님 시안: 십자 모양 (2사분면 제목, 4사분면 본문) */
+/* 목사님 시안: 십자가 모양 (2사분면 제목, 4사분면 본문)
+   - 왼쪽 칸 폭(--arm)만큼 가로 팔을 좌우 같은 길이로, 위 팔은 짧게, 아래 기둥은 길게 → 라틴 십자가 비율 */
 .hc-about-cross {
+  --arm: 30%;
+  --cross-ink: #2B2520;
+  --cross-w: 2px;
   --cross-line: rgba(20, 20, 20, 0.85);
-  --accent: #B8860B;
+  --accent: #3E6B47; /* 깊은 숲색: 로고 초록과 "풀이 자라 나무가 되매"에 어울리는 포인트 색 */
   max-width: 1080px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 30% 1fr;
+  grid-template-columns: var(--arm) 1fr;
   grid-template-areas:
     "q2 q1"
     "q3 q4";
@@ -933,11 +937,48 @@ button.hc-nav-parent {
 .hc-about-cross-q1 { grid-area: q1; }
 .hc-about-cross-q3 { grid-area: q3; }
 .hc-about-cross-q4 { grid-area: q4; }
-/* 가로선: 위 두 칸 아래쪽 / 세로선: 왼쪽 두 칸 오른쪽 → 가운데서 십자로 교차 */
+/* 십자가 선: 각 칸의 가장자리에 팔을 하나씩 그려서 가운데서 만나게 함 */
 .hc-about-cross-q2,
-.hc-about-cross-q1 { border-bottom: 1px solid var(--cross-line); }
-.hc-about-cross-q2,
-.hc-about-cross-q3 { border-right: 1px solid var(--cross-line); }
+.hc-about-cross-q1,
+.hc-about-cross-q3 { position: relative; }
+.hc-about-cross-q2::before,
+.hc-about-cross-q2::after,
+.hc-about-cross-q1::before,
+.hc-about-cross-q3::after {
+  content: "";
+  position: absolute;
+  background: var(--cross-ink);
+  border-radius: var(--cross-w);
+}
+/* 위 팔 (짧게) */
+.hc-about-cross-q2::after {
+  top: 0;
+  bottom: calc(var(--cross-w) / -2);
+  right: calc(var(--cross-w) / -2);
+  width: var(--cross-w);
+}
+/* 왼쪽 팔 */
+.hc-about-cross-q2::before {
+  left: 0;
+  right: 0;
+  bottom: calc(var(--cross-w) / -2);
+  height: var(--cross-w);
+}
+/* 오른쪽 팔: 왼쪽 팔과 같은 길이 (왼쪽 칸 폭 / 오른쪽 칸 폭 비율) */
+.hc-about-cross-q1::before {
+  left: 0;
+  bottom: calc(var(--cross-w) / -2);
+  width: calc(100% * 30 / 70);
+  height: var(--cross-w);
+}
+/* 아래 기둥 (길게, 끝은 부드럽게 사라짐) */
+.hc-about-cross-q3::after {
+  top: calc(var(--cross-w) / -2);
+  bottom: 0;
+  right: calc(var(--cross-w) / -2);
+  width: var(--cross-w);
+  background: linear-gradient(to bottom, var(--cross-ink) 0%, var(--cross-ink) 75%, rgba(43, 37, 32, 0) 100%);
+}
 
 .hc-about-cross-q2 {
   display: flex;
@@ -958,33 +999,50 @@ button.hc-nav-parent {
   text-align: left;
 }
 
-/* 말씀: 금색 포인트 */
+/* 말씀: 숲색 포인트 + 큰 따옴표 장식 */
 .hc-about-verse {
   position: relative;
-  margin: 0 0 56px;
-  padding: 4px 0 4px 24px;
-  border-left: 3px solid var(--accent);
+  margin: 0 0 64px;
+  padding-top: 34px;
+}
+.hc-about-verse::before {
+  content: "“";
+  position: absolute;
+  top: -18px;
+  left: -6px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 96px;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.18;
 }
 .hc-about-verse-text {
   font-family: 'Pretendard', sans-serif;
-  font-size: clamp(24px, 2.6vw, 32px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: clamp(26px, 2.8vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 1.35;
   color: var(--accent);
   margin: 0;
 }
-.hc-about-verse-text::before { content: "“"; }
-.hc-about-verse-text::after { content: "”"; }
 .hc-about-verse-ref {
-  display: block;
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
   font-family: 'Pretendard', sans-serif;
   font-style: normal;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   color: var(--ink-soft);
+}
+.hc-about-verse-ref::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.6;
 }
 
 /* 본문 */
@@ -1064,12 +1122,13 @@ button.hc-nav-parent {
   .hc-about-cross-q1,
   .hc-about-cross-q3 { display: none; }
   .hc-about-cross-q2 {
-    border-right: 0;
     justify-content: flex-start;
     padding: 8px 0 18px;
   }
+  .hc-about-cross-q2::after { display: none; }
   .hc-about-cross-q4 { padding: 36px 0 0; }
-  .hc-about-verse { margin-bottom: 40px; padding-left: 16px; }
+  .hc-about-verse { margin-bottom: 44px; padding-top: 26px; }
+  .hc-about-verse::before { font-size: 72px; top: -12px; }
   .hc-about-story p { font-size: 16px; line-height: 1.85; margin-bottom: 26px; }
   .hc-about-core { margin-top: 64px; }
   .hc-about-core-list li {
