@@ -923,10 +923,11 @@ button.hc-nav-parent {
   --h: 1; /* 좌우·위 팔이 그려진 정도 (0~1, 스크롤에 따라 About.jsx가 바꿈) */
   --v: 1; /* 아래 기둥이 그려진 정도 */
   --arm: 30%;
-  /* 처음(맨 위) 십자가 크기: 좌우 팔은 같은 길이, 위 팔은 짧게, 아래 기둥은 길게 */
-  --start-arm: 110px;
-  --start-top: 64px;
-  --start-pillar: 230px;
+  /* 처음(맨 위) 십자가: 제목 오른쪽 아래 모서리에 붙은 작은 낫표 같은 십자가
+     좌우 팔은 같은 길이, 위 팔은 짧게, 아래 기둥은 조금 길게 */
+  --start-arm: 20px;
+  --start-top: 16px;
+  --start-pillar: 30px;
   --cross-ink: #2B2520;
   --cross-w: 2px;
   --cross-line: rgba(20, 20, 20, 0.85);
@@ -991,13 +992,14 @@ button.hc-nav-parent {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  padding: 72px 36px 28px 0;
+  padding: 72px 16px 12px 0; /* 교차점이 제목 오른쪽 아래 모서리에 바짝 붙도록 */
 }
 .hc-about-cross-title {
   font-family: 'Pretendard', sans-serif;
   font-size: clamp(30px, 3.6vw, 44px);
   font-weight: 800;
   letter-spacing: -0.02em;
+  line-height: 1.1;
   color: var(--ink);
   margin: 0;
 }
