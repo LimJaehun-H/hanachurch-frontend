@@ -1122,33 +1122,35 @@ button.hc-nav-parent {
   word-break: keep-all;
 }
 
-/* 휴대폰: 십자를 접고 제목 → 가로선 → 본문 순서로 */
+/* 휴대폰: PC와 같은 십자가 레이아웃을 좁은 화면에 맞게 줄여서 */
 @media (max-width: 760px) {
   .hc-about-cross {
-    grid-template-columns: 1fr;
-    grid-template-areas: "q2" "q4";
+    --start-arm: 10px;
+    --start-top: 8px;
+    --start-pillar: 18px;
   }
-  .hc-about-cross-q1,
-  .hc-about-cross-q3 { display: none; }
-  .hc-about-cross-q2 {
-    justify-content: flex-start;
-    padding: 8px 0 18px;
+  .hc-about-cross-q2 { padding: 36px 10px 8px 0; }
+  .hc-about-cross-title {
+    font-size: 21px;
+    white-space: nowrap; /* 칸이 좁아도 한 줄로 (넘치면 왼쪽 여백 쪽으로) */
   }
-  .hc-about-cross-q2::after { display: none; }
-  /* 휴대폰: 제목 아래 가로선만 */
-  .hc-about-cross-q2::before { left: 0; width: 100%; }
-  .hc-about-cross-q4 { padding: 36px 0 0; }
-  .hc-about-verse { margin-bottom: 44px; padding-top: 26px; }
-  .hc-about-verse::before { font-size: 72px; top: -12px; }
-  .hc-about-story p { font-size: 16px; line-height: 1.85; margin-bottom: 26px; }
-  .hc-about-core { margin-top: 64px; }
+  .hc-about-cross-q4 { padding: 32px 0 0 18px; }
+  .hc-about-verse { margin-bottom: 40px; padding-top: 24px; }
+  .hc-about-verse::before { font-size: 64px; top: -10px; left: -4px; }
+  .hc-about-verse-text { font-size: 21px; }
+  .hc-about-verse-ref { font-size: 12px; gap: 8px; }
+  .hc-about-verse-ref::before { width: 18px; }
+  .hc-about-story p { font-size: 15px; line-height: 1.85; margin-bottom: 24px; }
+  .hc-about-core { margin-top: 56px; }
+  .hc-about-core-title { margin-bottom: 20px; }
   .hc-about-core-list li {
-    grid-template-columns: 40px 1fr;
-    gap: 6px 10px;
-    padding: 20px 0;
+    grid-template-columns: 28px 1fr;
+    gap: 4px 8px;
+    padding: 18px 0;
   }
-  .hc-about-core-desc { grid-column: 2; font-size: 15px; }
-  .hc-about-core-label { font-size: 17px; }
+  .hc-about-core-num { font-size: 12px; }
+  .hc-about-core-label { font-size: 16px; }
+  .hc-about-core-desc { grid-column: 2; font-size: 14px; }
 }
 
 /* ---------- 오시는 길 페이지 ---------- */
