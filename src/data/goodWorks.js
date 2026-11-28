@@ -151,7 +151,18 @@ export const GOOD_WORKS_ROOT = {
         },
       ],
     },
-    { id: "finance", name: "재무부" },
+    {
+      id: "finance",
+      name: "재무부",
+      children: [
+        { id: "finance-offering", name: "헌금관리" },
+        { id: "finance-accounting", name: "회계관리" },
+        { id: "finance-expense", name: "지출관리" },
+        { id: "finance-report", name: "재정보고" },
+        { id: "finance-evidence", name: "증빙관리" },
+        { id: "finance-transparency", name: "재정투명성" },
+      ],
+    },
     {
       id: "admin-planning",
       name: "행정 및 기획",
