@@ -10,6 +10,7 @@ import AdminPasswordPanel from "../components/AdminPasswordPanel.jsx";
 import AdminBulletinSmsPanel from "../components/AdminBulletinSmsPanel.jsx";
 import AdminHomePopupPanel from "../components/AdminHomePopupPanel.jsx";
 import AdminMinistryPhotoPanel from "../components/AdminMinistryPhotoPanel.jsx";
+import AdminMemberPanel from "../components/AdminMemberPanel.jsx";
 import { API_BASE_URL } from "../config.js";
 import "../admin.css";
 
@@ -29,6 +30,7 @@ const MENU = [
         ],
       },
       { key: "bulletinsms", label: "주보 문자 발송", desc: "주보 사진을 문자 수신에 동의한 성도님께 문자(MMS)로 보냅니다." },
+      { key: "members", label: "교인 관리", desc: "가입한 교인을 교인 명부와 대조하고, 정보를 고치거나 교인이 아니면 삭제합니다." },
     ],
   },
   {
@@ -77,6 +79,7 @@ const PANELS = {
   homepopup: AdminHomePopupPanel,
   siteimage: AdminSiteImagePanel,
   ministryphoto: AdminMinistryPhotoPanel,
+  members: AdminMemberPanel,
 };
 
 function Caret() {

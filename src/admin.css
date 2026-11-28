@@ -611,6 +611,9 @@
 .hc-adm-thumb-actions button:hover { background: var(--adm-soft); }
 .hc-adm-thumb-actions button:disabled { opacity: 0.3; cursor: default; }
 .hc-adm-thumb-actions .hc-adm-thumb-delete { color: var(--adm-danger); font-weight: 600; }
+/* 교인 관리: 검색칸 */
+.hc-adm-member-search { width: 100%; max-width: 360px; margin-bottom: 12px; }
+
 /* 교회부서 사진: 어느 자리에 들어가는지 + 설명 */
 .hc-adm-thumb-meta { padding: 10px 10px 12px; border-top: 1px solid var(--adm-line); }
 .hc-adm-thumb-pos { display: block; margin-bottom: 6px; font-size: 12.5px; font-weight: 600; color: var(--adm-sub); }
