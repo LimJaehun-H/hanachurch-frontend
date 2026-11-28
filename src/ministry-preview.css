@@ -190,7 +190,13 @@ figcaption {
   background: #E6E0D6;
   object-fit: cover;
 }
-.mla-hero .mla-img { max-height: 440px; aspect-ratio: 2 / 1; } /* 1번째 사진: 예전 16:9·560px보다 낮게 */
+/* 1번째 사진: 들어오자마자 사진 + 팀 이름 + 한 줄 소개가 한 화면에 보이도록
+   화면 높이에서 헤더(116px)와 제목 영역(약 260px)을 뺀 만큼만 (최소 200px, 최대 440px) */
+.mla-hero .mla-img {
+  aspect-ratio: auto;
+  height: clamp(200px, calc(100vh - 380px), 440px);
+  height: clamp(200px, calc(100svh - 380px), 440px);
+}
 .mla-inset .mla-img { aspect-ratio: 3 / 2; }
 /* 3번째 사진부터: 아래 사진 모음 */
 .mla-gallery {
@@ -235,7 +241,11 @@ figcaption {
   .mla { padding: 0; }
   .mla-hero-ph { aspect-ratio: 4 / 5 !important; }
   .mla-hero figcaption { padding: 0 20px; }
-  .mla-hero .mla-img { aspect-ratio: 3 / 2; }
+  /* 휴대폰: 헤더(85px)와 제목 영역(약 205px)을 뺀 만큼 (최소 170px, 최대 300px) */
+  .mla-hero .mla-img {
+    height: clamp(170px, calc(100vh - 290px), 300px);
+    height: clamp(170px, calc(100svh - 290px), 300px);
+  }
   .mla-state { padding: 64px 20px 0; }
   .mla-subs li { font-size: 16px; }
   .mla-head, .mla-row, .mla-joy { grid-template-columns: 1fr; }
