@@ -21,7 +21,7 @@ export default function MinistryOrgChart({ tree }) {
           <li key={dept.id} className="org-col" style={{ "--mc": colorOf(dept.id) }}>
             {/* 부는 링크 없이 이름만 (소개 페이지는 맨 끝 팀만) */}
             <div className="org-dept">{dept.name}</div>
-            <Branch nodes={dept.children} hasPage={hasPage} />
+            <Branch nodes={dept.children} hasPage={hasPage} top />
           </li>
         ))}
       </ul>
@@ -30,13 +30,15 @@ export default function MinistryOrgChart({ tree }) {
 }
 
 // 하위 가지 (묶음이면 그 아래로 한 번 더)
-function Branch({ nodes, hasPage }) {
+// top: 부 바로 아래 단계. 여기 있는 항목은 하위 팀이 없어도 묶음처럼 색 배경 상자로 보여 줌 (예: 재무부의 헌금관리)
+function Branch({ nodes, hasPage, top = false }) {
   if (!nodes?.length) return null;
   return (
     <ul className="org-tree">
       {nodes.map((n) => {
         const isGroup = n.children?.length > 0;
-        const cls = `org-node ${isGroup ? "org-node--group" : "org-node--team"}`;
+        const boxed = isGroup || top;
+        const cls = `org-node ${boxed ? "org-node--group" : "org-node--team"}`;
         return (
           <li key={n.id}>
             {!isGroup && hasPage(n.id) ? (
@@ -44,7 +46,7 @@ function Branch({ nodes, hasPage }) {
                 {n.name}
               </Link>
             ) : (
-              <span className={`${cls} ${isGroup ? "" : "org-node--plain"}`}>{n.name}</span>
+              <span className={`${cls} ${boxed ? "" : "org-node--plain"}`}>{n.name}</span>
             )}
             {isGroup && <Branch nodes={n.children} hasPage={hasPage} />}
           </li>
