@@ -25,6 +25,8 @@ import SermonDetail from "./pages/SermonDetail.jsx";
 import SignupAgree from "./pages/SignupAgree.jsx";
 import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
+import KakaoCallback from "./pages/KakaoCallback.jsx";
+import KakaoSignup from "./pages/KakaoSignup.jsx";
 import MyPage from "./pages/MyPage.jsx";
 import Privacy from "./pages/Privacy.jsx";
 
@@ -63,6 +65,8 @@ export default function App() {
           <Route path="/signup/agree" element={<SignupAgree />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/kakao" element={<KakaoCallback />} />
+          <Route path="/signup/kakao" element={<KakaoSignup />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/privacy" element={<Privacy />} />
         </Routes>

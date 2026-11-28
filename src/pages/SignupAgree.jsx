@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
+import KakaoLoginButton from "../components/KakaoLoginButton.jsx";
 
-const AGREEMENT_ITEMS = [
+export const AGREEMENT_ITEMS = [
   {
     key: "age",
     required: true,
@@ -74,6 +75,7 @@ export default function SignupAgree() {
         </div>
 
         <div className="hc-auth-card">
+          <KakaoLoginButton label="카카오로 3초 만에 가입하기" />
           <label className="hc-auth-agree-all">
             <input
               type="checkbox"

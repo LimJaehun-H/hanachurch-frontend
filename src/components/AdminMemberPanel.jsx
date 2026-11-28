@@ -182,6 +182,7 @@ export default function AdminMemberPanel({ token, onAuthExpired }) {
               badge={
                 <>
                   {m.admin && <span className="hc-adm-badge">관리자</span>}
+                  {m.kakao && <span className="hc-adm-badge hc-adm-badge--wait">카카오</span>}
                   {m.smsReceive && <span className="hc-adm-badge hc-adm-badge--on">주보 문자</span>}
                 </>
               }

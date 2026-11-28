@@ -4,6 +4,7 @@ import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { API_BASE_URL } from "../config.js";
 import { setMemberSession } from "../utils/memberAuth.js";
+import KakaoLoginButton from "../components/KakaoLoginButton.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ export default function Login() {
         </div>
 
         <form className="hc-auth-card" onSubmit={handleSubmit}>
+          <KakaoLoginButton label="카카오로 로그인" />
           <div className="hc-auth-field">
             <label className="hc-auth-label" htmlFor="loginId">아이디</label>
             <input
