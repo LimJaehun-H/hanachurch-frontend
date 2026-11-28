@@ -46,7 +46,7 @@ function Photo({ photo, className = "" }) {
 }
 
 function Intro({ d, subs, hasPage }) {
-  const [hero, inset] = d.photos;
+  const [hero, inset, ...more] = d.photos; // 1번째 맨 위, 2번째 본문 중간, 3번째부터 아래 사진 모음
   const [firstJoy, ...restJoy] = d.joy;
 
   return (
@@ -110,6 +110,14 @@ function Intro({ d, subs, hasPage }) {
           <blockquote>{firstJoy}</blockquote>
           {restJoy.map((t) => (
             <p key={t}>{t}</p>
+          ))}
+        </section>
+      )}
+
+      {more.length > 0 && (
+        <section className="mla-gallery" aria-label="사진">
+          {more.map((p) => (
+            <Photo key={p.url} photo={p} />
           ))}
         </section>
       )}

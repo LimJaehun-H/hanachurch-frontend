@@ -9,6 +9,7 @@ import AdminSiteImagePanel from "../components/AdminSiteImagePanel.jsx";
 import AdminPasswordPanel from "../components/AdminPasswordPanel.jsx";
 import AdminBulletinSmsPanel from "../components/AdminBulletinSmsPanel.jsx";
 import AdminHomePopupPanel from "../components/AdminHomePopupPanel.jsx";
+import AdminMinistryPhotoPanel from "../components/AdminMinistryPhotoPanel.jsx";
 import { API_BASE_URL } from "../config.js";
 import "../admin.css";
 
@@ -42,6 +43,7 @@ const MENU = [
         ],
       },
       { key: "siteimage", label: "사이트 이미지 관리", desc: "각 페이지에 쓰이는 사진을 바꾸거나 추가합니다." },
+      { key: "ministryphoto", label: "교회부서 사진 관리", desc: "부서 소개 페이지에 들어가는 사진을 올리고, 설명과 순서를 정합니다." },
     ],
   },
   {
@@ -74,6 +76,7 @@ const PANELS = {
   homevideo: AdminHomeVideoPanel,
   homepopup: AdminHomePopupPanel,
   siteimage: AdminSiteImagePanel,
+  ministryphoto: AdminMinistryPhotoPanel,
 };
 
 function Caret() {

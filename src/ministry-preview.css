@@ -192,6 +192,15 @@ figcaption {
 }
 .mla-hero .mla-img { max-height: 560px; aspect-ratio: 16 / 9; }
 .mla-inset .mla-img { aspect-ratio: 3 / 2; }
+/* 3번째 사진부터: 아래 사진 모음 */
+.mla-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 72px;
+}
+.mla-gallery figure { margin: 0; }
+.mla-gallery .mla-img { aspect-ratio: 4 / 3; }
 .mla-subs { list-style: none; margin: 0; padding: 0; }
 .mla-subs li {
   padding: 12px 0;
@@ -242,4 +251,5 @@ figcaption {
   .mla-inset { width: auto; margin: 44px 20px 0 64px; }
   .mla-joy { margin: 52px 20px 0; row-gap: 12px; }
   .mla-joy blockquote { font-size: 25px; padding-top: 18px; }
+  .mla-gallery { grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 52px 20px 0; }
 }
