@@ -190,7 +190,7 @@ figcaption {
   background: #E6E0D6;
   object-fit: cover;
 }
-.mla-hero .mla-img { max-height: 560px; aspect-ratio: 16 / 9; }
+.mla-hero .mla-img { max-height: 440px; aspect-ratio: 2 / 1; } /* 1번째 사진: 예전 16:9·560px보다 낮게 */
 .mla-inset .mla-img { aspect-ratio: 3 / 2; }
 /* 3번째 사진부터: 아래 사진 모음 */
 .mla-gallery {
@@ -235,7 +235,7 @@ figcaption {
   .mla { padding: 0; }
   .mla-hero-ph { aspect-ratio: 4 / 5 !important; }
   .mla-hero figcaption { padding: 0 20px; }
-  .mla-hero .mla-img { aspect-ratio: 4 / 3; }
+  .mla-hero .mla-img { aspect-ratio: 3 / 2; }
   .mla-state { padding: 64px 20px 0; }
   .mla-subs li { font-size: 16px; }
   .mla-head, .mla-row, .mla-joy { grid-template-columns: 1fr; }
