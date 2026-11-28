@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
 import Home from "./pages/Home.jsx";
@@ -18,9 +18,10 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import PageTransition from "./components/PageTransition.jsx";
 import NoticeDetail from "./pages/NoticeDetail.jsx";
 import SermonDetail from "./pages/SermonDetail.jsx";
-import Offering from "./pages/Offering.jsx";
-import OfferingSuccess from "./pages/OfferingSuccess.jsx";
-import OfferingFail from "./pages/OfferingFail.jsx";
+// 온라인 헌금: 지금은 사용 안 함 (페이지 파일과 백엔드는 그대로 둠, 다시 열 때 아래 주석 해제)
+// import Offering from "./pages/Offering.jsx";
+// import OfferingSuccess from "./pages/OfferingSuccess.jsx";
+// import OfferingFail from "./pages/OfferingFail.jsx";
 import SignupAgree from "./pages/SignupAgree.jsx";
 import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
@@ -53,9 +54,12 @@ export default function App() {
           <Route path="/bulletin/:id" element={<BulletinDetail />} />
           <Route path="/notice/:id" element={<NoticeDetail />} />
           <Route path="/sermon/:id" element={<SermonDetail />} />
+          {/* 온라인 헌금: 메뉴와 주소 모두 닫아 둠. 주소로 들어오면 홈으로 보냄
           <Route path="/offering" element={<Offering />} />
           <Route path="/offering/success" element={<OfferingSuccess />} />
           <Route path="/offering/fail" element={<OfferingFail />} />
+          */}
+          <Route path="/offering/*" element={<Navigate to="/" replace />} />
           <Route path="/signup/agree" element={<SignupAgree />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />

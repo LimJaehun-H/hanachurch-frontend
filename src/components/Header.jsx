@@ -214,11 +214,13 @@ export default function Header({ variant = "solid" }) {
             </div>
           </div>
 
+          {/* 온라인 헌금: 기능은 그대로 두고 메뉴에서만 숨김 (다시 열 때 이 주석을 풀고 App.jsx의 경로도 되살리기)
           <div className="hc-nav-item">
             <Link to="/offering" className="hc-nav-parent">
               온라인 헌금
             </Link>
           </div>
+          */}
         </nav>
       </div>
 
